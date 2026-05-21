@@ -1,12 +1,17 @@
 ---
 /* Home position statement — the brand's opening line on the page.
-   Since the hero imagery carries no text, this is the page's first
-   verbal beat: the brand position copy from the print pagers, set on
-   the white page background between the hero and the product slider.
+   ------------------------------------------------------------------
+   REBUILD (2026-05-21). The first cut centred a small italic line in a
+   tidy block — correct, restrained, and exactly the wrong energy. This
+   rebuild gives the statement room and weight: a tall section the line
+   commands, the position sentence at display scale, revealed line by
+   line through clipping masks as the section enters, and a slow gold
+   hairline that draws itself in. The Marigold text-animation move,
+   applied to the brand's defining sentence.
 
-   Treatment mirrors the brand pager masthead: the position sentence in
-   display italic, "Cuban Soul." in pink, the rest in ink, wrapping
-   naturally across two lines; the italic sub-line below it. */
+   Treatment per the conventions overlay: "Cuban Soul." pink, the rest
+   ink, both halves display italic, wrapping naturally — not locked to
+   one line. The sub-line follows, quieter. */
 interface Props {
   /** Brand position copy split into the pink half and the ink half. */
   positionPink: string;
@@ -16,21 +21,38 @@ interface Props {
 const { positionPink, positionInk, subline } = Astro.props;
 ---
 
-<section class="position" aria-label="Mariposa">
+<section class="position" aria-label="Mariposa" data-position>
   <div class="position__inner container">
-    <span class="wordmark position__mark">mariposa</span>
-    <p class="position__line">
-      <span class="position__em">{positionPink}</span>{' '}
-      <span class="position__ink">{positionInk}</span>
-    </p>
-    <p class="position__subline">{subline}</p>
+    <span class="wordmark position__mark" data-position-mark>mariposa</span>
+
+    {/* The position sentence. Each half is wrapped in a clipping mask;
+        the inner line slides up from below the mask edge on entry —
+        the Marigold masked-headline reveal. */}
+    <h2 class="position__line">
+      <span class="motion-mask">
+        <span class="motion-line position__em">{positionPink}</span>
+      </span>
+      {' '}
+      <span class="motion-mask">
+        <span class="motion-line position__ink">{positionInk}</span>
+      </span>
+    </h2>
+
+    <span class="position__rule" data-position-rule aria-hidden="true"></span>
+
+    <p class="position__subline" data-position-subline>{subline}</p>
   </div>
 </section>
 
 <style>
   .position {
     background: var(--white);
-    padding-block: clamp(var(--space-8), 9vw, var(--space-10));
+    /* A tall section — the statement is given room to be the only thing
+       in the viewport when it lands. */
+    min-height: 86svh;
+    display: grid;
+    place-items: center;
+    padding-block: clamp(var(--space-9), 14vw, var(--space-10));
   }
 
   .position__inner {
@@ -45,16 +67,18 @@ const { positionPink, positionInk, subline } = Astro.props;
     color: var(--gold-deep);
   }
 
-  /* Position sentence — display italic, wraps across two lines (the
-     conventions overlay forbids locking it to one line). */
+  /* Position sentence — display italic at real scale, wraps naturally.
+     The conventions overlay forbids locking it to one line. */
   .position__line {
     font-family: var(--font-display);
     font-style: italic;
     font-weight: 500;
-    font-size: clamp(2rem, 5vw, 3.25rem);
-    line-height: var(--lh-snug);
-    margin-top: var(--space-5);
-    max-width: 20ch;
+    font-size: clamp(2.6rem, 7vw, 5rem);
+    line-height: 1.04;
+    letter-spacing: var(--ls-display);
+    margin: 0;
+    margin-top: var(--space-7);
+    max-width: 18ch;
   }
   .position__em {
     color: var(--pink);
@@ -63,14 +87,80 @@ const { positionPink, positionInk, subline } = Astro.props;
     color: var(--ink);
   }
 
+  /* Masked reveal — each half of the sentence lives in a clipping box.
+     The box is padded top/bottom (and pulled back by an equal negative
+     margin) so the italic's ascenders and descenders have room at
+     rest; only the slide-up travel is clipped, never the glyph. A
+     touch of x-padding clears the italic overshoot. */
+  .motion-mask {
+    display: inline-block;
+    overflow: hidden;
+    padding: 0.16em 0.06em;
+    margin: -0.16em -0.06em;
+    vertical-align: bottom;
+  }
+  .motion-line {
+    display: inline-block;
+    /* JS sets the entry transform. Without JS the line is simply in
+       place — no flash of clipped content. */
+  }
+
+  /* Gold hairline — draws itself in left-to-right under the statement. */
+  .position__rule {
+    display: block;
+    width: 96px;
+    height: 1px;
+    background: var(--gold);
+    margin-top: var(--space-8);
+    transform-origin: center;
+    transform: scaleX(1);
+  }
+
   .position__subline {
     font-family: var(--font-display);
     font-style: italic;
     font-weight: 400;
-    font-size: clamp(1.1rem, 2.2vw, var(--fs-lede));
+    font-size: clamp(1.15rem, 2.4vw, 1.5rem);
     line-height: var(--lh-snug);
     color: var(--ink-soft);
-    margin-top: var(--space-5);
-    max-width: 30ch;
+    margin-top: var(--space-7);
+    max-width: 34ch;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .position { min-height: 0; }
   }
 </style>
+
+<script>
+  import { gsap, revealLines, reveal, REDUCED } from '../lib/motion';
+
+  const section = document.querySelector<HTMLElement>('[data-position]');
+  if (section) {
+    const mark = section.querySelector<HTMLElement>('[data-position-mark]');
+    const masks = section.querySelectorAll('.motion-mask');
+    const rule = section.querySelector<HTMLElement>('[data-position-rule]');
+    const subline = section.querySelector<HTMLElement>('[data-position-subline]');
+
+    // Wordmark fades up first, a beat ahead of the sentence.
+    if (mark) reveal(mark, { y: 16, duration: 0.7, start: 'top 80%' });
+
+    // The sentence unveils line by line through the masks.
+    revealLines(masks, { start: 'top 78%', stagger: 0.14 });
+
+    // The gold hairline draws itself in once the sentence has landed.
+    if (rule && !REDUCED) {
+      gsap.set(rule, { scaleX: 0 });
+      gsap.to(rule, {
+        scaleX: 1,
+        duration: 0.9,
+        ease: 'power2.out',
+        delay: 0.35,
+        scrollTrigger: { trigger: section, start: 'top 70%', toggleActions: 'play none none none' },
+      });
+    }
+
+    // Sub-line settles in last.
+    if (subline) reveal(subline, { y: 18, duration: 0.8, delay: 0.15, start: 'top 72%' });
+  }
+</script>

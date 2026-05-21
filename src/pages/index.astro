@@ -48,3 +48,12 @@ const products = (await getCollection('products'))
     aboutLinkLabel={home.lifestyle.aboutLinkLabel}
   />
 </BaseLayout>
+
+<script>
+  /* Recompute every ScrollTrigger position once webfonts and imagery
+     have settled — late layout shifts otherwise leave stale start/end
+     points. One call per page; the section scripts register their own
+     triggers independently. */
+  import { refreshOnLoad } from '../lib/motion';
+  refreshOnLoad();
+</script>

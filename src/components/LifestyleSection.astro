@@ -1,13 +1,27 @@
 ---
 /* Home lifestyle section — the condensed Mariposa story.
-   The brand's emotional close: the white butterfly-ginger legend and
-   the gold-leaf-as-secret-message idea, landing on "enjoyed today".
-   Editorial, image-led, generous negative space. Since the About page
-   ships, this section stays atmospheric and points to /about.
+   ------------------------------------------------------------------
+   REBUILD (2026-05-21). The first cut was a tidy 1:1 column grid —
+   image left, text right, both sitting still. The scope names this the
+   section that "most needs to read as a lifestyle brand," and a static
+   split panel is the opposite of that. This rebuild makes it an
+   immersive editorial spread:
+
+   - the section opens on a tall, near-full-bleed image with a slow
+     parallax drift and a scale-settle (the Marigold hero-image move);
+   - the story copy sits in a card that lifts off the image, breaking
+     the grid line — the design system's "asymmetry is welcome";
+   - the copy reveals paragraph by paragraph on scroll-in;
+   - the closing line is set at display scale and unveiled through a
+     clipping mask, the brand's emotional landing.
+
+   Since the About page ships, this section stays atmospheric and
+   points to /about.
 
    IMAGERY: shot-list frame 13 — the Mariposa brand composition
-   (header-collage.png, the mariposa_header_sq.png asset) stands in
-   until a commissioned collage lands. */
+   (header-collage.png) stands in until a commissioned collage lands.
+
+   prefers-reduced-motion: no parallax, no scale; copy shown in place. */
 import { Image } from 'astro:assets';
 import { withBase } from '../lib/path';
 import lifestyleCollage from '../assets/header-collage.png';
@@ -21,74 +35,120 @@ interface Props {
 const { eyebrow, paragraphs, closingLine, aboutLinkLabel } = Astro.props;
 ---
 
-<section class="story" aria-labelledby="story-heading">
-  <div class="story__inner container">
-    <!-- Collage image — frame 13, the Mariposa brand composition -->
-    <div class="story__media grain">
+<section class="story" aria-labelledby="story-heading" data-story>
+  {/* Full-bleed image bed with a parallax/scale drift. */}
+  <div class="story__bed" data-story-bed>
+    <div class="story__bed-media" data-story-media>
       <Image
         class="story__img"
         src={lifestyleCollage}
         alt="Mariposa brand composition — the lowercase wordmark, the gold band, and the butterfly motif."
-        widths={[420, 720, 913]}
-        sizes="(max-width: 720px) 90vw, 45vw"
+        widths={[720, 1200, 1800]}
+        sizes="100vw"
         loading="lazy"
       />
     </div>
+    <div class="story__bed-wash" aria-hidden="true"></div>
+  </div>
 
-    <!-- Story copy -->
-    <div class="story__copy">
-      <p class="eyebrow" id="story-heading">{eyebrow}</p>
+  {/* Story card — lifts off the image bed, breaking the grid. */}
+  <div class="story__layer container">
+    <article class="story__card grain" data-story-card>
+      <p class="eyebrow story__eyebrow" id="story-heading">{eyebrow}</p>
+
       <div class="story__prose">
-        {paragraphs.map((para) => <p class="story__para">{para}</p>)}
+        {paragraphs.map((para) => <p class="story__para" data-story-para>{para}</p>)}
       </div>
-      <p class="story__closing">{closingLine}</p>
-      <a class="story__link" href={withBase('/about')}>
-        {aboutLinkLabel}
+
+      <h2 class="story__closing">
+        {
+          closingLine.split('. ').map((part, i, arr) => (
+            <span class="motion-mask">
+              <span class="motion-line">{part}{i < arr.length - 1 ? '.' : ''}</span>
+            </span>
+          ))
+        }
+      </h2>
+
+      <a class="story__link" href={withBase('/about')} data-story-link>
+        <span class="story__link-text">{aboutLinkLabel}</span>
         <span class="story__link-arrow" aria-hidden="true">&rarr;</span>
       </a>
-    </div>
+    </article>
   </div>
 </section>
 
 <style>
   .story {
-    background: var(--white);
-    padding-block: clamp(var(--space-9), 12vw, var(--space-10));
-  }
-
-  .story__inner {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: clamp(var(--space-7), 7vw, var(--space-10));
-    align-items: center;
-  }
-
-  /* Collage media — the master move; a portrait-leaning frame. */
-  .story__media {
     position: relative;
-    aspect-ratio: 4 / 5;
+    background: var(--white);
+    /* The section is tall — the image bed and the lifted card need
+       room to overlap with deliberate negative space. */
+    padding-block: clamp(var(--space-9), 14vw, calc(var(--space-10) * 1.4));
+  }
+
+  /* ── Image bed ──────────────────────────────────────────────── */
+  .story__bed {
+    position: absolute;
+    inset: 0;
+    /* The bed does not run the full section; it occupies the upper
+       portion so the card can lift off its lower edge. */
+    height: 68%;
     overflow: hidden;
-    background: var(--pearl);
+  }
+  .story__bed-media {
+    position: absolute;
+    /* Oversized so the parallax drift never reveals an edge. */
+    inset: -12% 0;
+    will-change: transform;
   }
   .story__img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: center;
+    filter: grayscale(1) sepia(0.24) contrast(1.04) brightness(0.86);
   }
-  /* Paper-grain sits above the image. */
-  .story__media.grain::before {
-    z-index: 1;
+  /* Wash — grades the image into the white page so the card reads. */
+  .story__bed-wash {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to bottom, rgba(28, 25, 21, 0.28) 0%, transparent 30%),
+      linear-gradient(to top, var(--white) 0%, rgba(255, 255, 255, 0.2) 38%, transparent 60%);
   }
 
-  .story__prose {
-    margin-top: var(--space-6);
+  /* ── Story card ─────────────────────────────────────────────── */
+  .story__layer {
+    position: relative;
+    z-index: 2;
+    /* Push the card down so it sits across the bed's lower edge. */
+    padding-top: clamp(28vh, 34vw, 42vh);
   }
+  .story__card {
+    background: var(--pearl);
+    border: 1px solid var(--border-gold);
+    box-shadow: var(--shadow-lift);
+    /* Asymmetric — the card hangs off the left grid line, not centred,
+       and is held to an editorial measure, not full width. */
+    max-width: 600px;
+    margin-left: clamp(0px, 6vw, 96px);
+    padding: clamp(var(--space-7), 5vw, var(--space-9));
+  }
+  /* Paper-grain over the card surface. */
+  .story__card.grain::before {
+    opacity: 0.06;
+  }
+
+  .story__eyebrow {
+    margin-bottom: var(--space-6);
+  }
+
   .story__para {
     font-family: var(--font-display);
     font-style: italic;
     font-weight: 400;
-    font-size: clamp(1.15rem, 1.8vw, var(--fs-lede));
+    font-size: clamp(1.15rem, 1.9vw, 1.4rem);
     line-height: var(--lh-loose);
     color: var(--ink);
   }
@@ -96,48 +156,105 @@ const { eyebrow, paragraphs, closingLine, aboutLinkLabel } = Astro.props;
     margin-top: var(--space-5);
   }
 
+  /* Closing line — display scale, unveiled through clipping masks. */
   .story__closing {
     font-family: var(--font-display);
     font-weight: 300;
-    font-size: clamp(1.6rem, 3vw, 2.25rem);
-    line-height: var(--lh-snug);
+    font-size: clamp(2rem, 4vw, 3.25rem);
+    line-height: 1.06;
+    letter-spacing: var(--ls-display);
     color: var(--gold-deep);
-    margin-top: var(--space-7);
-    max-width: 16ch;
+    margin: 0;
+    margin-top: var(--space-8);
+  }
+  /* Block masks — padded top/bottom and pulled back by an equal
+     negative margin so ascenders/descenders sit clear at rest while
+     the slide-up travel is still clipped. */
+  .story__closing .motion-mask {
+    display: block;
+    overflow: hidden;
+    padding-block: 0.14em;
+    margin-block: -0.14em;
+  }
+  .story__closing .motion-line {
+    display: block;
   }
 
   .story__link {
     display: inline-flex;
     align-items: center;
-    gap: var(--space-2);
-    margin-top: var(--space-6);
+    gap: var(--space-3);
+    margin-top: var(--space-7);
     font-family: var(--font-body);
     font-size: var(--fs-small);
     font-weight: 600;
     letter-spacing: var(--ls-small);
     color: var(--gold-deep);
     text-decoration: none;
-    padding-bottom: 2px;
-    border-bottom: 1px solid var(--border-gold);
-    transition: color var(--dur-default) var(--ease-paper);
   }
-  .story__link:hover {
-    color: var(--ink);
+  .story__link-text {
+    position: relative;
+    padding-bottom: 3px;
+  }
+  .story__link-text::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--gold-deep);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform var(--dur-default) var(--ease-paper);
+  }
+  .story__link:hover .story__link-text::after,
+  .story__link:focus-visible .story__link-text::after {
+    transform: scaleX(1);
   }
   .story__link-arrow {
     transition: transform var(--dur-default) var(--ease-paper);
   }
   .story__link:hover .story__link-arrow {
-    transform: translateX(4px);
+    transform: translateX(5px);
   }
 
   @media (max-width: 720px) {
-    .story__inner {
-      grid-template-columns: 1fr;
-    }
-    .story__media {
-      aspect-ratio: 3 / 4;
-      order: -1;
+    .story__bed { height: 52%; }
+    .story__layer { padding-top: clamp(22vh, 40vw, 34vh); }
+    .story__card {
+      margin-left: 0;
+      padding: var(--space-7);
     }
   }
 </style>
+
+<script>
+  import { reveal, revealLines, parallax, scaleScrub } from '../lib/motion';
+
+  const section = document.querySelector<HTMLElement>('[data-story]');
+  if (section) {
+    const bed = section.querySelector<HTMLElement>('[data-story-bed]');
+    const media = section.querySelector<HTMLElement>('[data-story-media]');
+    const card = section.querySelector<HTMLElement>('[data-story-card]');
+    const eyebrow = section.querySelector('.story__eyebrow');
+    const paras = section.querySelectorAll('[data-story-para]');
+    const masks = section.querySelectorAll('.story__closing .motion-mask');
+    const link = section.querySelector('[data-story-link]');
+
+    // The image bed drifts slowly against the scroll and eases from a
+    // touch enlarged toward true size — the Marigold hero-image move.
+    parallax(media, { depth: 90, scope: bed });
+    scaleScrub(media, { from: 1.12, to: 1, scope: bed });
+
+    // The card lifts in as a whole, then its contents cascade.
+    if (card) reveal(card, { y: 40, duration: 1, start: 'top 82%' });
+    if (eyebrow) reveal(eyebrow, { y: 14, duration: 0.6, delay: 0.15, start: 'top 80%' });
+    reveal(paras, { y: 22, duration: 0.8, stagger: 0.14, delay: 0.2, start: 'top 78%' });
+
+    // The closing line unveils through its masks — the emotional landing.
+    revealLines(masks, { start: 'top 84%', stagger: 0.13 });
+
+    if (link) reveal(link, { y: 16, duration: 0.7, delay: 0.1, start: 'top 88%' });
+  }
+</script>

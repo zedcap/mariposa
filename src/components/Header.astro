@@ -95,7 +95,8 @@ const isActive = (href: string) => {
 
   /* STUCK — detached at the top of the viewport. The white bar gains
      the 24px blur and a faint lift so it floats above scrolling
-     content. */
+     content, and the bar contracts a touch — the Marigold nav, which
+     shortens once the user is past the hero. */
   .site-header.is-stuck {
     background: var(--nav-bg);
     backdrop-filter: blur(var(--nav-blur));
@@ -107,7 +108,12 @@ const isActive = (href: string) => {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 72px;
+    height: 84px;
+    /* The bar height eases down when the header sticks. */
+    transition: height var(--dur-default) var(--ease-paper);
+  }
+  .site-header.is-stuck .site-header__inner {
+    height: 66px;
   }
 
   .site-header__mark {
@@ -146,14 +152,16 @@ const isActive = (href: string) => {
   }
 
   @media (max-width: 720px) {
-    .site-header__inner { height: 60px; }
+    .site-header__inner { height: 66px; }
+    .site-header.is-stuck .site-header__inner { height: 56px; }
     .site-header__nav { gap: var(--space-5); }
   }
 
   /* No motion preference — the two states still apply, just without
      the transition between them. */
   @media (prefers-reduced-motion: reduce) {
-    .site-header { transition: none; }
+    .site-header,
+    .site-header__inner { transition: none; }
   }
 </style>
 

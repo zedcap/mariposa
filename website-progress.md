@@ -4,7 +4,7 @@ Live tracker. To pick this project up in any session, read this file plus `websi
 
 ## Status
 
-Build underway. Home page first cut done, then revised against Stephane's first review (2026-05-21). Home nav uses the marigold.global pattern (menu rests below the hero, sticks to the top on scroll).
+Build underway. Home page rebuilt against Stephane's "feels lazy / early-2000s" feedback (2026-05-21) — first cut was structure-first and restrained; the rebuild adds scroll choreography, full-bleed scale and a shared GSAP motion engine, modelled on the marigold.global theme. Home nav uses the marigold.global pattern (menu rests below the hero, sticks to the top on scroll).
 
 ## Working files (all in this folder)
 
@@ -16,6 +16,7 @@ Build underway. Home page first cut done, then revised against Stephane's first 
 ## Decisions locked
 
 - Astro 6 + TypeScript, `output: static`. No Tailwind — design-system CSS tokens wired as a global stylesheet.
+- **GSAP sanctioned** for scroll choreography (Stephane, 2026-05-21). `gsap` + `ScrollTrigger`, ~47KB gzipped, shared across sections via one `motion` chunk. The standard tool; marigold.global uses the same. Loads deferred; page is fully readable without it.
 - One-page-scroll home + 2 product pages + About page + 21+ age gate. No contact page.
 - Product section: Option B (paired editorial slider).
 - Web typography: Spectral + Hanken Grotesk (fallback to Cormorant + Inter only if that fails).
@@ -30,14 +31,23 @@ Build underway. Home page first cut done, then revised against Stephane's first 
 - [done] Dispatch 1 — Astro scaffold + home page first cut (age gate, hero slider, product section, lifestyle section, sticky contact, footer).
 - [done] Home nav revision — marigold.global menu-below-hero-then-sticks pattern. Header is `position: sticky; top: 0` in document flow after the hero (BaseLayout named `hero` slot). Rests below the hero on load, sticks at the top on scroll; gains 24px blur + faint shadow when stuck. Hero-less pages render the header stuck from the top (dispatch 2 inherits this).
 - [done] Home revisions — Stephane review 1 (2026-05-21). Eight items:
-  1. Hero height — `64svh` contained band (was `100svh`), matched to marigold.global's shorter hero.
-  2. Hero text overlay removed — no wordmark/position/sub-line on the slider images.
-  3. Scroll cue removed.
-  4. Product-section eyebrow + gold divider removed; the slider stands alone.
+  1. Hero height — `64svh` contained band (was `100svh`), matched to marigold.global's shorter hero. *(Superseded by the rebuild — see below; the contained band read as a header strip, not a hero.)*
+  2. Hero text overlay removed — no wordmark/position/sub-line on the slider images. *(Held in the rebuild.)*
+  3. Scroll cue removed. *(Reinstated in the rebuild as a quiet drifting gold tick — a "keep scrolling" affordance the choreographed page now earns.)*
+  4. Product-section eyebrow + gold divider removed; the slider stands alone. *(Held in the rebuild.)*
   5. Nav uppercase (VOLAGE, CAPRICE, ABOUT). SKU corrected to **Caprice** (singular) — name, slug, route `/caprice`, asset, content file all renamed.
   6. Brand position copy ("Cuban Soul. 24 Carat Swiss Gold." + sub-line) moved off the hero into a new `PositionStatement.astro` text block between hero and product slider; treatment mirrors the brand pager masthead.
   7. Lifestyle section uses `mariposa_header_sq.png` (= `src/assets/header-collage.png`), replacing the placeholder.
   8. Colour correction — site-wide. `--nav-bg` was cream `rgba(239,234,226,0.78)`; replaced with white-based `rgba(255,255,255,0.82)`. Header comments de-creamed. Conventions overlay updated: design system's cream nav-bar / `--cream-edge` explicitly overridden, white only. No other cream values found in the site (the `tokens.css` copy had already renamed `--ivory`→`--white`, `--cream-edge`→`--hairline`).
+- [done] **Home rebuild — Stephane review 2, "feels lazy / early-2000s" (2026-05-21).** First cut was built structure-first and restrained; correct for the print pagers, wrong for a "cool, modern lifestyle brand" (the governing principle, scope §1). Rebuilt for scroll choreography, full-bleed scale and analogue motion, mining the marigold.global Shopify theme for technique.
+  - **GSAP added.** `src/lib/motion.ts` — one shared motion engine. Registers `ScrollTrigger`; exposes `reveal` (one-shot rise-and-fade), `revealLines` (masked headline unveil — the Marigold text-animation move), `slideIn` (masked horizontal slide), `parallax` and `scaleScrub` (scrub-tied depth/settle — the Marigold title-break / hero-image move), `scrubTimeline`. Honours `prefers-reduced-motion` throughout — every animated element degrades to its instant resting state. `refreshOnLoad` recomputes triggers after webfonts settle.
+  - **Hero.** Restored to full-bleed `100svh` (the contained 64svh band was the main "header strip" tell). Each slide carries a slow Ken Burns scale + drift; cross-fade kept; the gold ticks now carry a fill bar that runs over the dwell so the slider's pace is legible; a quiet drifting gold scroll cue. No text on the imagery (held).
+  - **Position statement.** Rebuilt from a small centred block into a tall section the line commands — display scale, the sentence unveiled line-by-line through clipping masks, a gold hairline that draws itself in.
+  - **Product slider.** Option B kept (resolved). Each frame is now a composed editorial spread: a giant ghosted display initial behind the cigar (depth), the cigar on a parallax drift, copy that cascades in when the frame activates, the pink hairline drawn across, a kinetic slide between frames, pointer-swipe + arrow-key support. No section heading (held — review 1 item 4).
+  - **Lifestyle section.** Rebuilt from a tidy 1:1 column grid into an immersive editorial spread: a tall image bed with parallax + scale-settle, a pearl story card that lifts off the image and breaks the grid line (asymmetry), copy revealing paragraph-by-paragraph, the closing line unveiled at display scale through masks.
+  - **Header.** Contracts on stick (84px → 66px) — the Marigold nav move. `scroll-padding-top` updated to match (66/56px).
+  - **Footer.** Brand line reveals on scroll-in so the page close is part of the choreography.
+  - Build clean; home page ships ~47KB gzipped JS (GSAP is the bulk), deferred. HTML ~19KB.
 - [pending] Dispatch 2 — product pages (`/volage`, `/caprice`), About page (`/about`).
 - [pending] Imagery — Stephane commissions from the shot list in `website-scope.md` §7. Placeholders until then.
 - [done] Deploy — GitHub Pages staging **LIVE**: `https://zedcap.github.io/mariposa/`. Repo `zedcap/mariposa` (public); CI workflow `deploy.yml` builds and deploys on every push to `main`. First successful deploy 2026-05-21 (run 26219302974, both build + deploy jobs green). Pages source set to "GitHub Actions" by Stephane. Verified: home page serves HTTP 200 with the age gate + hero; CSS, images and inline client JS all resolve correctly under the `/mariposa/` base.

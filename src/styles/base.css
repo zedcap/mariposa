@@ -12,14 +12,14 @@
 
 html {
   scroll-behavior: smooth;
-  /* The header sticks at 72px (60px on mobile). Offset in-page anchor
+  /* The header sticks at 66px (56px on mobile). Offset in-page anchor
      jumps so a targeted section clears the stuck header instead of
      hiding behind it. */
-  scroll-padding-top: 72px;
+  scroll-padding-top: 66px;
 }
 
 @media (max-width: 720px) {
-  html { scroll-padding-top: 60px; }
+  html { scroll-padding-top: 56px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

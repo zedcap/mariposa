@@ -11,10 +11,10 @@ const global = (await getEntry('site', 'global'))!.data as {
 const { footer, contact } = global;
 ---
 
-<footer class="site-footer grain">
+<footer class="site-footer grain" data-footer>
   <div class="site-footer__inner container">
     <div class="site-footer__top">
-      <p class="site-footer__brandline">{footer.brandLine}</p>
+      <p class="site-footer__brandline" data-footer-brandline>{footer.brandLine}</p>
       <nav class="site-footer__contact" aria-label="Contact">
         <a href={`mailto:${contact.email}`}>{contact.email}</a>
         <a href={contact.instagramUrl} target="_blank" rel="noopener">
@@ -125,3 +125,11 @@ const { footer, contact } = global;
     }
   }
 </style>
+
+<script>
+  /* The brand line reveals on scroll-in so the footer is part of the
+     page's choreography, not a static stop. */
+  import { reveal } from '../lib/motion';
+  const brandline = document.querySelector('[data-footer-brandline]');
+  if (brandline) reveal(brandline, { y: 22, duration: 0.9, start: 'top 92%' });
+</script>
