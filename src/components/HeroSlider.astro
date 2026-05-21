@@ -1,14 +1,20 @@
 ---
-/* Home hero — full-bleed image slider.
+/* Home hero — contained image slider.
    ------------------------------------------------------------------
-   REBUILD (2026-05-21). The first cut sat the hero in a 64svh contained
-   band; it read as a header strip, not a hero. This rebuild restores
-   full-viewport scale (the Marigold hero is full-bleed) and gives each
-   slide a slow Ken Burns scale so the imagery is alive rather than
-   static. No text overlay on the imagery — resolved — but the section
-   carries its own choreography: a slow scale on the active frame, a
-   plain cross-fade between slides, a thin gold progress line that
-   fills over the dwell time, and a quiet drifting scroll cue.
+   HEIGHT (2026-05-22). The hero is a CONTAINED band, not full-viewport.
+   The site runs the marigold.global nav pattern: the menu sits below
+   the hero and sticks to the top on scroll. That placement only reads
+   if the menu is actually visible below the hero on load. A 100svh hero
+   pushes the menu under the fold, so the "menu below hero" pattern is
+   invisible until the user scrolls — which defeats it. Containing the
+   hero so the nav bar shows underneath on first paint is the pattern
+   working as designed. Stephane's call; not a regression to a header
+   strip — the band stays rich (four frames, Ken Burns, slider motion),
+   only the height is capped.
+
+   The section carries its own choreography: a slow scale on the active
+   frame, a plain cross-fade between slides, a thin gold progress line
+   that fills over the dwell time, and a quiet drifting scroll cue.
 
    Hero imagery renders in ORIGINAL COLOUR — a deliberate override of
    the design system's "full-bleed photography = B&W / duotone" rule.
@@ -105,11 +111,15 @@ const { slides } = Astro.props;
 
 <style>
   .hero {
-    /* Full-bleed — the rebuild restores real hero scale. The brand
-       impression has to land within the first viewport. */
+    /* Contained band — sized so the nav menu below the hero is visible
+       on first paint without scrolling (the marigold.global pattern).
+       64svh on a standard desktop viewport leaves the full 84px nav bar
+       clearly in view; the min/max keep that true across screen sizes.
+       Rich imagery and motion live inside this height, not beyond it. */
     position: relative;
-    height: 100svh;
-    min-height: 560px;
+    height: 64svh;
+    min-height: 440px;
+    max-height: 720px;
     overflow: hidden;
     background: var(--ink);
   }
@@ -233,6 +243,14 @@ const { slides } = Astro.props;
   }
 
   @media (max-width: 720px) {
+    .hero {
+      /* On a phone the contained band is held a touch shorter so the
+         nav bar below it stays clearly in view even on short
+         viewports — the menu peeks underneath, never buried. */
+      height: 60svh;
+      min-height: 360px;
+      max-height: 560px;
+    }
     .hero__indicators {
       left: var(--page-pad-m);
       bottom: var(--space-7);
