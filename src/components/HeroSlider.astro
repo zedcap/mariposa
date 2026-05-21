@@ -10,16 +10,29 @@
    cross-fade through a sliver of gold, a thin gold progress line that
    fills over the dwell time, and a quiet drifting scroll cue.
 
-   3-5 frames, slow auto-advance (7s), pause on hover, manual ticks.
+   4 frames, slow auto-advance (7s), pause on hover, manual ticks.
    prefers-reduced-motion: no Ken Burns, no progress fill, instant
    cross-fade, scroll cue static.
 
-   FIRST-CUT IMAGERY: real photography is not yet commissioned. Each
-   frame after the first renders a duotone placeholder block tinted
-   from the brand palette. Frame 1 carries the header collage as a
-   tonal stand-in. Swap to <Image> once shots land. */
+   ============================ PLACEHOLDER IMAGERY ============================
+   The four hero frames below are PLACEHOLDERS, not final art.
+   - hero-image0 / hero-image1 / hero-image2 are MARIGOLD's own hero
+     photographs, pulled from the Marigold Shopify theme. They belong to
+     another brand and MUST NOT ship on the live Mariposa site.
+   - hero-image3 is a separately supplied stand-in.
+   All four are temporary holds until Mariposa's commissioned photography
+   lands (shot list in website-scope.md §7). SWAP ALL FOUR before launch.
+   ============================================================================ */
 import { Image } from 'astro:assets';
-import headerCollage from '../assets/header-collage.png';
+
+/* PLACEHOLDER hero frames — see banner above. Order is fixed:
+   image0 → image1 → image2 → image3, matching the four caption slides. */
+import heroImage0 from '../assets/hero-image0.jpg';
+import heroImage1 from '../assets/hero-image1.jpg';
+import heroImage2 from '../assets/hero-image2.jpg';
+import heroImage3 from '../assets/hero-image3.jpg';
+
+const heroImages = [heroImage0, heroImage1, heroImage2, heroImage3];
 
 interface Slide {
   key: string;
@@ -41,21 +54,16 @@ const { slides } = Astro.props;
           aria-hidden={i === 0 ? 'false' : 'true'}
         >
           <div class="hero__frame" data-hero-frame>
-            {i === 0 ? (
-              <Image
-                class="hero__img"
-                src={headerCollage}
-                alt="Mariposa brand composition — wordmark, gold band, and botanical motif."
-                widths={[720, 1280, 1920, 2400]}
-                sizes="100vw"
-                loading="eager"
-                fetchpriority="high"
-              />
-            ) : (
-              <div class:list={['hero__placeholder', `hero__placeholder--${i}`]}>
-                <span class="hero__placeholder-note">Frame {i + 1} — {slide.caption}</span>
-              </div>
-            )}
+            {/* PLACEHOLDER image — frames 0-2 are Marigold's photos. */}
+            <Image
+              class="hero__img"
+              src={heroImages[i] ?? heroImages[0]}
+              alt={slide.caption}
+              widths={[720, 1280, 1920, 2400]}
+              sizes="100vw"
+              loading={i === 0 ? 'eager' : 'lazy'}
+              fetchpriority={i === 0 ? 'high' : 'auto'}
+            />
           </div>
         </div>
       ))
@@ -135,36 +143,6 @@ const { slides } = Astro.props;
     /* Duotone — full-bleed photography reads B&W / warm sepia. */
     filter: grayscale(1) sepia(0.26) contrast(1.05) brightness(0.8);
     will-change: transform;
-  }
-
-  /* Duotone placeholder frames — palette-tinted, clearly a stand-in. */
-  .hero__placeholder {
-    width: 100%;
-    height: 100%;
-    display: grid;
-    place-items: center;
-    padding: var(--space-7);
-    will-change: transform;
-  }
-  .hero__placeholder--1 {
-    background: radial-gradient(120% 90% at 30% 20%, #4a443c 0%, #1c1915 72%);
-  }
-  .hero__placeholder--2 {
-    background: radial-gradient(120% 90% at 70% 80%, #5a4634 0%, #1a1713 72%);
-  }
-  .hero__placeholder--3 {
-    background: radial-gradient(110% 100% at 50% 30%, #3c3a36 0%, #191714 74%);
-  }
-  .hero__placeholder--4 {
-    background: radial-gradient(120% 90% at 40% 60%, #534434 0%, #1c1813 72%);
-  }
-  .hero__placeholder-note {
-    font-family: var(--font-body);
-    font-size: var(--fs-caption);
-    letter-spacing: var(--ls-small);
-    color: rgba(255, 255, 255, 0.3);
-    text-align: center;
-    max-width: 36ch;
   }
 
   /* Vignette — a soft darkening at the foot so the white page below
