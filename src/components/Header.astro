@@ -1,0 +1,178 @@
+---
+/* Site header — marigold.global nav pattern.
+
+   Placement: the header is NOT fixed to the top. It sits in normal
+   document flow and uses `position: sticky; top: 0`. On a page with a
+   hero it renders directly below the hero, so on load the nav rests
+   below the hero imagery. As the user scrolls past the hero the header
+   reaches the top of the viewport and sticks there for the rest of the
+   scroll. (marigold.global achieves this with a GSAP ScrollTrigger pin;
+   native CSS `sticky` gives the same behaviour with no JavaScript.)
+
+   Two visual states:
+   - RESTING — below the hero, in flow. Solid cream bar, gold hairline
+     underneath, no shadow. It belongs to the page.
+   - STUCK — detached at the top, content scrolling beneath it. Same
+     cream bar, plus the 24px backdrop blur and a faint lift shadow so
+     it reads as a floating header, not part of the page body.
+
+   `overHero` is true when the page has a hero (the header has somewhere
+   to rest below). When false — interior pages with no hero — the header
+   is the first element in flow and is therefore stuck from the first
+   paint: it renders in the stuck state immediately.
+
+   A 1px sentinel just above the header drives the resting/stuck class
+   toggle (a sticky element cannot reliably self-detect its stuck state
+   in pure CSS). Without JS the header still sticks correctly; it simply
+   keeps its initial styling rather than animating between the two
+   states. */
+import { withBase } from '../lib/path';
+
+interface Props {
+  /** True when the page has a hero for the nav to rest below. */
+  overHero?: boolean;
+}
+const { overHero = false } = Astro.props;
+/* Astro.url.pathname includes the base ('/mariposa/volage' on staging),
+   so compare against base-prefixed hrefs. Normalise the trailing slash
+   the GitHub Pages build adds to directory URLs. */
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isActive = (href: string) => {
+  const target = withBase(href).replace(/\/$/, '') || '/';
+  return target === withBase('/').replace(/\/$/, '')
+    ? path === target
+    : path.startsWith(target);
+};
+---
+
+{/* Sentinel — sits in flow right before the header. While it is in
+    view the header is resting; once it scrolls out the header is
+    stuck. Only rendered when there is a hero to rest below. */}
+{overHero && <div class="site-header__sentinel" aria-hidden="true"></div>}
+
+<header
+  class:list={['site-header', { 'is-stuck': !overHero }]}
+  data-header
+  data-over-hero={overHero ? 'true' : 'false'}
+>
+  <div class="site-header__inner container">
+    <a class="site-header__mark wordmark" href={withBase('/')} aria-label="Mariposa, home">
+      mariposa
+    </a>
+    <nav class="site-header__nav" aria-label="Primary">
+      <a href={withBase('/volage')} class:list={[{ 'is-active': isActive('/volage') }]}>Volage</a>
+      <a href={withBase('/caprices')} class:list={[{ 'is-active': isActive('/caprices') }]}>Caprices</a>
+      <a href={withBase('/about')} class:list={[{ 'is-active': isActive('/about') }]}>About</a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  /* The sentinel carries no height of its own; it just marks the
+     point above the header for the observer. */
+  .site-header__sentinel {
+    height: 1px;
+    margin-bottom: -1px;
+    pointer-events: none;
+  }
+
+  .site-header {
+    /* The pattern: rests in flow below the hero, sticks at the top
+       once it gets there. */
+    position: sticky;
+    top: 0;
+    z-index: 60;
+    background: var(--nav-bg);
+    border-bottom: 1px solid var(--border-gold);
+    /* Backdrop blur and shadow are introduced only in the stuck state;
+       transition them so the detach reads as a quiet settle, not a
+       jump — the design system's slow analogue motion. */
+    transition:
+      box-shadow var(--dur-default) var(--ease-paper),
+      backdrop-filter var(--dur-default) var(--ease-paper),
+      background-color var(--dur-default) var(--ease-paper);
+  }
+
+  /* STUCK — detached at the top of the viewport. The cream bar gains
+     the 24px blur and a faint lift so it floats above scrolling
+     content. */
+  .site-header.is-stuck {
+    background: var(--nav-bg);
+    backdrop-filter: blur(var(--nav-blur));
+    -webkit-backdrop-filter: blur(var(--nav-blur));
+    box-shadow: 0 1px 16px rgba(31, 27, 23, 0.08);
+  }
+
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 72px;
+  }
+
+  .site-header__mark {
+    font-size: 1.25rem;
+    color: var(--gold-deep);
+    text-decoration: none;
+  }
+
+  .site-header__nav {
+    display: flex;
+    gap: var(--space-7);
+  }
+
+  .site-header__nav a {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    font-weight: 500;
+    letter-spacing: var(--ls-small);
+    text-transform: lowercase;
+    color: var(--ink);
+    text-decoration: none;
+    padding-bottom: 2px;
+    border-bottom: 1px solid transparent;
+    transition:
+      color var(--dur-default) var(--ease-paper),
+      border-color var(--dur-default) var(--ease-paper);
+  }
+
+  .site-header__nav a:hover {
+    color: var(--gold-deep);
+  }
+
+  .site-header__nav a.is-active {
+    border-bottom-color: var(--gold);
+    color: var(--gold-deep);
+  }
+
+  @media (max-width: 720px) {
+    .site-header__inner { height: 60px; }
+    .site-header__nav { gap: var(--space-5); }
+  }
+
+  /* No motion preference — the two states still apply, just without
+     the transition between them. */
+  @media (prefers-reduced-motion: reduce) {
+    .site-header { transition: none; }
+  }
+</style>
+
+<script>
+  // Toggle the resting/stuck state. The header is `position: sticky`,
+  // so it sticks on its own; this only swaps the class that carries
+  // the blur + shadow. The sentinel sits 1px above the header: while
+  // it intersects the viewport the header is resting, once it leaves
+  // the header is stuck.
+  const header = document.querySelector<HTMLElement>('[data-header]');
+
+  if (header && header.dataset.overHero === 'true') {
+    const sentinel = header.previousElementSibling;
+    if (sentinel) {
+      const io = new IntersectionObserver(
+        ([entry]) => header.classList.toggle('is-stuck', !entry.isIntersecting),
+        { threshold: 0 },
+      );
+      io.observe(sentinel);
+    }
+  }
+</script>

@@ -1,0 +1,58 @@
+---
+/* 404 — minimal branded fallback. */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { withBase } from '../lib/path';
+---
+
+<BaseLayout title="Mariposa — page not found">
+  <section class="notfound">
+    <div class="notfound__inner container">
+      <p class="eyebrow">404</p>
+      <h1 class="notfound__heading">This page has drifted off.</h1>
+      <p class="notfound__body">
+        The page you were looking for is not here. The cigars, however, are.
+      </p>
+      <a class="notfound__link" href={withBase('/')}>
+        Back to Mariposa
+        <span aria-hidden="true">&rarr;</span>
+      </a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .notfound {
+    min-height: 70vh;
+    display: grid;
+    place-items: center;
+    padding-block: var(--space-10);
+  }
+  .notfound__inner {
+    text-align: center;
+    max-width: 36rem;
+  }
+  .notfound__heading {
+    margin-top: var(--space-5);
+  }
+  .notfound__body {
+    font-family: var(--font-body);
+    color: var(--ink-soft);
+    margin-top: var(--space-5);
+  }
+  .notfound__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-7);
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    font-weight: 600;
+    color: var(--gold-deep);
+    text-decoration: none;
+    padding-bottom: 2px;
+    border-bottom: 1px solid var(--border-gold);
+  }
+  .notfound__link:hover {
+    color: var(--ink);
+  }
+</style>

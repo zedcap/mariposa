@@ -1,0 +1,127 @@
+---
+/* Shared footer. Wordmark, brand line, contact channels, the
+   responsible-enjoyment line, copyright. No legal-entity line
+   (resolved decision 5). Contact: email + Instagram only. */
+import { getEntry } from 'astro:content';
+
+const global = (await getEntry('site', 'global'))!.data as {
+  footer: { brandLine: string; responsibleLine: string; copyright: string };
+  contact: { email: string; instagramHandle: string; instagramUrl: string };
+};
+const { footer, contact } = global;
+---
+
+<footer class="site-footer grain">
+  <div class="site-footer__inner container">
+    <div class="site-footer__top">
+      <p class="site-footer__brandline">{footer.brandLine}</p>
+      <nav class="site-footer__contact" aria-label="Contact">
+        <a href={`mailto:${contact.email}`}>{contact.email}</a>
+        <a href={contact.instagramUrl} target="_blank" rel="noopener">
+          Instagram {contact.instagramHandle}
+        </a>
+      </nav>
+    </div>
+
+    <hr class="rule-gold site-footer__rule" />
+
+    <div class="site-footer__bottom">
+      <span class="wordmark site-footer__mark">mariposa</span>
+      <div class="site-footer__legal">
+        <p>{footer.responsibleLine}</p>
+        <p>{footer.copyright}</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--bg-elevated);
+    border-top: 1px solid var(--border-gold);
+  }
+
+  .site-footer__inner {
+    padding-block: var(--space-9) var(--space-7);
+    position: relative;
+  }
+
+  .site-footer__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--space-7);
+    flex-wrap: wrap;
+  }
+
+  .site-footer__brandline {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    line-height: var(--lh-snug);
+    color: var(--ink);
+    max-width: 22ch;
+  }
+
+  .site-footer__contact {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    text-align: right;
+  }
+
+  .site-footer__contact a {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    letter-spacing: var(--ls-small);
+    color: var(--gold-deep);
+    text-decoration: none;
+    transition: color var(--dur-default) var(--ease-paper);
+  }
+  .site-footer__contact a:hover {
+    color: var(--ink);
+  }
+
+  .site-footer__rule {
+    margin-block: var(--space-7);
+  }
+
+  .site-footer__bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--space-7);
+    flex-wrap: wrap;
+  }
+
+  .site-footer__mark {
+    font-size: 1rem;
+    color: var(--gold-deep);
+  }
+
+  .site-footer__legal {
+    text-align: right;
+  }
+  .site-footer__legal p {
+    font-family: var(--font-body);
+    font-size: var(--fs-caption);
+    color: var(--ash);
+    margin: 0;
+  }
+  .site-footer__legal p + p {
+    margin-top: var(--space-1);
+  }
+
+  @media (max-width: 720px) {
+    .site-footer__top,
+    .site-footer__bottom {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .site-footer__contact,
+    .site-footer__legal {
+      text-align: left;
+    }
+  }
+</style>

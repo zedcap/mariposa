@@ -1,0 +1,33 @@
+{
+  "name": "Volage",
+  "slug": "volage",
+  "order": 1,
+  "edition": "1st Edition",
+  "vitola": "Canonazo",
+  "format": "150 mm · 52 ring gauge",
+  "tagline": "A cigar that doesn't wait for an occasion.",
+  "homeLede": "The flagship. A long, slow Canonazo built for the hour you give yourself, creamy at the first draw, full-bodied by the last.",
+  "narrative": [
+    "The first draw is creamy and slow. Wood arrives, followed by coffee, and a lingering sweetness that holds while the spice walks in. Hand-rolled in Java, it is born from tobacco grown in the volcanic soil at the foot of the Argopuro range, from Havana seed that has learned what Indonesia tastes like.",
+    "The 24-carat gold leaf laid by hand on every Mariposa is the brand's signature. It stands as a quiet reminder that the finer things in life are meant to be enjoyed."
+  ],
+  "specs": [
+    { "label": "Vitola", "value": "Canonazo" },
+    { "label": "Format", "value": "150 mm · 52 ring gauge" },
+    { "label": "Wrapper", "value": "Criollo 98 · 2021 · Seco priming · Colorado grade" },
+    { "label": "Binder", "value": "Criollo 98 · 2021 · Viso priming" },
+    { "label": "Filler", "value": "Criollo 98 · 2021 · Long-filler · 50% Viso, 50% Ligero" },
+    { "label": "Construction", "value": "Three-part · entubado bunching · Cuban triple cap" },
+    { "label": "Origin", "value": "Jember, East Java, Indonesia" },
+    { "label": "Fermentation", "value": "24 months" },
+    { "label": "Ageing", "value": "12 months" },
+    { "label": "Smoke time", "value": "~45 minutes" },
+    { "label": "Strength", "value": "Full body" },
+    { "label": "Release", "value": "Limited release" }
+  ],
+  "tasting": [
+    { "stage": "First third", "note": "Creamy and woody, grounded by an underlying note of coffee." },
+    { "stage": "Second third", "note": "The creaminess lingers as a rich sweetness begins to emerge." },
+    { "stage": "Final third", "note": "Spice arrives, the sweetness holds, and deep earth closes the smoke." }
+  ]
+}

@@ -1,0 +1,174 @@
+---
+/* Sticky scroll-following contact element.
+   A small fixed pill, bottom-right, on every page. Click/tap expands
+   a small leaf-edged card revealing email + Instagram. No form — direct
+   channels only. Discreet concierge, not a chat-widget bubble.
+   Pattern modelled on marigold.global's fixed contact element. */
+import { getEntry } from 'astro:content';
+
+const global = (await getEntry('site', 'global'))!.data as {
+  contact: { email: string; instagramHandle: string; instagramUrl: string };
+};
+const { contact } = global;
+---
+
+<div class="concierge" data-concierge>
+  <div class="concierge__panel grain" id="concierge-panel" role="group" aria-label="Contact Mariposa" hidden>
+    <p class="concierge__eyebrow eyebrow">Get in touch</p>
+    <a class="concierge__channel" href={`mailto:${contact.email}`}>
+      <span class="concierge__channel-label">Email</span>
+      <span class="concierge__channel-value">{contact.email}</span>
+    </a>
+    <a class="concierge__channel" href={contact.instagramUrl} target="_blank" rel="noopener">
+      <span class="concierge__channel-label">Instagram</span>
+      <span class="concierge__channel-value">{contact.instagramHandle}</span>
+    </a>
+  </div>
+
+  <button
+    class="concierge__toggle"
+    type="button"
+    data-concierge-toggle
+    aria-expanded="false"
+    aria-controls="concierge-panel"
+  >
+    <span class="concierge__toggle-label" data-concierge-open>Contact</span>
+    <span class="concierge__toggle-label concierge__toggle-label--close" data-concierge-close hidden>Close</span>
+  </button>
+</div>
+
+<style>
+  .concierge {
+    position: fixed;
+    right: clamp(16px, 4vw, 40px);
+    bottom: clamp(16px, 4vw, 40px);
+    z-index: 70;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--space-3);
+  }
+
+  .concierge__toggle {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    font-weight: 600;
+    letter-spacing: var(--ls-small);
+    text-transform: lowercase;
+    color: var(--white);
+    background: var(--ink);
+    border: 1px solid var(--ink);
+    border-radius: var(--radius-pill);
+    padding: 12px 22px;
+    cursor: pointer;
+    box-shadow: var(--shadow-rise);
+    transition:
+      transform var(--dur-default) var(--ease-paper),
+      box-shadow var(--dur-default) var(--ease-paper);
+  }
+  .concierge__toggle:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lift);
+  }
+  .concierge__toggle:active {
+    transform: translateY(1px);
+    box-shadow: var(--shadow-press);
+  }
+
+  .concierge__panel {
+    background: var(--pearl);
+    border: 1px solid var(--border-gold);
+    border-radius: var(--radius-xs);
+    padding: var(--space-5) var(--space-6);
+    box-shadow: var(--shadow-lift);
+    min-width: 248px;
+    /* enter/exit handled by JS toggling [hidden] + the state class */
+  }
+  .concierge__panel[hidden] {
+    display: none;
+  }
+  .concierge--open .concierge__panel {
+    animation: concierge-rise var(--dur-default) var(--ease-paper);
+  }
+
+  @keyframes concierge-rise {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .concierge__eyebrow {
+    margin-bottom: var(--space-4);
+  }
+
+  .concierge__channel {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    text-decoration: none;
+    padding-block: var(--space-3);
+    border-top: 1px solid var(--hairline);
+  }
+  .concierge__channel:last-child {
+    padding-bottom: 0;
+  }
+
+  .concierge__channel-label {
+    font-family: var(--font-body);
+    font-size: var(--fs-caption);
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
+    color: var(--ash);
+  }
+  .concierge__channel-value {
+    font-family: var(--font-display);
+    font-size: var(--fs-h6);
+    color: var(--ink);
+    transition: color var(--dur-default) var(--ease-paper);
+  }
+  .concierge__channel:hover .concierge__channel-value {
+    color: var(--gold-deep);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .concierge--open .concierge__panel { animation: none; }
+  }
+</style>
+
+<script>
+  // Expand / collapse the concierge panel. Closes on outside click and Escape.
+  const root = document.querySelector<HTMLElement>('[data-concierge]');
+  const toggle = document.querySelector<HTMLButtonElement>('[data-concierge-toggle]');
+  const panel = document.getElementById('concierge-panel');
+  const labelOpen = document.querySelector<HTMLElement>('[data-concierge-open]');
+  const labelClose = document.querySelector<HTMLElement>('[data-concierge-close]');
+
+  if (root && toggle && panel && labelOpen && labelClose) {
+    const setOpen = (open: boolean) => {
+      root.classList.toggle('concierge--open', open);
+      toggle.setAttribute('aria-expanded', String(open));
+      panel.hidden = !open;
+      labelOpen.hidden = open;
+      labelClose.hidden = !open;
+    };
+
+    toggle.addEventListener('click', () => {
+      setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (
+        toggle.getAttribute('aria-expanded') === 'true' &&
+        !root.contains(e.target as Node)
+      ) {
+        setOpen(false);
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+  }
+</script>

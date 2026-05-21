@@ -1,0 +1,323 @@
+---
+/* Home hero — full-bleed image slider.
+   3-5 frames, slow auto-advance (7s), cross-fade through a sliver of gold,
+   pause on hover, manual tick controls. A fixed verbal overlay (wordmark,
+   position line, sub-line) does NOT change between frames.
+
+   FIRST-CUT IMAGERY: real photography is not yet commissioned. Each frame
+   renders a duotone placeholder block tinted from the brand palette, with
+   the shot-list caption as a build note. Frame 1 carries the header
+   collage as a tonal stand-in. Swap to <Image> once shots land. */
+import { Image } from 'astro:assets';
+import headerCollage from '../assets/header-collage.png';
+
+interface Slide {
+  key: string;
+  caption: string;
+}
+interface Props {
+  positionLine: string;
+  subline: string;
+  scrollCue: string;
+  slides: Slide[];
+}
+const { positionLine, subline, scrollCue, slides } = Astro.props;
+---
+
+<section class="hero" aria-label="Mariposa" data-hero>
+  <!-- Slide track -->
+  <div class="hero__track">
+    {
+      slides.map((slide, i) => (
+        <div
+          class:list={['hero__slide', { 'is-active': i === 0 }]}
+          data-slide
+          aria-hidden={i === 0 ? 'false' : 'true'}
+        >
+          {i === 0 ? (
+            <Image
+              class="hero__img"
+              src={headerCollage}
+              alt="Mariposa brand composition — wordmark, gold band, and botanical motif."
+              widths={[720, 1280, 1920]}
+              sizes="100vw"
+              loading="eager"
+              fetchpriority="high"
+            />
+          ) : (
+            <div class:list={['hero__placeholder', `hero__placeholder--${i}`]}>
+              <span class="hero__placeholder-note">Frame {i + 1} — {slide.caption}</span>
+            </div>
+          )}
+        </div>
+      ))
+    }
+    <!-- Tint scrim so the white overlay stays legible over any frame -->
+    <div class="hero__scrim" aria-hidden="true"></div>
+  </div>
+
+  <!-- Fixed verbal overlay — does not change between frames -->
+  <div class="hero__overlay container">
+    <span class="wordmark hero__wordmark">mariposa</span>
+    <p class="hero__position">{positionLine}</p>
+    <p class="hero__subline">{subline}</p>
+  </div>
+
+  <!-- Slide indicators — thin gold ticks -->
+  <div class="hero__indicators" role="tablist" aria-label="Hero slides">
+    {
+      slides.map((slide, i) => (
+        <button
+          class:list={['hero__tick', { 'is-active': i === 0 }]}
+          type="button"
+          role="tab"
+          aria-selected={i === 0 ? 'true' : 'false'}
+          aria-label={`Show slide ${i + 1}`}
+          data-tick={i}
+        />
+      ))
+    }
+  </div>
+
+  <!-- Scroll cue -->
+  <a class="hero__scroll" href="#range" aria-label="Scroll to the range">
+    <span>{scrollCue}</span>
+    <svg width="14" height="22" viewBox="0 0 14 22" fill="none" aria-hidden="true">
+      <path d="M7 0v20M1 14l6 7 6-7" stroke="currentColor" stroke-width="1.2" />
+    </svg>
+  </a>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    height: 100svh;
+    min-height: 600px;
+    overflow: hidden;
+    background: var(--ink);
+  }
+
+  .hero__track {
+    position: absolute;
+    inset: 0;
+  }
+
+  .hero__slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity var(--dur-slow) var(--ease-paper);
+  }
+  .hero__slide.is-active {
+    opacity: 1;
+  }
+
+  .hero__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    /* Duotone treatment — full-bleed photography reads B&W / warm sepia
+       per the design system. */
+    filter: grayscale(1) sepia(0.28) contrast(1.04) brightness(0.82);
+  }
+
+  /* Duotone placeholder frames — palette-tinted, clearly a stand-in. */
+  .hero__placeholder {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    padding: var(--space-7);
+  }
+  .hero__placeholder--1 {
+    background:
+      radial-gradient(120% 90% at 30% 20%, #4a443c 0%, #211d18 70%);
+  }
+  .hero__placeholder--2 {
+    background:
+      radial-gradient(120% 90% at 70% 80%, #5a4634 0%, #1f1b17 70%);
+  }
+  .hero__placeholder--3 {
+    background:
+      radial-gradient(110% 100% at 50% 30%, #3c3a36 0%, #1c1916 72%);
+  }
+  .hero__placeholder--4 {
+    background:
+      radial-gradient(120% 90% at 40% 60%, #534434 0%, #211c16 70%);
+  }
+  .hero__placeholder-note {
+    font-family: var(--font-body);
+    font-size: var(--fs-caption);
+    letter-spacing: var(--ls-small);
+    color: rgba(255, 255, 255, 0.32);
+    text-align: center;
+    max-width: 36ch;
+  }
+
+  /* Scrim — gradient so the wordmark sits legibly on any frame. */
+  .hero__scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(31, 27, 23, 0.34) 0%,
+      rgba(31, 27, 23, 0.12) 38%,
+      rgba(31, 27, 23, 0.5) 100%
+    );
+    pointer-events: none;
+  }
+
+  /* Fixed verbal overlay */
+  .hero__overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    z-index: 2;
+  }
+
+  .hero__wordmark {
+    font-size: clamp(3.4rem, 11vw, 9rem);
+    color: var(--white);
+    line-height: 0.95;
+  }
+
+  .hero__position {
+    font-family: var(--font-body);
+    font-size: clamp(var(--fs-caption), 1.4vw, var(--fs-small));
+    font-weight: 600;
+    letter-spacing: var(--ls-section);
+    text-transform: uppercase;
+    color: var(--gold-soft);
+    margin-top: var(--space-5);
+  }
+
+  .hero__subline {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(1.1rem, 2.2vw, 1.6rem);
+    line-height: var(--lh-snug);
+    color: rgba(255, 255, 255, 0.9);
+    margin-top: var(--space-5);
+    max-width: 24ch;
+  }
+
+  /* Slide indicators — thin gold ticks, bottom-aligned */
+  .hero__indicators {
+    position: absolute;
+    left: 50%;
+    bottom: var(--space-7);
+    transform: translateX(-50%);
+    display: flex;
+    gap: var(--space-3);
+    z-index: 3;
+  }
+
+  .hero__tick {
+    width: 36px;
+    height: 2px;
+    padding: 0;
+    border: 0;
+    background: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    transition: background-color var(--dur-default) var(--ease-paper);
+  }
+  .hero__tick.is-active {
+    background: var(--gold-leaf);
+  }
+  .hero__tick:hover {
+    background: rgba(255, 255, 255, 0.6);
+  }
+
+  /* Scroll cue */
+  .hero__scroll {
+    position: absolute;
+    right: clamp(16px, 4vw, 40px);
+    bottom: var(--space-7);
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+    color: rgba(255, 255, 255, 0.78);
+    text-decoration: none;
+  }
+  .hero__scroll span {
+    font-family: var(--font-body);
+    font-size: var(--fs-caption);
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
+  }
+  .hero__scroll svg {
+    animation: hero-drift 2.6s var(--ease-drift) infinite;
+  }
+  .hero__scroll:hover {
+    color: var(--white);
+  }
+
+  @keyframes hero-drift {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(4px); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero__scroll svg { animation: none; }
+  }
+
+  @media (max-width: 720px) {
+    .hero__indicators { bottom: var(--space-9); }
+    .hero__scroll { display: none; }
+  }
+</style>
+
+<script>
+  // Hero slider — slow auto-advance, cross-fade, pause on hover,
+  // manual tick controls. Respects prefers-reduced-motion.
+  const hero = document.querySelector<HTMLElement>('[data-hero]');
+  const slides = Array.from(document.querySelectorAll<HTMLElement>('[data-slide]'));
+  const ticks = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-tick]'));
+  const ADVANCE_MS = 7000;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (hero && slides.length > 1) {
+    let current = 0;
+    let timer: number | undefined;
+
+    const show = (next: number) => {
+      slides[current].classList.remove('is-active');
+      slides[current].setAttribute('aria-hidden', 'true');
+      ticks[current]?.classList.remove('is-active');
+      ticks[current]?.setAttribute('aria-selected', 'false');
+      current = (next + slides.length) % slides.length;
+      slides[current].classList.add('is-active');
+      slides[current].setAttribute('aria-hidden', 'false');
+      ticks[current]?.classList.add('is-active');
+      ticks[current]?.setAttribute('aria-selected', 'true');
+    };
+
+    const start = () => {
+      if (reduceMotion) return;
+      stop();
+      timer = window.setInterval(() => show(current + 1), ADVANCE_MS);
+    };
+    const stop = () => {
+      if (timer) window.clearInterval(timer);
+    };
+
+    ticks.forEach((tick, i) => {
+      tick.addEventListener('click', () => {
+        show(i);
+        start();
+      });
+    });
+
+    hero.addEventListener('mouseenter', stop);
+    hero.addEventListener('mouseleave', start);
+
+    start();
+  }
+</script>

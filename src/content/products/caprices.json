@@ -1,0 +1,33 @@
+{
+  "name": "Caprices",
+  "slug": "caprices",
+  "order": 2,
+  "tag": "Q4 2026",
+  "vitola": "Gordito",
+  "format": "105 mm · 58 ring gauge",
+  "tagline": "A small indulgence, taken short.",
+  "homeLede": "Darker by intent. A short, thick Maduro for the indulgence you take when time is shorter than the mood.",
+  "narrative": [
+    "Darker by intent. A Maduro wrapper, roasted to a deeper sweetness, wraps a Gordito built short and thick. Spice opens, toasted nuts warm it through, and caramel rises to meet the cream. The leaf is Havana-seed Criollo 98, hand-rolled in Jember from tobacco the volcanic soil of East Java has made its own.",
+    "The 24-carat gold leaf laid by hand on every Mariposa is the brand's signature. It stands as a quiet reminder that the finer things in life are meant to be enjoyed."
+  ],
+  "specs": [
+    { "label": "Vitola", "value": "Gordito" },
+    { "label": "Format", "value": "105 mm · 58 ring gauge" },
+    { "label": "Wrapper", "value": "Criollo 98 · 2021 · Viso priming · Maduro grade" },
+    { "label": "Binder", "value": "Criollo 98 · 2021 · Viso priming" },
+    { "label": "Filler", "value": "Criollo 98 · 2021 · Long-filler · 65% Viso, 35% Ligero" },
+    { "label": "Construction", "value": "Three-part · entubado bunching · Cuban triple cap" },
+    { "label": "Origin", "value": "Jember, East Java, Indonesia" },
+    { "label": "Fermentation", "value": "24 months" },
+    { "label": "Ageing", "value": "12 months" },
+    { "label": "Smoke time", "value": "~35 minutes" },
+    { "label": "Strength", "value": "Full body" },
+    { "label": "Release", "value": "Q4 2026" }
+  ],
+  "tasting": [
+    { "stage": "First third", "note": "Spice opens the smoke, warmed through by a steady note of toasted nuts." },
+    { "stage": "Second third", "note": "The spice softens as cream comes in, and a slow caramel sweetness builds underneath." },
+    { "stage": "Final third", "note": "Spice returns alongside the nuts, the cream holds its line, and damp earth carries it home." }
+  ]
+}

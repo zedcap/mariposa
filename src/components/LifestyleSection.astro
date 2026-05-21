@@ -1,0 +1,142 @@
+---
+/* Home lifestyle section — the condensed Mariposa story.
+   The brand's emotional close: the white butterfly-ginger legend and
+   the gold-leaf-as-secret-message idea, landing on "enjoyed today".
+   Editorial, image-led, generous negative space. Since the About page
+   ships, this section stays atmospheric and points to /about.
+
+   FIRST-CUT IMAGERY: the collage image (shot-list frame 13) is not yet
+   commissioned. A duotone placeholder block stands in. */
+import { withBase } from '../lib/path';
+
+interface Props {
+  eyebrow: string;
+  paragraphs: string[];
+  closingLine: string;
+  aboutLinkLabel: string;
+}
+const { eyebrow, paragraphs, closingLine, aboutLinkLabel } = Astro.props;
+---
+
+<section class="story" aria-labelledby="story-heading">
+  <div class="story__inner container">
+    <!-- Collage image — placeholder until commissioned -->
+    <div class="story__media">
+      <div class="story__placeholder grain">
+        <span class="story__placeholder-note">
+          Frame 13 — the butterfly-ginger legend made visual: the white
+          flower, a butterfly, the gold leaf, assembled as a collage.
+        </span>
+      </div>
+    </div>
+
+    <!-- Story copy -->
+    <div class="story__copy">
+      <p class="eyebrow" id="story-heading">{eyebrow}</p>
+      <div class="story__prose">
+        {paragraphs.map((para) => <p class="story__para">{para}</p>)}
+      </div>
+      <p class="story__closing">{closingLine}</p>
+      <a class="story__link" href={withBase('/about')}>
+        {aboutLinkLabel}
+        <span class="story__link-arrow" aria-hidden="true">&rarr;</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .story {
+    background: var(--white);
+    padding-block: clamp(var(--space-9), 12vw, var(--space-10));
+  }
+
+  .story__inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(var(--space-7), 7vw, var(--space-10));
+    align-items: center;
+  }
+
+  /* Collage media — the master move; a portrait-leaning frame. */
+  .story__media {
+    aspect-ratio: 4 / 5;
+  }
+  .story__placeholder {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    padding: var(--space-7);
+    background:
+      radial-gradient(110% 90% at 30% 25%, #6b645c 0%, #322d27 78%);
+  }
+  .story__placeholder-note {
+    font-family: var(--font-body);
+    font-size: var(--fs-caption);
+    letter-spacing: var(--ls-small);
+    color: rgba(255, 255, 255, 0.4);
+    text-align: center;
+    max-width: 32ch;
+  }
+
+  .story__prose {
+    margin-top: var(--space-6);
+  }
+  .story__para {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.15rem, 1.8vw, var(--fs-lede));
+    line-height: var(--lh-loose);
+    color: var(--ink);
+  }
+  .story__para + .story__para {
+    margin-top: var(--space-5);
+  }
+
+  .story__closing {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(1.6rem, 3vw, 2.25rem);
+    line-height: var(--lh-snug);
+    color: var(--gold-deep);
+    margin-top: var(--space-7);
+    max-width: 16ch;
+  }
+
+  .story__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-6);
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    font-weight: 600;
+    letter-spacing: var(--ls-small);
+    color: var(--gold-deep);
+    text-decoration: none;
+    padding-bottom: 2px;
+    border-bottom: 1px solid var(--border-gold);
+    transition: color var(--dur-default) var(--ease-paper);
+  }
+  .story__link:hover {
+    color: var(--ink);
+  }
+  .story__link-arrow {
+    transition: transform var(--dur-default) var(--ease-paper);
+  }
+  .story__link:hover .story__link-arrow {
+    transform: translateX(4px);
+  }
+
+  @media (max-width: 720px) {
+    .story__inner {
+      grid-template-columns: 1fr;
+    }
+    .story__media {
+      aspect-ratio: 3 / 4;
+      order: -1;
+    }
+  }
+</style>

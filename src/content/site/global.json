@@ -1,0 +1,22 @@
+{
+  "wordmark": "mariposa",
+  "positionLine": "Cuban Soul · 24 Carat Swiss Gold",
+  "contact": {
+    "email": "hello@mariposacigars.com",
+    "instagramHandle": "@mariposacigars",
+    "instagramUrl": "https://instagram.com/mariposacigars"
+  },
+  "ageGate": {
+    "intro": "Before you come in.",
+    "question": "Are you 21 or older?",
+    "confirm": "Yes, I am",
+    "decline": "No",
+    "declineHeading": "Mariposa is for those of legal smoking age.",
+    "declineBody": "Come back when the years are on your side."
+  },
+  "footer": {
+    "brandLine": "Don't wait for special occasions. Create them.",
+    "responsibleLine": "You must be 21 or older to enjoy Mariposa. Please smoke responsibly.",
+    "copyright": "© 2026 Mariposa. All rights reserved."
+  }
+}

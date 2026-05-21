@@ -1,0 +1,58 @@
+# Deploy the Mariposa Astro site to GitHub Pages.
+#
+# Standard withastro/action -> actions/deploy-pages setup. Builds on
+# every push to main and publishes the dist/ bundle to the Pages
+# environment. Astro's `base: '/mariposa'` (astro.config.mjs) makes the
+# build correct for the project-site subpath https://zedcap.github.io/mariposa/ .
+#
+# Prerequisite, set once by hand: GitHub repo Settings -> Pages ->
+# Build and deployment -> Source = "GitHub Actions". Without that this
+# workflow runs but has nowhere to deploy.
+
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  # Manual re-run from the Actions tab without a code change.
+  workflow_dispatch:
+
+# Least-privilege token. `pages: write` + `id-token: write` are what
+# actions/deploy-pages requires; `contents: read` lets the build check
+# out the source. Nothing else is granted.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deploy at a time. Don't cancel an in-flight deploy — let it
+# finish so a half-published site is never left live.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build with Astro
+        uses: withastro/action@v3
+        with:
+          # Node 22 LTS — satisfies package.json engines (>=22.12.0).
+          node-version: 22
+          # Repo root holds package.json and astro.config.mjs.
+          path: .
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

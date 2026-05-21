@@ -1,0 +1,25 @@
+{
+  "hero": {
+    "subline": "For those who don't wait for special occasions, but create them.",
+    "scrollCue": "Scroll",
+    "slides": [
+      { "key": "in-the-hand", "caption": "A lit Mariposa held mid-conversation, the 24-carat gold leaf catching the light." },
+      { "key": "the-tuesday", "caption": "An unhurried moment in soft late light. No occasion, no event." },
+      { "key": "the-craft", "caption": "A torcedora's hands at the roll, in the workshop in Jember." },
+      { "key": "the-setting", "caption": "Tobacco at the foot of the Argopuro range, East Java." }
+    ]
+  },
+  "productSection": {
+    "eyebrow": "The range",
+    "heading": "Two cigars. One considered range."
+  },
+  "lifestyle": {
+    "eyebrow": "Mariposa",
+    "paragraphs": [
+      "The story goes that during Cuba's wars of independence, women slipped secret messages to the guerrilleros into the petals of the Mariposa flower, the white butterfly ginger that became the nation's flower in 1936.",
+      "Every Mariposa carries a secret of its own. In place of a printed band, a 24-carat gold leaf is laid onto the wrapper by hand. A quiet reminder that the finer things are not for saving. They are meant to be enjoyed today."
+    ],
+    "closingLine": "Don't wait for special occasions. Create them.",
+    "aboutLinkLabel": "Read the full story"
+  }
+}

@@ -1,0 +1,236 @@
+---
+/* 21+ age gate — full-screen interstitial.
+   Renders inline on every page and shows before content if no prior
+   confirmation flag is set. The flag (localStorage, ~30 days) means the
+   gate does not re-prompt on return visits within that window.
+
+   The gate is rendered visible by default and the body is lock-scrolled;
+   a tiny inline head script clears both immediately if the flag is valid,
+   so a confirmed visitor never sees a flash of the gate. JS-disabled
+   visitors see the gate and can dismiss it — without JS it cannot gate,
+   but it also cannot trap; the script enhances, it does not obstruct. */
+import { getEntry } from 'astro:content';
+
+const global = (await getEntry('site', 'global'))!.data as {
+  wordmark: string;
+  positionLine: string;
+  ageGate: {
+    intro: string;
+    question: string;
+    confirm: string;
+    decline: string;
+    declineHeading: string;
+    declineBody: string;
+  };
+};
+const { positionLine, ageGate } = global;
+---
+
+{/* Runs before paint: if a valid flag exists, drop the gate and unlock scroll
+    so confirmed visitors never see it. Inline by necessity — it must beat render. */}
+<script is:inline>
+  (function () {
+    try {
+      var raw = localStorage.getItem('mariposa-age-ok');
+      if (raw && Number(raw) > Date.now()) {
+        document.documentElement.setAttribute('data-age-ok', 'true');
+      }
+    } catch (e) {
+      /* storage blocked — gate stays, visitor confirms each visit */
+    }
+  })();
+</script>
+
+<div class="age-gate grain" data-age-gate role="dialog" aria-modal="true" aria-labelledby="age-gate-q">
+  <div class="age-gate__inner">
+    <!-- Ask state -->
+    <div class="age-gate__panel" data-age-ask>
+      <span class="wordmark age-gate__mark">mariposa</span>
+      <p class="age-gate__position">{positionLine}</p>
+      <hr class="rule-gold age-gate__rule" />
+      <p class="age-gate__intro">{ageGate.intro}</p>
+      <p class="age-gate__question" id="age-gate-q">{ageGate.question}</p>
+      <div class="age-gate__choices">
+        <button class="pill pill--solid" type="button" data-age-confirm>
+          {ageGate.confirm}
+        </button>
+        <button class="pill pill--ghost" type="button" data-age-decline>
+          {ageGate.decline}
+        </button>
+      </div>
+    </div>
+
+    <!-- Decline state -->
+    <div class="age-gate__panel age-gate__panel--decline" data-age-declined hidden>
+      <span class="wordmark age-gate__mark">mariposa</span>
+      <hr class="rule-gold age-gate__rule" />
+      <p class="age-gate__decline-heading">{ageGate.declineHeading}</p>
+      <p class="age-gate__decline-body">{ageGate.declineBody}</p>
+    </div>
+  </div>
+</div>
+
+<style>
+  .age-gate {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: var(--white);
+    display: grid;
+    place-items: center;
+    padding: var(--page-pad-m);
+  }
+  /* Confirmed visitor (flag valid): never render the gate. */
+  :global(html[data-age-ok='true']) .age-gate {
+    display: none;
+  }
+
+  .age-gate__inner {
+    width: 100%;
+    max-width: 520px;
+    text-align: center;
+  }
+
+  .age-gate__panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .age-gate__panel[hidden] {
+    display: none;
+  }
+
+  .age-gate__mark {
+    font-size: clamp(2rem, 7vw, 3rem);
+    color: var(--gold-deep);
+  }
+
+  .age-gate__position {
+    font-family: var(--font-body);
+    font-size: var(--fs-caption);
+    letter-spacing: var(--ls-section);
+    text-transform: uppercase;
+    color: var(--ash);
+    margin-top: var(--space-4);
+  }
+
+  .age-gate__rule {
+    width: 64px;
+    margin-block: var(--space-7);
+  }
+
+  .age-gate__intro {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    letter-spacing: var(--ls-small);
+    color: var(--ash);
+    margin-bottom: var(--space-2);
+  }
+
+  .age-gate__question {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(1.75rem, 4.5vw, 2.5rem);
+    line-height: var(--lh-snug);
+    color: var(--ink);
+  }
+
+  .age-gate__choices {
+    display: flex;
+    gap: var(--space-4);
+    margin-top: var(--space-7);
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .age-gate__decline-heading {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(1.4rem, 3.6vw, 2rem);
+    line-height: var(--lh-snug);
+    color: var(--ink);
+    max-width: 22ch;
+  }
+  .age-gate__decline-body {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--fs-lede);
+    color: var(--ash);
+    margin-top: var(--space-4);
+    max-width: 26ch;
+  }
+
+  /* Pill buttons — design-system pill, used for the two choices. */
+  .pill {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    font-weight: 600;
+    letter-spacing: var(--ls-small);
+    border-radius: var(--radius-pill);
+    padding: 14px 32px;
+    cursor: pointer;
+    transition:
+      transform var(--dur-default) var(--ease-paper),
+      box-shadow var(--dur-default) var(--ease-paper),
+      background-color var(--dur-default) var(--ease-paper);
+  }
+  .pill--solid {
+    color: var(--white);
+    background: var(--ink);
+    border: 1px solid var(--ink);
+    box-shadow: var(--shadow-rise);
+  }
+  .pill--solid:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lift);
+  }
+  .pill--ghost {
+    color: var(--ink);
+    background: transparent;
+    border: 1px solid var(--border-gold);
+  }
+  .pill--ghost:hover {
+    background: var(--pearl);
+  }
+  .pill:active {
+    transform: translateY(1px);
+    box-shadow: var(--shadow-press);
+  }
+</style>
+
+<script>
+  // Age gate behaviour: lock scroll while showing, confirm/decline handlers.
+  const gate = document.querySelector<HTMLElement>('[data-age-gate]');
+  const ask = document.querySelector<HTMLElement>('[data-age-ask]');
+  const declined = document.querySelector<HTMLElement>('[data-age-declined]');
+  const confirmBtn = document.querySelector<HTMLButtonElement>('[data-age-confirm]');
+  const declineBtn = document.querySelector<HTMLButtonElement>('[data-age-decline]');
+
+  const ALREADY_OK = document.documentElement.getAttribute('data-age-ok') === 'true';
+  const FLAG_KEY = 'mariposa-age-ok';
+  const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
+
+  if (gate && ask && declined && confirmBtn && declineBtn) {
+    if (!ALREADY_OK) {
+      // Gate is showing — lock scroll and move focus into it.
+      document.body.classList.add('gate-locked');
+      confirmBtn.focus();
+    }
+
+    confirmBtn.addEventListener('click', () => {
+      try {
+        localStorage.setItem(FLAG_KEY, String(Date.now() + THIRTY_DAYS));
+      } catch (e) {
+        /* storage blocked — gate will re-prompt next visit, acceptable */
+      }
+      gate.remove();
+      document.body.classList.remove('gate-locked');
+    });
+
+    declineBtn.addEventListener('click', () => {
+      ask.hidden = true;
+      declined.hidden = false;
+      // Scroll stays locked — there is no onward link from the decline screen.
+    });
+  }
+</script>

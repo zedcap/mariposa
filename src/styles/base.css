@@ -1,0 +1,201 @@
+/* Mariposa website — base styles
+   ---------------------------------------------
+   Reset, document defaults, semantic type roles, shared utilities.
+   Component-specific styling lives in each .astro component's scoped
+   <style> block. This file holds only what is genuinely global. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* The header sticks at 72px (60px on mobile). Offset in-page anchor
+     jumps so a targeted section clears the stuck header instead of
+     hiding behind it. */
+  scroll-padding-top: 72px;
+}
+
+@media (max-width: 720px) {
+  html { scroll-padding-top: 60px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg-1);
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  letter-spacing: var(--ls-body);
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Lock scroll while the age gate is showing. */
+body.gate-locked {
+  overflow: hidden;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ─── Semantic type roles ─────────────────────────────────── */
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  letter-spacing: var(--ls-display);
+  color: var(--fg-1);
+  margin: 0;
+}
+
+h1 {
+  font-weight: 300;
+  font-size: clamp(2.6rem, 6vw, 5rem);
+  line-height: var(--lh-tight);
+}
+
+h2 {
+  font-weight: 300;
+  font-size: clamp(2rem, 4.4vw, 3.25rem);
+  line-height: var(--lh-snug);
+}
+
+h3 {
+  font-weight: 400;
+  font-size: clamp(1.5rem, 2.6vw, 2.25rem);
+  line-height: var(--lh-snug);
+  letter-spacing: -0.005em;
+}
+
+p {
+  margin: 0;
+  text-wrap: pretty;
+}
+
+/* The wordmark — lowercase Spectral, the brand's logo type. */
+.wordmark {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-style: normal;
+  text-transform: lowercase;
+  letter-spacing: var(--ls-wordmark);
+  line-height: 1;
+}
+
+/* Section eyebrow — Hanken caps with the gold hairline (conventions spec:
+   uppercase, 0.32em tracking, gold-deep). The trailing rule is opt-in
+   via .eyebrow--rule. */
+.eyebrow {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--fs-eyebrow);
+  letter-spacing: var(--ls-section);
+  text-transform: uppercase;
+  color: var(--accent-strong);
+  margin: 0;
+}
+
+.eyebrow--rule {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.eyebrow--rule::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--gold);
+  opacity: 0.5;
+}
+
+/* Editorial lede — italic display serif. */
+.lede {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: var(--fs-lede);
+  line-height: var(--lh-loose);
+  color: var(--fg-1);
+}
+
+/* Plain gold rule — the conventions overlay's divider. No leaf SVG. */
+.rule-gold {
+  border: 0;
+  height: 1px;
+  background: var(--gold);
+  opacity: 0.5;
+  width: 100%;
+}
+
+/* ─── Shared utilities ────────────────────────────────────── */
+
+/* Page container — 1200px, generous desktop gutters, design-system spec. */
+.container {
+  width: 100%;
+  max-width: var(--content);
+  margin-inline: auto;
+  padding-inline: var(--page-pad-d);
+}
+
+@media (max-width: 720px) {
+  .container {
+    padding-inline: var(--page-pad-m);
+  }
+}
+
+/* Paper-grain field — faint noise over warm surfaces, design-system grain. */
+.grain {
+  position: relative;
+}
+
+.grain::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  /* --grain-image is set on :root by BaseLayout, base-path baked in.
+     CSS url() is NOT rewritten for Astro's `base`, so the path cannot
+     be hard-coded here — it would 404 under the /mariposa/ subpath. */
+  background-image: var(--grain-image);
+  background-size: 220px 220px;
+  opacity: 0.05;
+  pointer-events: none;
+}
+
+/* Focus — 2px gold outline, 3px offset. Never browser-default blue. */
+:where(a, button, [tabindex]):focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+  border-radius: var(--radius-xs);
+}
+
+/* Visually hidden — for skip links and screen-reader labels. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

@@ -1,0 +1,126 @@
+/* Mariposa website — design tokens
+   ---------------------------------------------
+   Sourced from the Mariposa design system (`Claude Design - Design System/
+   colors_and_type.css`). Web pairing: Spectral (display) + Hanken Grotesk
+   (body), per resolved decision 3 in website-scope.md. The design-conventions
+   overlay reserves Cormorant + Inter for print surfaces only, so there is no
+   conflict here.
+   Raw tokens first, semantic tokens below. Edit values here, nowhere else. */
+
+@import url('https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Hanken+Grotesk:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&display=swap');
+
+:root {
+  /* ─── Color — raw ──────────────────────────────────────────── */
+  --white:       #FFFFFF;   /* page background, default */
+  --pearl:       #FAFAF7;   /* lifted cards — barely perceptible warmth */
+  --hairline:    #ECEAE3;   /* divider / border against white */
+
+  --gold:        #B39959;   /* 24-carat antique — the signature */
+  --gold-deep:   #8A7341;   /* hover, pressed, type on gold */
+  --gold-soft:   #D8C794;   /* tint, gold-on-gold */
+  --gold-leaf:   #C8A24A;   /* the band in the hero — slightly hotter */
+
+  --pink:        #DF6899;   /* mariposa — the wink */
+  --pink-deep:   #C24A82;   /* hover state, type on pink */
+  --pink-mist:   #F2A5A6;   /* sunset/coral tertiary */
+
+  --ink:         #1F1B17;   /* primary text — warm near-black */
+  --ink-soft:    #4A4744;   /* softened ink, editorial body */
+  --ash:         #6B645C;   /* secondary text, muted */
+  --smoke:       #B9B2A8;   /* tertiary text, borders */
+  --whisper:     #D8D2C6;   /* finest border */
+
+  --tobacco:     #6B4A2A;   /* dried tobacco wrapper */
+  --garnet:      #7B1F3A;   /* deep wine in the pink hue family */
+
+  /* ─── Color — semantic ─────────────────────────────────────── */
+  --bg:               var(--white);
+  --bg-elevated:      var(--pearl);
+  --bg-inverse:       var(--ink);
+
+  --fg-1:             var(--ink);    /* primary text */
+  --fg-2:             var(--ash);    /* secondary */
+  --fg-3:             var(--smoke);  /* tertiary, placeholder */
+  --fg-on-gold:       var(--white);
+  --fg-on-ink:        var(--white);
+
+  --accent:           var(--gold);
+  --accent-strong:    var(--gold-deep);
+  --accent-soft:      var(--gold-soft);
+  --accent-secondary: var(--pink);
+
+  --border:           var(--whisper);
+  --border-strong:    var(--hairline);
+  --border-gold:      color-mix(in srgb, var(--gold-deep) 25%, transparent);
+
+  /* ─── Type — raw families ─────────────────────────────────── */
+  /* Web pairing. Display cut Spectral (closest free substitute for Marion);
+     body Hanken Grotesk. Print pagers use Cormorant + Inter — not here. */
+  --font-display: "Spectral", "Cormorant Garamond", Garamond, "Times New Roman", serif;
+  --font-body:    "Hanken Grotesk", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  /* ─── Type — scale ────────────────────────────────────────── */
+  --fs-eyebrow:   12px;
+  --fs-caption:   13px;
+  --fs-small:     14px;
+  --fs-body:      17px;
+  --fs-lede:      20px;
+  --fs-h6:        18px;
+  --fs-h5:        22px;
+  --fs-h4:        28px;
+  --fs-h3:        36px;
+  --fs-h2:        52px;
+  --fs-h1:        80px;
+  --fs-display:   120px;
+
+  --lh-tight:     1.08;
+  --lh-snug:      1.2;
+  --lh-body:      1.55;
+  --lh-loose:     1.75;
+
+  --ls-eyebrow:   0.18em;
+  --ls-section:   0.32em;   /* section eyebrows, design-conventions spec */
+  --ls-small:     0.04em;
+  --ls-body:      0.005em;
+  --ls-display:   -0.015em;
+  --ls-wordmark:  0.18em;
+
+  /* ─── Spacing ─────────────────────────────────────────────── */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  24px;
+  --space-6:  32px;
+  --space-7:  48px;
+  --space-8:  64px;
+  --space-9:  96px;
+  --space-10: 128px;
+
+  /* ─── Radii ──────────────────────────────────────────────── */
+  --radius-xs:   2px;       /* inputs, cards, tags */
+  --radius-pill: 9999px;    /* CTA pills, badges */
+
+  /* ─── Shadows ────────────────────────────────────────────── */
+  --shadow-rise:  0 1px 0 rgba(31,27,23,0.04), 0 8px 24px -12px rgba(31,27,23,0.12);
+  --shadow-lift:  0 1px 0 rgba(31,27,23,0.04), 0 24px 60px -20px rgba(31,27,23,0.18);
+  --shadow-press: inset 0 1px 2px rgba(31,27,23,0.08);
+
+  /* ─── Motion ─────────────────────────────────────────────── */
+  --ease-paper:  cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-drift:  cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-quick:   180ms;
+  --dur-default: 400ms;
+  --dur-slow:    600ms;
+
+  /* ─── Layout ─────────────────────────────────────────────── */
+  --measure:    640px;   /* editorial body max width */
+  --content:    1200px;  /* landing-page container */
+  --gutter:     32px;
+  --page-pad-d: 96px;
+  --page-pad-m: 24px;
+
+  /* ─── Sticky nav ─────────────────────────────────────────── */
+  --nav-blur:   24px;
+  --nav-bg:     rgba(239, 234, 226, 0.78);
+}
