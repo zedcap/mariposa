@@ -7,8 +7,12 @@
    slide a slow Ken Burns scale so the imagery is alive rather than
    static. No text overlay on the imagery — resolved — but the section
    carries its own choreography: a slow scale on the active frame, a
-   cross-fade through a sliver of gold, a thin gold progress line that
+   plain cross-fade between slides, a thin gold progress line that
    fills over the dwell time, and a quiet drifting scroll cue.
+
+   Hero imagery renders in ORIGINAL COLOUR — a deliberate override of
+   the design system's "full-bleed photography = B&W / duotone" rule.
+   Stephane's call (2026-05-22); recorded in mariposa-design-conventions.md.
 
    4 frames, slow auto-advance (7s), pause on hover, manual ticks.
    prefers-reduced-motion: no Ken Burns, no progress fill, instant
@@ -70,7 +74,8 @@ const { slides } = Astro.props;
     }
   </div>
 
-  {/* Slow vignette — anchors the imagery to the white page below. */}
+  {/* Minimal foot scrim — keeps the gold ticks and scroll cue legible
+      against a light image. Top scrim removed: nav rests below the hero. */}
   <div class="hero__veil" aria-hidden="true"></div>
 
   {/* Indicators — thin gold ticks; the active tick carries a fill bar
@@ -118,9 +123,7 @@ const { slides } = Astro.props;
     position: absolute;
     inset: 0;
     opacity: 0;
-    /* Cross-fade through a sliver of gold: the outgoing slide fades to
-       a faint gold wash before the incoming one resolves. The wash is
-       the gold sliver from the design system's page-transition spec. */
+    /* Plain cross-fade between slides — no gold wash. */
     transition: opacity var(--dur-slow) var(--ease-paper);
   }
   .hero__slide.is-active {
@@ -140,21 +143,22 @@ const { slides } = Astro.props;
     height: 100%;
     object-fit: cover;
     object-position: center;
-    /* Duotone — full-bleed photography reads B&W / warm sepia. */
-    filter: grayscale(1) sepia(0.26) contrast(1.05) brightness(0.8);
+    /* Original colour — hero is a deliberate override of the design
+       system's full-bleed duotone rule. No filter. */
     will-change: transform;
   }
 
-  /* Vignette — a soft darkening at the foot so the white page below
-     enters cleanly, and a faint top wash so the resting nav reads. */
+  /* Foot scrim — a faint darkening at the foot only, so the gold
+     slide-indicator ticks and the scroll cue stay legible against a
+     light image. No top scrim: the nav rests below the hero, and the
+     imagery shows clean. Kept minimal so the original picture reads. */
   .hero__veil {
     position: absolute;
     inset: 0;
     pointer-events: none;
     z-index: 2;
     background:
-      linear-gradient(to bottom, rgba(28, 25, 21, 0.32) 0%, transparent 22%),
-      linear-gradient(to top, rgba(28, 25, 21, 0.5) 0%, transparent 30%);
+      linear-gradient(to top, rgba(28, 25, 21, 0.34) 0%, transparent 24%);
   }
 
   /* Indicators — thin gold ticks, bottom-left, generous from the edge. */

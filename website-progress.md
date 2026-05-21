@@ -4,7 +4,7 @@ Live tracker. To pick this project up in any session, read this file plus `websi
 
 ## Status
 
-Build underway. Home page rebuilt against Stephane's "feels lazy / early-2000s" feedback (2026-05-21) — first cut was structure-first and restrained; the rebuild adds scroll choreography, full-bleed scale and a shared GSAP motion engine, modelled on the marigold.global theme. Home nav uses the marigold.global pattern (menu rests below the hero, sticks to the top on scroll).
+Build underway. Home page rebuilt against Stephane's "feels lazy / early-2000s" feedback (2026-05-21) — first cut was structure-first and restrained; the rebuild adds scroll choreography, full-bleed scale and a shared GSAP motion engine, modelled on the marigold.global theme. Home nav uses the marigold.global pattern (menu rests below the hero, sticks to the top on scroll). The rebuild is deployed and live at `https://zedcap.github.io/mariposa/` (2026-05-22) — see the Deploy phase for the SSH push transport now in use.
 
 ## Working files (all in this folder)
 
@@ -48,10 +48,20 @@ Build underway. Home page rebuilt against Stephane's "feels lazy / early-2000s" 
   - **Header.** Contracts on stick (84px → 66px) — the Marigold nav move. `scroll-padding-top` updated to match (66/56px).
   - **Footer.** Brand line reveals on scroll-in so the page close is part of the choreography.
   - Build clean; home page ships ~47KB gzipped JS (GSAP is the bulk), deferred. HTML ~19KB.
+- [done] **Hero colour treatment removed — Stephane's call (2026-05-22).** The duotone `filter: grayscale(1) sepia(0.26) contrast(1.05) brightness(0.8)` on the hero images read as a gold tint. Removed: hero imagery now renders in original colour, no filter. The gold cross-fade wash is dropped — slide transitions are a plain cross-fade. Scrims: the top scrim is removed (the nav rests below the hero, so it had no remaining job); a minimal foot scrim is kept (dialled from `rgba(28,25,21,0.5)`/30% to `0.34`/24%) so the gold slide-indicator ticks and scroll cue stay legible against a light image. A deliberate override of the design system's "full-bleed photography = B&W/duotone" rule — recorded in `mariposa-design-conventions.md` (new "Hero / full-bleed photography (website)" section). Ken Burns scale, scroll choreography, four images and slider motion all unchanged. Deployed — see Deploy phase.
 - [pending] Dispatch 2 — product pages (`/volage`, `/caprice`), About page (`/about`).
 - [pending] Imagery — Stephane commissions from the shot list in `website-scope.md` §7. Placeholders until then.
 - [done] Deploy — GitHub Pages staging **LIVE**: `https://zedcap.github.io/mariposa/`. Repo `zedcap/mariposa` (public); CI workflow `deploy.yml` builds and deploys on every push to `main`. First successful deploy 2026-05-21 (run 26219302974, both build + deploy jobs green). Pages source set to "GitHub Actions" by Stephane. Verified: home page serves HTTP 200 with the age gate + hero; CSS, images and inline client JS all resolve correctly under the `/mariposa/` base.
   - Push credential: fine-grained PAT in `/Users/mrclaude/Claude/.git-repos/mariposa-credentials.json` (chmod 600, outside pCloud, outside repo). Git host-scoped credential helper reads it; token not in `.git/config`. **PAT expires ~2026-08-19 (90 days from 2026-05-21) — renew before then.**
+- [done] **Deploy rebuild — `3e26e9e` (home rebuild) + `84e106c` (hero images) LIVE** (2026-05-22, Sergey). Both commits on `origin/main`; Actions run `26257970367` (`deploy.yml`, SHA `84e106c`) completed **success**; `https://zedcap.github.io/mariposa/` verified serving the rebuilt site — HTTP 200, all four hero images resolve (`_astro/hero-image0..3.*.webp`, 84-225KB each), rebuilt component scripts present (`HeroSlider`, `ProductSlider`, `PositionStatement`, `LifestyleSection`), not the pre-rebuild first cut.
+  - **Transport is now SSH.** HTTPS push stalled on the Bali-to-GitHub link in the pack-upload phase (ref discovery clean, upload POST hung); see history below. Remote URL is permanently switched to `git@github.com:zedcap/mariposa.git`. An ed25519 deploy key (registered on the repo with write access) is the working transport.
+  - **Standing push command — all future pushes from Mr. Claude must use this** (no persistent git config, no `~/.ssh/config` changes):
+    ```
+    GIT_SSH_COMMAND="ssh -i /Users/mrclaude/Claude/.git-repos/mariposa-deploy-key -o IdentitiesOnly=yes" git push origin main
+    ```
+    Same `GIT_SSH_COMMAND` prefix applies to `git fetch` / `git pull`. Private key: `/Users/mrclaude/Claude/.git-repos/mariposa-deploy-key` (chmod 600, outside pCloud, outside repo). Do not push over HTTPS — it stalls.
+  - Note: the two commits are authored under git's auto-identity `MrClaude <mrclaude@MrClaude-MBP.local>` (no repo identity set). Left as-is — rewriting history not worth it.
+  - **History (why SSH).** HTTPS `git push` from this machine stalls in the pack-upload phase: `GIT_TRACE_CURL` showed ref discovery completing cleanly (TLS + auth + advertisement 200 OK in ~1.4s), then the upload `POST .../git-receive-pack` never returns and the connection hangs. Reads (`git ls-remote`) were instant. ~10-15MB of objects over a high-latency link with a buffered chunked POST. Did not fix it: plain push, HTTP/1.1, `http.postBuffer` to 1GB, credential helper, sandbox off, low-speed-limit tolerances — all stalled identically. SSH uses a single bidirectional stream and survives the latency.
 
 ## Open / watch
 
