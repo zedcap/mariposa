@@ -1,0 +1,76 @@
+---
+/* Home position statement — the brand's opening line on the page.
+   Since the hero imagery carries no text, this is the page's first
+   verbal beat: the brand position copy from the print pagers, set on
+   the white page background between the hero and the product slider.
+
+   Treatment mirrors the brand pager masthead: the position sentence in
+   display italic, "Cuban Soul." in pink, the rest in ink, wrapping
+   naturally across two lines; the italic sub-line below it. */
+interface Props {
+  /** Brand position copy split into the pink half and the ink half. */
+  positionPink: string;
+  positionInk: string;
+  subline: string;
+}
+const { positionPink, positionInk, subline } = Astro.props;
+---
+
+<section class="position" aria-label="Mariposa">
+  <div class="position__inner container">
+    <span class="wordmark position__mark">mariposa</span>
+    <p class="position__line">
+      <span class="position__em">{positionPink}</span>{' '}
+      <span class="position__ink">{positionInk}</span>
+    </p>
+    <p class="position__subline">{subline}</p>
+  </div>
+</section>
+
+<style>
+  .position {
+    background: var(--white);
+    padding-block: clamp(var(--space-8), 9vw, var(--space-10));
+  }
+
+  .position__inner {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .position__mark {
+    font-size: var(--fs-h6);
+    color: var(--gold-deep);
+  }
+
+  /* Position sentence — display italic, wraps across two lines (the
+     conventions overlay forbids locking it to one line). */
+  .position__line {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 500;
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    line-height: var(--lh-snug);
+    margin-top: var(--space-5);
+    max-width: 20ch;
+  }
+  .position__em {
+    color: var(--pink);
+  }
+  .position__ink {
+    color: var(--ink);
+  }
+
+  .position__subline {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.1rem, 2.2vw, var(--fs-lede));
+    line-height: var(--lh-snug);
+    color: var(--ink-soft);
+    margin-top: var(--space-5);
+    max-width: 30ch;
+  }
+</style>

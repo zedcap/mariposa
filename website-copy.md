@@ -32,9 +32,17 @@ Notes for Yulia:
 
 ---
 
-## 2. Hero — fixed verbal overlay
+## 2. Hero — image slider, no text overlay
 
-ADAPTED — confirmed for web, no change. These lines are approved canon and carry as-is. Position copy is identity; it does not need a web rewrite.
+REVISED 2026-05-21 (Stephane review). The hero images carry NO text — no wordmark, no position line, no sub-line — and no scroll cue. The hero is a contained band (height matched to marigold.global), not full-viewport. The slider imagery stands alone.
+
+The brand statement that previously sat on the hero now lives in a dedicated text block on the white page, immediately below the hero (see §2a).
+
+---
+
+## 2a. Home — position statement (page-opening text block)
+
+ADAPTED — verbatim from the brand pager masthead. Sits on the white page background between the hero and the product slider; treatment mirrors the brand pager (position sentence in display italic, "Cuban Soul." in pink, the rest in ink, wrapping two lines; italic sub-line below).
 
 **Wordmark**
 > mariposa  *(lowercase)*
@@ -45,15 +53,13 @@ ADAPTED — confirmed for web, no change. These lines are approved canon and car
 **Sub-line** (italic serif)
 > For those who don't wait for special occasions, but create them.
 
-Notes for Yulia:
-- The overlay does not change between slider frames. The imagery moves beneath a fixed verbal anchor.
-- No CTA button. The only forward cue is the scroll cue.
-
 ---
 
 ## 3. Home — product section (Option B, paired editorial slider)
 
-Two SKU frames. Volage leads (live SKU); Caprices follows and carries the Q4 2026 tag.
+REVISED 2026-05-21 (Stephane review). The product section no longer carries an eyebrow or a section heading. The previous heading copy ("Two cigars. One considered range.") is removed — the brand position copy now opens the page in §2a. The section is the paired slider only.
+
+Two SKU frames. Volage leads (live SKU); Caprice follows and carries the Q4 2026 tag.
 
 ### 3.1 Volage frame
 
@@ -64,14 +70,14 @@ Two SKU frames. Volage leads (live SKU); Caprices follows and carries the Q4 202
 > The flagship. A long, slow Canonazo built for the hour you give yourself — creamy at the first draw, full-bodied by the last.
 - **Link:** Discover Volage  →  `/volage`
 
-### 3.2 Caprices frame
+### 3.2 Caprice frame
 
-- **Name:** Caprices
+- **Name:** Caprice  *(singular — no S; the SKU name and route are "Caprice" / `/caprice` site-wide)*
 - **Tag:** Q4 2026
 - **Tagline** (ADAPTED — verbatim from pager): *A small indulgence, taken short.*
 - **Lede** (NEW):
 > Darker by intent. A short, thick Maduro for the indulgence you take when time is shorter than the mood.
-- **Link:** Discover Caprices  →  `/caprices`
+- **Link:** Discover Caprice  →  `/caprice`
 
 Note for Yulia: the em dash in the Volage lede is a typographic choice for that single client-voice line and is intentional. If the build prefers an en dash or a comma for consistency, a comma reads cleanly: "...the hour you give yourself, creamy at the first draw, full-bodied by the last."
 
@@ -132,12 +138,12 @@ ADAPTED. Narrative ledes carry near-verbatim from the pagers. Spec lists and tas
 - Final third — Spice arrives, the sweetness holds, and deep earth closes the smoke.
 
 **Cross-link** (foot of page)
-> Also from Mariposa — Caprices  →  `/caprices`
+> Also from Mariposa — Caprice  →  `/caprice`
 
-### 5.2 Caprices — `/caprices`
+### 5.2 Caprice — `/caprice`
 
 **Product hero**
-- SKU name: Caprices
+- SKU name: Caprice
 - Tag: Q4 2026
 - Vitola: Gordito
 - Format line: 105 mm · 58 ring gauge
@@ -230,7 +236,7 @@ Note for Yulia: no legal-entity line, per the scope (the print pagers carry none
 
 ## Flags for Stephane
 
-- **Gemini critic pass not run.** Step 11 of Axel's working method calls for an adversarial Gemini read on the four new substantial pieces (the two product-section ledes, the condensed lifestyle section, the age-gate copy). The Gemini MCP tool was unavailable in this session. Axel ran the adversarial read manually instead. Findings: the lifestyle close carries two beats doing one job ("not for saving" then "meant to be enjoyed today") — kept, because that doubling is locked canon from the approved brand pager. The Caprices lede's one new turn ("when time is shorter than the mood") was tested for health drift and is clean. If you want the formal Gemini pass before the build locks, flag it and Axel will run it when the tool is back.
+- **Gemini critic pass not run.** Step 11 of Axel's working method calls for an adversarial Gemini read on the four new substantial pieces (the two product-section ledes, the condensed lifestyle section, the age-gate copy). The Gemini MCP tool was unavailable in this session. Axel ran the adversarial read manually instead. Findings: the lifestyle close carries two beats doing one job ("not for saving" then "meant to be enjoyed today") — kept, because that doubling is locked canon from the approved brand pager. The Caprice lede's one new turn ("when time is shorter than the mood") was tested for health drift and is clean. If you want the formal Gemini pass before the build locks, flag it and Axel will run it when the tool is back.
 - **Age-gate decline line.** Shipped warm: "Come back when the years are on your side." Plainer compliance-register alternate if you prefer: "Mariposa is for adults of legal smoking age. We are sorry to see you go." Axel's recommendation: keep the warm line. It is the brand's voice and the gate is a brand surface.
 - **Regulatory ownership is external.** All copy above is drafted compliant — no health, wellness, or reduced-harm language. Sign-off for this regulated-category copy sits with the external owner (the Indonesian producer, or the importer/distributor per market). Axel does not self-certify. Route this file to that owner before launch.
 - **No invented facts.** Every provenance and process claim above traces to the locked print pagers. Nothing was originated here.

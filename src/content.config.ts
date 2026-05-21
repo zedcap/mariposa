@@ -8,7 +8,7 @@ import { glob } from 'astro/loaders';
    are DATA — carried verbatim from the print pagers.
 
    `site`     — singleton data files (home, age gate, footer).
-   `products` — one entry per SKU (volage, caprices). */
+   `products` — one entry per SKU (volage, caprice). */
 
 const products = defineCollection({
   loader: glob({ pattern: '*.json', base: './src/content/products' }),

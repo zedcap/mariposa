@@ -121,6 +121,10 @@
   --page-pad-m: 24px;
 
   /* ─── Sticky nav ─────────────────────────────────────────── */
+  /* White-based translucent. The design system's cream nav-bar value
+     (rgba(239,234,226,0.78)) and --cream-edge token are overridden by
+     the conventions overlay: white only, including translucent/blurred
+     nav backgrounds. No cream, no ivory. */
   --nav-blur:   24px;
-  --nav-bg:     rgba(239, 234, 226, 0.78);
+  --nav-bg:     rgba(255, 255, 255, 0.82);
 }

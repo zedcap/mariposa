@@ -1,7 +1,7 @@
 ---
 /* Home product section — Option B, the paired editorial slider.
    The range is two cigars; that pairing is the story. Two full-bleed
-   editorial frames (Volage, Caprices) on a horizontal track. A two-dot
+   editorial frames (Volage, Caprice) on a horizontal track. A two-dot
    indicator and an edge-peek of the next frame keep the second SKU
    present. Mirrors the hero's slider motion vocabulary.
 
@@ -10,7 +10,7 @@
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import cigarVolage from '../assets/cigar-volage.png';
-import cigarCaprices from '../assets/cigar-caprices.png';
+import cigarCaprice from '../assets/cigar-caprice.png';
 import { withBase } from '../lib/path';
 
 interface ProductFrame {
@@ -22,24 +22,17 @@ interface ProductFrame {
   homeLede: string;
 }
 interface Props {
-  eyebrow: string;
-  heading: string;
   products: ProductFrame[];
 }
-const { eyebrow, heading, products } = Astro.props;
+const { products } = Astro.props;
 
 const cigarImages: Record<string, ImageMetadata> = {
   volage: cigarVolage,
-  caprices: cigarCaprices,
+  caprice: cigarCaprice,
 };
 ---
 
-<section class="range grain" id="range" aria-labelledby="range-heading" data-range>
-  <div class="range__head container">
-    <p class="eyebrow eyebrow--rule">{eyebrow}</p>
-    <h2 id="range-heading" class="range__heading">{heading}</h2>
-  </div>
-
+<section class="range grain" id="range" aria-label="The Mariposa range" data-range>
   <div class="range__viewport">
     <div class="range__track" data-range-track>
       {
@@ -106,14 +99,6 @@ const cigarImages: Record<string, ImageMetadata> = {
     background: var(--bg-elevated);
     padding-block: clamp(var(--space-8), 9vw, var(--space-10));
     overflow: hidden;
-  }
-
-  .range__head {
-    margin-bottom: var(--space-8);
-  }
-  .range__heading {
-    margin-top: var(--space-5);
-    max-width: 18ch;
   }
 
   /* Viewport clips the track; the track translates between frames.

@@ -1,7 +1,5 @@
 {
   "hero": {
-    "subline": "For those who don't wait for special occasions, but create them.",
-    "scrollCue": "Scroll",
     "slides": [
       { "key": "in-the-hand", "caption": "A lit Mariposa held mid-conversation, the 24-carat gold leaf catching the light." },
       { "key": "the-tuesday", "caption": "An unhurried moment in soft late light. No occasion, no event." },
@@ -9,9 +7,10 @@
       { "key": "the-setting", "caption": "Tobacco at the foot of the Argopuro range, East Java." }
     ]
   },
-  "productSection": {
-    "eyebrow": "The range",
-    "heading": "Two cigars. One considered range."
+  "position": {
+    "positionPink": "Cuban Soul.",
+    "positionInk": "24 Carat Swiss Gold.",
+    "subline": "For those who don't wait for special occasions, but create them."
   },
   "lifestyle": {
     "eyebrow": "Mariposa",

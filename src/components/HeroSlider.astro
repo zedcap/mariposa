@@ -1,8 +1,11 @@
 ---
 /* Home hero — full-bleed image slider.
    3-5 frames, slow auto-advance (7s), cross-fade through a sliver of gold,
-   pause on hover, manual tick controls. A fixed verbal overlay (wordmark,
-   position line, sub-line) does NOT change between frames.
+   pause on hover, manual tick controls. The hero carries NO text overlay
+   and no scroll cue — the imagery stands alone; the brand statement lives
+   in a text block on the white page below (the position section). Height
+   is a contained band (matched to marigold.global's hero treatment),
+   not the full viewport.
 
    FIRST-CUT IMAGERY: real photography is not yet commissioned. Each frame
    renders a duotone placeholder block tinted from the brand palette, with
@@ -16,12 +19,9 @@ interface Slide {
   caption: string;
 }
 interface Props {
-  positionLine: string;
-  subline: string;
-  scrollCue: string;
   slides: Slide[];
 }
-const { positionLine, subline, scrollCue, slides } = Astro.props;
+const { slides } = Astro.props;
 ---
 
 <section class="hero" aria-label="Mariposa" data-hero>
@@ -52,15 +52,6 @@ const { positionLine, subline, scrollCue, slides } = Astro.props;
         </div>
       ))
     }
-    <!-- Tint scrim so the white overlay stays legible over any frame -->
-    <div class="hero__scrim" aria-hidden="true"></div>
-  </div>
-
-  <!-- Fixed verbal overlay — does not change between frames -->
-  <div class="hero__overlay container">
-    <span class="wordmark hero__wordmark">mariposa</span>
-    <p class="hero__position">{positionLine}</p>
-    <p class="hero__subline">{subline}</p>
   </div>
 
   <!-- Slide indicators — thin gold ticks -->
@@ -78,21 +69,17 @@ const { positionLine, subline, scrollCue, slides } = Astro.props;
       ))
     }
   </div>
-
-  <!-- Scroll cue -->
-  <a class="hero__scroll" href="#range" aria-label="Scroll to the range">
-    <span>{scrollCue}</span>
-    <svg width="14" height="22" viewBox="0 0 14 22" fill="none" aria-hidden="true">
-      <path d="M7 0v20M1 14l6 7 6-7" stroke="currentColor" stroke-width="1.2" />
-    </svg>
-  </a>
 </section>
 
 <style>
   .hero {
+    /* Contained band — matches marigold.global's shorter hero treatment.
+       Clearly less than the full viewport so the brand statement below
+       enters the read on first scroll. */
     position: relative;
-    height: 100svh;
-    min-height: 600px;
+    height: 64svh;
+    min-height: 420px;
+    max-height: 680px;
     overflow: hidden;
     background: var(--ink);
   }
@@ -155,62 +142,11 @@ const { positionLine, subline, scrollCue, slides } = Astro.props;
     max-width: 36ch;
   }
 
-  /* Scrim — gradient so the wordmark sits legibly on any frame. */
-  .hero__scrim {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      180deg,
-      rgba(31, 27, 23, 0.34) 0%,
-      rgba(31, 27, 23, 0.12) 38%,
-      rgba(31, 27, 23, 0.5) 100%
-    );
-    pointer-events: none;
-  }
-
-  /* Fixed verbal overlay */
-  .hero__overlay {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    z-index: 2;
-  }
-
-  .hero__wordmark {
-    font-size: clamp(3.4rem, 11vw, 9rem);
-    color: var(--white);
-    line-height: 0.95;
-  }
-
-  .hero__position {
-    font-family: var(--font-body);
-    font-size: clamp(var(--fs-caption), 1.4vw, var(--fs-small));
-    font-weight: 600;
-    letter-spacing: var(--ls-section);
-    text-transform: uppercase;
-    color: var(--gold-soft);
-    margin-top: var(--space-5);
-  }
-
-  .hero__subline {
-    font-family: var(--font-display);
-    font-style: italic;
-    font-weight: 300;
-    font-size: clamp(1.1rem, 2.2vw, 1.6rem);
-    line-height: var(--lh-snug);
-    color: rgba(255, 255, 255, 0.9);
-    margin-top: var(--space-5);
-    max-width: 24ch;
-  }
-
   /* Slide indicators — thin gold ticks, bottom-aligned */
   .hero__indicators {
     position: absolute;
     left: 50%;
-    bottom: var(--space-7);
+    bottom: var(--space-6);
     transform: translateX(-50%);
     display: flex;
     gap: var(--space-3);
@@ -231,46 +167,6 @@ const { positionLine, subline, scrollCue, slides } = Astro.props;
   }
   .hero__tick:hover {
     background: rgba(255, 255, 255, 0.6);
-  }
-
-  /* Scroll cue */
-  .hero__scroll {
-    position: absolute;
-    right: clamp(16px, 4vw, 40px);
-    bottom: var(--space-7);
-    z-index: 3;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--space-2);
-    color: rgba(255, 255, 255, 0.78);
-    text-decoration: none;
-  }
-  .hero__scroll span {
-    font-family: var(--font-body);
-    font-size: var(--fs-caption);
-    letter-spacing: var(--ls-eyebrow);
-    text-transform: uppercase;
-  }
-  .hero__scroll svg {
-    animation: hero-drift 2.6s var(--ease-drift) infinite;
-  }
-  .hero__scroll:hover {
-    color: var(--white);
-  }
-
-  @keyframes hero-drift {
-    0%, 100% { transform: translateY(0); }
-    50%      { transform: translateY(4px); }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .hero__scroll svg { animation: none; }
-  }
-
-  @media (max-width: 720px) {
-    .hero__indicators { bottom: var(--space-9); }
-    .hero__scroll { display: none; }
   }
 </style>
 

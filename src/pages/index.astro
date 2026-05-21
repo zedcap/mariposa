@@ -1,25 +1,22 @@
 ---
 /* Home — one-page vertical scroll.
-   Hero slider, product section (Option B), lifestyle section.
-   The hero goes into BaseLayout's named `hero` slot, so the nav rests
-   directly below it on load and sticks to the top on scroll
-   (marigold.global pattern). Copy comes from content collections. */
+   Hero slider (no text), brand position statement, product section
+   (Option B), lifestyle section. The hero goes into BaseLayout's named
+   `hero` slot, so the nav rests directly below it on load and sticks to
+   the top on scroll (marigold.global pattern). Copy comes from content
+   collections. */
 import { getEntry, getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import HeroSlider from '../components/HeroSlider.astro';
+import PositionStatement from '../components/PositionStatement.astro';
 import ProductSlider from '../components/ProductSlider.astro';
 import LifestyleSection from '../components/LifestyleSection.astro';
 
-const global = (await getEntry('site', 'global'))!.data as {
-  positionLine: string;
-};
 const home = (await getEntry('site', 'home'))!.data as {
   hero: {
-    subline: string;
-    scrollCue: string;
     slides: { key: string; caption: string }[];
   };
-  productSection: { eyebrow: string; heading: string };
+  position: { positionPink: string; positionInk: string; subline: string };
   lifestyle: {
     eyebrow: string;
     paragraphs: string[];
@@ -34,19 +31,15 @@ const products = (await getCollection('products'))
 ---
 
 <BaseLayout title="Mariposa — Cuban Soul. 24 Carat Swiss Gold.">
-  <HeroSlider
-    slot="hero"
-    positionLine={global.positionLine}
-    subline={home.hero.subline}
-    scrollCue={home.hero.scrollCue}
-    slides={home.hero.slides}
+  <HeroSlider slot="hero" slides={home.hero.slides} />
+
+  <PositionStatement
+    positionPink={home.position.positionPink}
+    positionInk={home.position.positionInk}
+    subline={home.position.subline}
   />
 
-  <ProductSlider
-    eyebrow={home.productSection.eyebrow}
-    heading={home.productSection.heading}
-    products={products}
-  />
+  <ProductSlider products={products} />
 
   <LifestyleSection
     eyebrow={home.lifestyle.eyebrow}

@@ -5,9 +5,12 @@
    Editorial, image-led, generous negative space. Since the About page
    ships, this section stays atmospheric and points to /about.
 
-   FIRST-CUT IMAGERY: the collage image (shot-list frame 13) is not yet
-   commissioned. A duotone placeholder block stands in. */
+   IMAGERY: shot-list frame 13 — the Mariposa brand composition
+   (header-collage.png, the mariposa_header_sq.png asset) stands in
+   until a commissioned collage lands. */
+import { Image } from 'astro:assets';
 import { withBase } from '../lib/path';
+import lifestyleCollage from '../assets/header-collage.png';
 
 interface Props {
   eyebrow: string;
@@ -20,14 +23,16 @@ const { eyebrow, paragraphs, closingLine, aboutLinkLabel } = Astro.props;
 
 <section class="story" aria-labelledby="story-heading">
   <div class="story__inner container">
-    <!-- Collage image — placeholder until commissioned -->
-    <div class="story__media">
-      <div class="story__placeholder grain">
-        <span class="story__placeholder-note">
-          Frame 13 — the butterfly-ginger legend made visual: the white
-          flower, a butterfly, the gold leaf, assembled as a collage.
-        </span>
-      </div>
+    <!-- Collage image — frame 13, the Mariposa brand composition -->
+    <div class="story__media grain">
+      <Image
+        class="story__img"
+        src={lifestyleCollage}
+        alt="Mariposa brand composition — the lowercase wordmark, the gold band, and the butterfly motif."
+        widths={[420, 720, 913]}
+        sizes="(max-width: 720px) 90vw, 45vw"
+        loading="lazy"
+      />
     </div>
 
     <!-- Story copy -->
@@ -60,24 +65,20 @@ const { eyebrow, paragraphs, closingLine, aboutLinkLabel } = Astro.props;
 
   /* Collage media — the master move; a portrait-leaning frame. */
   .story__media {
+    position: relative;
     aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: var(--pearl);
   }
-  .story__placeholder {
+  .story__img {
     width: 100%;
     height: 100%;
-    display: grid;
-    place-items: center;
-    padding: var(--space-7);
-    background:
-      radial-gradient(110% 90% at 30% 25%, #6b645c 0%, #322d27 78%);
+    object-fit: cover;
+    object-position: center;
   }
-  .story__placeholder-note {
-    font-family: var(--font-body);
-    font-size: var(--fs-caption);
-    letter-spacing: var(--ls-small);
-    color: rgba(255, 255, 255, 0.4);
-    text-align: center;
-    max-width: 32ch;
+  /* Paper-grain sits above the image. */
+  .story__media.grain::before {
+    z-index: 1;
   }
 
   .story__prose {

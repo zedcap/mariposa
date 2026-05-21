@@ -10,10 +10,10 @@
    native CSS `sticky` gives the same behaviour with no JavaScript.)
 
    Two visual states:
-   - RESTING — below the hero, in flow. Solid cream bar, gold hairline
+   - RESTING — below the hero, in flow. Solid white bar, gold hairline
      underneath, no shadow. It belongs to the page.
    - STUCK — detached at the top, content scrolling beneath it. Same
-     cream bar, plus the 24px backdrop blur and a faint lift shadow so
+     white bar, plus the 24px backdrop blur and a faint lift shadow so
      it reads as a floating header, not part of the page body.
 
    `overHero` is true when the page has a hero (the header has somewhere
@@ -61,7 +61,7 @@ const isActive = (href: string) => {
     </a>
     <nav class="site-header__nav" aria-label="Primary">
       <a href={withBase('/volage')} class:list={[{ 'is-active': isActive('/volage') }]}>Volage</a>
-      <a href={withBase('/caprices')} class:list={[{ 'is-active': isActive('/caprices') }]}>Caprices</a>
+      <a href={withBase('/caprice')} class:list={[{ 'is-active': isActive('/caprice') }]}>Caprice</a>
       <a href={withBase('/about')} class:list={[{ 'is-active': isActive('/about') }]}>About</a>
     </nav>
   </div>
@@ -93,7 +93,7 @@ const isActive = (href: string) => {
       background-color var(--dur-default) var(--ease-paper);
   }
 
-  /* STUCK — detached at the top of the viewport. The cream bar gains
+  /* STUCK — detached at the top of the viewport. The white bar gains
      the 24px blur and a faint lift so it floats above scrolling
      content. */
   .site-header.is-stuck {
@@ -123,10 +123,10 @@ const isActive = (href: string) => {
 
   .site-header__nav a {
     font-family: var(--font-body);
-    font-size: var(--fs-small);
-    font-weight: 500;
-    letter-spacing: var(--ls-small);
-    text-transform: lowercase;
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
     color: var(--ink);
     text-decoration: none;
     padding-bottom: 2px;
