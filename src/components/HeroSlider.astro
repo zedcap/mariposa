@@ -246,6 +246,14 @@ const { slides } = Astro.props;
       bottom: var(--space-7);
     }
     .hero__tick { width: 40px; }
+
+    /* Slide 3 (Bali pavilion) — the collage woman sits in the left third
+       of the frame. The default centre-crop on a narrow band cuts her
+       out, so anchor this one image's crop left-of-centre on mobile.
+       Slides 1 and 2 stay centred. */
+    .hero__slide:nth-child(3) .hero__img {
+      object-position: 25% center;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
