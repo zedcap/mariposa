@@ -1,10 +1,9 @@
 {
   "hero": {
     "slides": [
-      { "key": "in-the-hand", "caption": "A lit Mariposa held mid-conversation, the 24-carat gold leaf catching the light." },
-      { "key": "the-tuesday", "caption": "An unhurried moment in soft late light. No occasion, no event." },
-      { "key": "the-craft", "caption": "A torcedora's hands at the roll, in the workshop in Jember." },
-      { "key": "the-setting", "caption": "Tobacco at the foot of the Argopuro range, East Java." }
+      { "key": "poolside", "caption": "A woman with a Mariposa cigar at a palm-fringed poolside." },
+      { "key": "jungle-lodge", "caption": "A woman with a Mariposa cigar at an open jungle lodge." },
+      { "key": "bali-pavilion", "caption": "A woman with a Mariposa cigar in a Bali pavilion." }
     ]
   },
   "position": {

@@ -20,29 +20,20 @@
    the design system's "full-bleed photography = B&W / duotone" rule.
    Stephane's call (2026-05-22); recorded in mariposa-design-conventions.md.
 
-   4 frames, slow auto-advance (7s), pause on hover, manual ticks.
+   3 frames, slow auto-advance (7s), pause on hover, manual ticks.
    prefers-reduced-motion: no Ken Burns, no progress fill, instant
-   cross-fade, scroll cue static.
-
-   ============================ PLACEHOLDER IMAGERY ============================
-   The four hero frames below are PLACEHOLDERS, not final art.
-   - hero-image0 / hero-image1 / hero-image2 are MARIGOLD's own hero
-     photographs, pulled from the Marigold Shopify theme. They belong to
-     another brand and MUST NOT ship on the live Mariposa site.
-   - hero-image3 is a separately supplied stand-in.
-   All four are temporary holds until Mariposa's commissioned photography
-   lands (shot list in website-scope.md §7). SWAP ALL FOUR before launch.
-   ============================================================================ */
+   cross-fade, scroll cue static. */
 import { Image } from 'astro:assets';
 
-/* PLACEHOLDER hero frames — see banner above. Order is fixed:
-   image0 → image1 → image2 → image3, matching the four caption slides. */
-import heroImage0 from '../assets/hero-image0.jpg';
-import heroImage1 from '../assets/hero-image1.jpg';
-import heroImage2 from '../assets/hero-image2.jpg';
-import heroImage3 from '../assets/hero-image3.jpg';
+/* Mariposa hero frames — the collage device: the same faceless woman
+   with a cigar on three worlds (palm poolside, jungle lodge, Bali
+   pavilion). Order is fixed: 1 → 2 → 3, matching the three caption
+   slides. Landscape source, 1250×720. */
+import heroImage1 from '../assets/hero-mariposa-1.jpg';
+import heroImage2 from '../assets/hero-mariposa-2.jpg';
+import heroImage3 from '../assets/hero-mariposa-3.jpg';
 
-const heroImages = [heroImage0, heroImage1, heroImage2, heroImage3];
+const heroImages = [heroImage1, heroImage2, heroImage3];
 
 interface Slide {
   key: string;
@@ -64,12 +55,11 @@ const { slides } = Astro.props;
           aria-hidden={i === 0 ? 'false' : 'true'}
         >
           <div class="hero__frame" data-hero-frame>
-            {/* PLACEHOLDER image — frames 0-2 are Marigold's photos. */}
             <Image
               class="hero__img"
               src={heroImages[i] ?? heroImages[0]}
               alt={slide.caption}
-              widths={[720, 1280, 1920, 2400]}
+              widths={[720, 1024, 1250]}
               sizes="100vw"
               loading={i === 0 ? 'eager' : 'lazy'}
               fetchpriority={i === 0 ? 'high' : 'auto'}
