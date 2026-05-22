@@ -20,8 +20,8 @@
    the design system's "full-bleed photography = B&W / duotone" rule.
    Stephane's call (2026-05-22); recorded in mariposa-design-conventions.md.
 
-   3 frames, slow auto-advance (7s), pause on hover, manual ticks.
-   prefers-reduced-motion: no Ken Burns, no progress fill, instant
+   3 frames, slow auto-advance (7s), pause on hover, manual dots.
+   prefers-reduced-motion: no Ken Burns, no progress ring sweep, instant
    cross-fade, scroll cue static. */
 import { Image } from 'astro:assets';
 
@@ -70,24 +70,25 @@ const { slides } = Astro.props;
     }
   </div>
 
-  {/* Minimal foot scrim — keeps the gold ticks and scroll cue legible
+  {/* Minimal foot scrim — keeps the gold dots and scroll cue legible
       against a light image. Top scrim removed: nav rests below the hero. */}
   <div class="hero__veil" aria-hidden="true"></div>
 
-  {/* Indicators — thin gold ticks; the active tick carries a fill bar
-      that runs over the dwell time, so the slider's pace is legible. */}
+  {/* Indicators — small round gold dots, bottom-centre; the active dot
+      carries a progress ring that closes over the dwell time, so the
+      slider's pace stays legible without a heavy progress UI. */}
   <div class="hero__indicators" role="tablist" aria-label="Hero slides">
     {
       slides.map((slide, i) => (
         <button
-          class:list={['hero__tick', { 'is-active': i === 0 }]}
+          class:list={['hero__dot', { 'is-active': i === 0 }]}
           type="button"
           role="tab"
           aria-selected={i === 0 ? 'true' : 'false'}
           aria-label={`Show slide ${i + 1}`}
           data-tick={i}
         >
-          <span class="hero__tick-fill" data-tick-fill></span>
+          <span class="hero__dot-ring" data-tick-fill></span>
         </button>
       ))
     }
@@ -161,44 +162,64 @@ const { slides } = Astro.props;
       linear-gradient(to top, rgba(28, 25, 21, 0.34) 0%, transparent 24%);
   }
 
-  /* Indicators — thin gold ticks, bottom-left, generous from the edge. */
+  /* Indicators — small round gold dots, bottom-centre of the hero band.
+     Centred with left:50% + translateX(-50%) so the dot row is genuinely
+     centred regardless of dot count. Seated at the foot, within the foot
+     scrim's coverage so the gold reads on a light image, and below the
+     scroll cue's lowest reach (cue window bottom = 48px) so the two share
+     the centre axis without overlapping — the cue rises above the dots. */
   .hero__indicators {
     position: absolute;
-    left: var(--page-pad-d);
-    bottom: var(--space-8);
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: var(--space-5);
     display: flex;
+    align-items: center;
     gap: var(--space-3);
     z-index: 4;
   }
 
-  .hero__tick {
+  /* Each dot is a fixed-size round button. Inactive dots read as a quiet
+     translucent-white disc; the active dot is gold. The progress ring
+     lives in the ::before of the inner span. */
+  .hero__dot {
     position: relative;
-    width: 52px;
-    height: 2px;
+    width: 10px;
+    height: 10px;
     padding: 0;
     border: 0;
-    background: rgba(255, 255, 255, 0.26);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.32);
     cursor: pointer;
-    overflow: hidden;
     transition: background-color var(--dur-default) var(--ease-paper);
   }
-  .hero__tick:hover {
-    background: rgba(255, 255, 255, 0.5);
+  .hero__dot:hover {
+    background: rgba(255, 255, 255, 0.6);
   }
-  .hero__tick-fill {
-    position: absolute;
-    inset: 0;
-    transform-origin: left center;
-    transform: scaleX(0);
+  .hero__dot.is-active {
     background: var(--gold-leaf);
   }
-  /* The active tick's fill is animated by JS (a GSAP tween over the
-     dwell). The static rule keeps the active tick lit when JS is off. */
-  .hero__tick.is-active {
-    background: rgba(255, 255, 255, 0.26);
+
+  /* Progress ring — a conic sweep around the active dot that closes over
+     the dwell. JS tweens --dwell from 0 to 1 (a GSAP tween over the
+     dwell); the conic-gradient masks to a thin ring via a transparent
+     centre. Hidden on inactive dots; the static fallback shows a full
+     ring when JS is off so the active dot still reads. */
+  .hero__dot-ring {
+    position: absolute;
+    inset: -5px;
+    border-radius: 50%;
+    opacity: 0;
+    background:
+      conic-gradient(
+        var(--gold-leaf) calc(var(--dwell, 1) * 360deg),
+        rgba(255, 255, 255, 0.18) 0
+      );
+    -webkit-mask: radial-gradient(closest-side, transparent 72%, #000 73%);
+    mask: radial-gradient(closest-side, transparent 72%, #000 73%);
   }
-  .hero__tick.is-active .hero__tick-fill {
-    transform: scaleX(1);
+  .hero__dot.is-active .hero__dot-ring {
+    opacity: 1;
   }
 
   /* Scroll cue — a thin vertical gold line, bottom-centre. The line
@@ -234,25 +255,31 @@ const { slides } = Astro.props;
 
   @media (max-width: 720px) {
     .hero {
-      /* On a phone the contained band is held a touch shorter so the
-         nav bar below it stays clearly in view even on short
-         viewports — the menu peeks underneath, never buried. */
-      height: 60svh;
-      min-height: 360px;
-      max-height: 560px;
+      /* On a phone the band drops the crop entirely: it takes the hero
+         images' native landscape ratio (1250×720 = 125/72) and scales
+         down proportionally as the viewport narrows. The full image
+         shows, uncropped, no letterboxing — the header just gets
+         smaller. No fixed svh height, no min/max. */
+      height: auto;
+      min-height: 0;
+      max-height: none;
+      aspect-ratio: 125 / 72;
     }
-    .hero__indicators {
-      left: var(--page-pad-m);
-      bottom: var(--space-7);
-    }
-    .hero__tick { width: 40px; }
 
-    /* Slide 3 (Bali pavilion) — the collage woman sits in the left third
-       of the frame. The default centre-crop on a narrow band cuts her
-       out, so anchor this one image's crop left-of-centre on mobile.
-       Slides 1 and 2 stay centred. */
-    .hero__slide:nth-child(3) .hero__img {
-      object-position: 25% center;
+    /* No crop on mobile, so the frame fills with the whole image. */
+    .hero__img {
+      object-fit: contain;
+    }
+
+    /* The mobile band is much shorter than the desktop one (it scales
+       with the image ratio). Pull the dots and scroll cue in toward the
+       foot and shorten the cue so neither crowds the short band. */
+    .hero__indicators {
+      bottom: var(--space-3);
+    }
+    .hero__cue {
+      bottom: var(--space-5);
+      height: 36px;
     }
   }
 
@@ -300,18 +327,19 @@ const { slides } = Astro.props;
       );
     };
 
-    /* The active tick's fill bar runs left-to-right over the dwell, so
-       the slider's pace is visible without a heavy progress UI. */
+    /* The active dot's progress ring closes over the dwell, so the
+       slider's pace is visible without a heavy progress UI. The tween
+       drives a --dwell custom property (0 → 1) the conic gradient reads. */
     const runFill = (idx: number) => {
       if (REDUCED) return;
       fillTween?.kill();
-      fills.forEach((f, i) => gsap.set(f, { scaleX: i === idx ? 0 : 0 }));
+      fills.forEach((f) => gsap.set(f, { '--dwell': 0 }));
       const fill = fills[idx];
       if (!fill) return;
       fillTween = gsap.fromTo(
         fill,
-        { scaleX: 0 },
-        { scaleX: 1, duration: ADVANCE_MS / 1000, ease: 'none' },
+        { '--dwell': 0 },
+        { '--dwell': 1, duration: ADVANCE_MS / 1000, ease: 'none' },
       );
     };
 
@@ -320,7 +348,7 @@ const { slides } = Astro.props;
       slides[current].setAttribute('aria-hidden', 'true');
       ticks[current]?.classList.remove('is-active');
       ticks[current]?.setAttribute('aria-selected', 'false');
-      if (!REDUCED) gsap.set(fills[current], { scaleX: 0 });
+      if (!REDUCED) gsap.set(fills[current], { '--dwell': 0 });
 
       current = (next + slides.length) % slides.length;
 
