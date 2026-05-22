@@ -21,14 +21,14 @@ Status: scope draft, 2026-05-21. Author: Pax. Open decisions resolved by Stephan
 ```
 /                 Home — one-page vertical scroll (hero / product / lifestyle)
 /volage           Product page — Volage
-/caprices         Product page — Caprices
+/caprice          Product page — Caprice
 /about            About page — SHIPS (resolved), see §6
 [age gate]        21+ interstitial, gates first visit, see §7.1
 [404]             Minimal branded fallback
 ```
 
 - No contact page. Contact lives in a sticky scroll-following element (§7.2) and the footer (§7.3).
-- Flat structure, four pages maximum. Nav is minimal: wordmark (home), Volage, Caprices, and About if it ships.
+- Flat structure, four pages maximum. Nav is minimal: wordmark (home), Volage, Caprice, and About if it ships.
 
 ---
 
@@ -50,13 +50,13 @@ One continuous vertical scroll. Three sections in fixed order. Each fills roughl
 
 **Resolved: Option B, the paired editorial slider.** The three options below are kept for context.
 
-- **Option A — two static panels, side by side.** Volage left, Caprices right, each a full-height half-width panel with cigar image, name, one-line tagline, and a "discover" link to the product page. Pros: both SKUs visible at once, no interaction needed, reads instantly, robust on mobile (stacks cleanly). Cons: less "designed," more catalogue-adjacent.
-- **Option B — paired editorial feature with a horizontal slider. RECOMMENDED.** A single product section that presents the two SKUs as a deliberate pair (the range is two cigars, that is the story), with a horizontal slider/scroll to move between Volage and Caprices as full-bleed editorial frames. Each frame: large cigar shot, name set in display serif, the one-line tagline, a short lede, and the link through to the product page. Pros: feels like a lifestyle brand presenting a tight, considered range; the slider is the "cool" surface; mirrors the hero's slider language so the page has one consistent motion vocabulary. Cons: only one SKU visible at a time — mitigated by a clear two-dot indicator and a peek of the next frame at the edge.
+- **Option A — two static panels, side by side.** Volage left, Caprice right, each a full-height half-width panel with cigar image, name, one-line tagline, and a "discover" link to the product page. Pros: both SKUs visible at once, no interaction needed, reads instantly, robust on mobile (stacks cleanly). Cons: less "designed," more catalogue-adjacent.
+- **Option B — paired editorial feature with a horizontal slider. RECOMMENDED.** A single product section that presents the two SKUs as a deliberate pair (the range is two cigars, that is the story), with a horizontal slider/scroll to move between Volage and Caprice as full-bleed editorial frames. Each frame: large cigar shot, name set in display serif, the one-line tagline, a short lede, and the link through to the product page. Pros: feels like a lifestyle brand presenting a tight, considered range; the slider is the "cool" surface; mirrors the hero's slider language so the page has one consistent motion vocabulary. Cons: only one SKU visible at a time — mitigated by a clear two-dot indicator and a peek of the next frame at the edge.
 - **Option C — full-screen scroll-snap, one SKU per panel.** Each SKU gets its own scroll-snapped viewport within the section. Pros: maximum drama per cigar. Cons: adds two more "screens" to the scroll, can feel slow, and the snap fights the otherwise free scroll of the page.
 
-Rationale for B: it satisfies "looks cool" without losing the both-products-at-a-glance benefit (the edge-peek and indicator keep the second SKU present), and it reuses the hero's slider pattern so the site reads as one coherent object. Volage is the live SKU and leads; Caprices is the Q4 2026 SKU and can carry a discreet "Q4 2026" tag.
+Rationale for B: it satisfies "looks cool" without losing the both-products-at-a-glance benefit (the edge-peek and indicator keep the second SKU present), and it reuses the hero's slider pattern so the site reads as one coherent object. Volage is the live SKU and leads; Caprice is the Q4 2026 SKU and can carry a discreet "Q4 2026" tag.
 
-Each SKU frame pulls from the distributor pager: name, tagline (Volage — *A cigar that doesn't wait for an occasion*; Caprices — *A small indulgence, taken short*), one short lede, link to the product page. No spec tables in this section — spec lives on the product page.
+Each SKU frame pulls from the distributor pager: name, tagline (Volage — *A cigar that doesn't wait for an occasion*; Caprice — *A small indulgence, taken short*), one short lede, link to the product page. No spec tables in this section — spec lives on the product page.
 
 ### 3.3 Lifestyle section — the Mariposa story
 
@@ -70,7 +70,7 @@ Each SKU frame pulls from the distributor pager: name, tagline (Volage — *A ci
 
 ## 4. Product page template
 
-One shared template, two instances (Volage, Caprices). Content adapted from the distributor pagers (`mariposa - Volage`, `mariposa - Caprices`) for a web/consumer-distributor read — same substance, less print-grid rigidity, more room to breathe.
+One shared template, two instances (Volage, Caprice). Content adapted from the distributor pagers (`mariposa - Volage`, `mariposa - Caprice`) for a web/consumer-distributor read — same substance, less print-grid rigidity, more room to breathe.
 
 Section order, top to bottom:
 
@@ -83,7 +83,7 @@ Section order, top to bottom:
 
 Notes:
 - No price, no buy button, no add-to-cart. **Resolved: no "Trade enquiries" line on the product pages.** Contact lives in the sticky element and the footer only.
-- Caprices is pre-launch (release Q4 2026). The template carries a discreet "Q4 2026" tag rather than hiding the SKU.
+- Caprice is pre-launch (release Q4 2026). The template carries a discreet "Q4 2026" tag rather than hiding the SKU.
 - Template must hold a third SKU later without redesign.
 
 ---
@@ -151,14 +151,14 @@ Treatment note for every slot: per the design system, full-bleed photography is 
 ### Product section (home §3.2)
 
 6. **Volage — editorial product frame.** The Volage cigar (Canonazo, long, elegant) styled as a hero object, room to breathe, gold leaf visible. Beat: the flagship, the live SKU.
-7. **Caprices — editorial product frame.** The Caprices cigar (Gordito, short and thick, darker Maduro wrapper) styled to match frame 6. Beat: the second SKU, the short indulgence. Can carry a "Q4 2026" tag.
+7. **Caprice — editorial product frame.** The Caprice cigar (Gordito, short and thick, darker Maduro wrapper) styled to match frame 6. Beat: the second SKU, the short indulgence. Can carry a "Q4 2026" tag.
 
 ### Product pages (one set per SKU, §4)
 
 8. **Volage product hero shot.** Clean, large, full cigar — the existing PNG is a usable placeholder; a finished commissioned shot replaces it.
 9. **Volage detail shot.** Close on the cap and the gold leaf, or the foot, showing construction quality. Beat: the triple cap, the craft, draw-tested.
-10. **Caprices product hero shot.** As frame 8, for Caprices (Maduro wrapper, Gordito format).
-11. **Caprices detail shot.** As frame 9, for Caprices — the deeper, roasted Maduro wrapper texture.
+10. **Caprice product hero shot.** As frame 8, for Caprice (Maduro wrapper, Gordito format).
+11. **Caprice detail shot.** As frame 9, for Caprice — the deeper, roasted Maduro wrapper texture.
 12. *(Optional)* **A supporting tasting-mood image per SKU** — coffee, wood, caramel, toasted nuts as a still life echoing the tasting notes. Refine with Axel.
 
 ### Lifestyle section (home §3.3)

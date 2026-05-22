@@ -2,7 +2,7 @@
 
 Author: Axel. 2026-05-21. For Yulia's Astro build.
 
-Source of truth: the three locked print pagers (`mariposa - brand`, `mariposa - Volage`, `mariposa - Caprices`, all 2026-05-20). Adapted copy is marked ADAPTED and traces verbatim or near-verbatim to those pagers. New copy is marked NEW. Spec lists and tasting notes are DATA — carried verbatim, not rewritten.
+Source of truth: the three locked print pagers (`mariposa - brand`, `mariposa - Volage`, `mariposa - Caprice`, all 2026-05-20). Adapted copy is marked ADAPTED and traces verbatim or near-verbatim to those pagers. New copy is marked NEW. Spec lists and tasting notes are DATA — carried verbatim, not rewritten.
 
 Provenance note for the build: "Havana-seed" is a seed lineage, not an origin. No copy on this site states or implies Cuban origin or Cuban manufacture. Mariposa is hand-rolled in Jember, East Java, Indonesia. Keep that legible in any caption or alt text added later.
 
