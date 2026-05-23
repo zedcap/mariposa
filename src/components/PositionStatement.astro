@@ -25,6 +25,13 @@ interface Props {
 const { positionPink, positionInk, subline } = Astro.props;
 ---
 
+{/* Word-level colour split inside each half (Stephane 2026-05-23).
+    Left half: "Volcanic" ink, "Soul." pink. Right half: "24-Carat" ink,
+    "Gold." gold-deep. The two halves still slide in from their sides as
+    units — the colour spans nest inside `.slide-inner` and inherit the
+    motion. positionPink / positionInk props are passed through unused
+    so home.json stays valid; the spans are hard-coded because a single
+    brand line doesn't earn the structured-data overhead. */}
 <section class="position" aria-label="Mariposa" data-position>
   <div class="position__inner container">
     {/* The position sentence. Each half lives inside a horizontal
@@ -33,13 +40,17 @@ const { positionPink, positionInk, subline } = Astro.props;
     <h2 class="position__line">
       <span class="position__half">
         <span class="slide-mask">
-          <span class="slide-inner position__em" data-direction="left">{positionPink}</span>
+          <span class="slide-inner" data-direction="left">
+            <span class="position__ink">Volcanic</span>{' '}<span class="position__em">Soul.</span>
+          </span>
         </span>
       </span>
       {' '}
       <span class="position__half">
         <span class="slide-mask">
-          <span class="slide-inner position__ink" data-direction="right">{positionInk}</span>
+          <span class="slide-inner" data-direction="right">
+            <span class="position__ink">24-Carat</span>{' '}<span class="position__gold">Gold.</span>
+          </span>
         </span>
       </span>
     </h2>
@@ -94,8 +105,15 @@ const { positionPink, positionInk, subline } = Astro.props;
   .position__half {
     display: inline;
   }
+  /* Word-level colour spans. `--em` = pink word ("Soul."),
+     `--ink` = ink/black word ("Volcanic", "24-Carat"),
+     `--gold` = gold word ("Gold."). Gold-deep is chosen over
+     gold-leaf so the word holds its weight against the white
+     background and partners the ink and pink at display size
+     without washing out. */
   .position__em { color: var(--pink); }
   .position__ink { color: var(--ink); }
+  .position__gold { color: var(--gold-deep); }
 
   /* Horizontal slide-in mask. Each half is wrapped in a clipping box
      wide enough to absorb the off-stage transform; the inner element

@@ -302,14 +302,17 @@ const imageMode: Record<string, 'object' | 'scene'> = {
     margin: 0 0 var(--space-5) 0;
   }
 
+  /* Name / tagline / lede sizes (Stephane review 2026-05-23). The
+     step-down originally introduced as a Volage-only modifier is now
+     the base size for both SKUs — the side-by-side comparison decided
+     in favour of the smaller scale across the range. The
+     `.range__frame--volage` modifier has been retired. Same clamp
+     shape as the prior step-down; lede sits at --fs-small (14px),
+     the next named token below --fs-body (17px). */
   .range__name {
     font-family: var(--font-display);
     font-weight: 300;
-    /* Sized to match the position-statement headline above (same clamp
-       values), so the two display headlines tune together at every
-       viewport width. Applies to both Volage and Caprice — they share
-       this class and should not size differently in the same slider. */
-    font-size: clamp(1.9rem, 4.8vw, 3.4rem);
+    font-size: clamp(1.6rem, 4.0vw, 2.8rem);
     line-height: 0.96;
     letter-spacing: var(--ls-display);
     margin: 0;
@@ -318,35 +321,17 @@ const imageMode: Record<string, 'object' | 'scene'> = {
     font-family: var(--font-display);
     font-style: italic;
     font-weight: 400;
-    font-size: clamp(1.25rem, 2.4vw, 1.6rem);
+    font-size: clamp(1.05rem, 2.0vw, 1.35rem);
     color: var(--ink);
     margin-top: var(--space-5);
   }
   .range__lede {
     font-family: var(--font-body);
-    font-size: var(--fs-body);
+    font-size: var(--fs-small);
     line-height: var(--lh-body);
     color: var(--ink-soft);
     margin-top: var(--space-4);
-    max-width: 40ch;
-  }
-
-  /* Volage-only size step-down (Stephane review 2026-05-23). The Volage
-     lede grew substantially; the name and tagline step down one notch
-     to keep the copy column hierarchy intact and let the longer lede
-     breathe in the existing card. Caprice keeps the base sizes above
-     for side-by-side comparison — do not touch those. Same clamp
-     shape, lower bounds. Lede drops from --fs-body (17px) to
-     --fs-small (14px), the next named token down. */
-  .range__frame--volage .range__name {
-    font-size: clamp(1.6rem, 4.0vw, 2.8rem);
-  }
-  .range__frame--volage .range__tagline {
-    font-size: clamp(1.05rem, 2.0vw, 1.35rem);
-  }
-  .range__frame--volage .range__lede {
-    font-size: var(--fs-small);
-    /* Slightly wider measure so the longer paragraph doesn't tower. */
+    /* Slightly wider measure so the longer paragraphs don't tower. */
     max-width: 46ch;
   }
 
