@@ -138,7 +138,7 @@ const { positionPink, positionInk, subline } = Astro.props;
      second half's offset — the cascade reads as a clear diagonal but
      "Volcanic Soul." no longer hugs the gutter. */
   .position__half--first {
-    margin-left: 14%;
+    margin-left: calc(14% + 0.7ch);
   }
   /* Second half pushed right to read as a clearly diagonal staircase.
      Was 14% — now 30% desktop. Plus one character of additional offset
@@ -154,7 +154,7 @@ const { positionPink, positionInk, subline } = Astro.props;
        its desktop offset so the cascade keeps the same shape at a
        narrower stage. */
     .position__half--first {
-      margin-left: 9%;
+      margin-left: calc(9% + 0.7ch);
     }
     .position__half--second {
       margin-left: calc(18% + 0.7ch);
@@ -220,7 +220,7 @@ const { positionPink, positionInk, subline } = Astro.props;
      here. Static, per Stephane 2026-05-23. */
   .position__divider {
     width: clamp(64px, 8vw, 96px);
-    margin-top: clamp(var(--space-5), 3.5vw, var(--space-6));
+    margin-top: clamp(var(--space-6), 4.5vw, var(--space-7));
     margin-bottom: var(--space-3);
     margin-left: auto;
     margin-right: auto;
