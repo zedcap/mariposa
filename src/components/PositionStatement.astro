@@ -61,13 +61,13 @@ const { positionPink, positionInk, subline } = Astro.props;
         loads with no extra request. */}
     <div class="position__divider" aria-hidden="true" set:html={dividerGoldLeaf} />
 
-    {/* Deterministic line break after "occasions,". The trailing clause
-        is wrapped in a block-display span so the sub-line always reads
-        as two lines, regardless of viewport width. Same pattern as the
-        footer brand-line tail. The whole .position__subline still drives
+    {/* Deterministic two-line sub-line. Both halves are wrapped in
+        block-display, nowrap spans so the break sits exactly after
+        "occasions," at every viewport. Same pattern as the footer
+        brand-line lead/tail. The whole .position__subline still drives
         the fade-in as one element; both lines reveal together. */}
     <p class="position__subline" data-position-subline>
-      For those who don't wait for special occasions,<span class="position__subline-tail">but create them.</span>
+      <span class="position__subline-lead">For those who don't wait for special occasions,</span><span class="position__subline-tail">but create them.</span>
     </p>
   </div>
 </section>
@@ -160,17 +160,23 @@ const { positionPink, positionInk, subline } = Astro.props;
     font-family: var(--font-display);
     font-style: italic;
     font-weight: 400;
-    font-size: clamp(1.35rem, 2.8vw, 1.75rem);
+    /* Fluid: 14px at ~320px viewport, scales to 28px desktop ceiling.
+       Floor chosen so the lead clause (46ch) fits in the 272px content
+       width at narrowest target without wrapping. Same pattern as the
+       footer brand-line: keep the desktop ceiling, drop the floor. */
+    font-size: clamp(14px, 4.4vw, 1.75rem);
     line-height: var(--lh-snug);
     color: var(--ink-soft);
     margin-top: 0;
-    max-width: 34ch;
+    max-width: 46ch;
   }
-  /* Forces the trailing clause onto its own line. Block display puts
-     the break immediately after "occasions,"; the comma stays on the
-     first line. No other treatment change. */
+  /* Forces the break immediately after "occasions,". Both halves are
+     block-display, nowrap, so the line split is deterministic at every
+     viewport and the lead never wraps internally. */
+  .position__subline-lead,
   .position__subline-tail {
     display: block;
+    white-space: nowrap;
   }
 
   @media (prefers-reduced-motion: reduce) {
