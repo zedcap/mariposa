@@ -39,7 +39,12 @@ const { paragraphs } = Astro.props;
   .story {
     position: relative;
     background: #f2f0e9;
-    padding-block: clamp(var(--space-9), 14vw, calc(var(--space-10) * 1.4));
+    /* Top padding halved (Stephane review 2026-05-23): paired cut
+       with .range's padding-bottom to close the slider-controls →
+       story-card gap ~50%. Bottom padding preserved at the original
+       value so the story-to-footer rhythm below is unchanged. */
+    padding-top: clamp(var(--space-7), 7vw, calc(var(--space-10) * 0.7));
+    padding-bottom: clamp(var(--space-9), 14vw, calc(var(--space-10) * 1.4));
   }
 
   /* ── Story card ─────────────────────────────────────────────── */
@@ -51,10 +56,14 @@ const { paragraphs } = Astro.props;
     background: var(--pearl);
     border: 1px solid var(--border-gold);
     box-shadow: var(--shadow-lift);
-    /* Asymmetric — the card hangs off the left grid line, not centred,
-       and is held to an editorial measure, not full width. */
-    max-width: 600px;
-    margin-left: clamp(0px, 6vw, 96px);
+    /* Centered + widened (Stephane review 2026-05-23). Previous
+       asymmetry (margin-left clamp + 600px cap) broke the now-removed
+       brandmark image bed; with the bed gone the offset has no
+       remaining rationale. Card recentred via margin-inline:auto and
+       widened 600 → 760px so it occupies more horizontal real estate
+       without losing the editorial measure on the prose inside. */
+    max-width: 760px;
+    margin-inline: auto;
     padding: clamp(var(--space-7), 5vw, var(--space-9));
   }
   /* Paper-grain over the card surface. */
@@ -76,7 +85,6 @@ const { paragraphs } = Astro.props;
 
   @media (max-width: 720px) {
     .story__card {
-      margin-left: 0;
       padding: var(--space-7);
     }
   }
