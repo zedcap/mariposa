@@ -54,7 +54,11 @@ const { footer } = global;
   }
 
   .site-footer__rule {
-    margin-block: var(--footer-rhythm);
+    /* Halved gap above and below the divider per Stephane 2026-05-23.
+       --footer-rhythm (48px) stays on the section padding and the
+       brand-line / bottom rhythm; the divider alone gets the tighter
+       block margin. */
+    margin-block: var(--space-5);
   }
 
   .site-footer__bottom {
