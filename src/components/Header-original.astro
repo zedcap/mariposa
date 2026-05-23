@@ -1,38 +1,50 @@
 ---
-/* Site header — header-at-the-top trial (Stephane, 2026-05-23).
+/* BACKUP: menu-below-hero pattern. Not loaded by the build (no import
+   references this filename). Restore by swapping back to Header.astro /
+   BaseLayout.astro if Stephane reverts. Kept verbatim as of 2026-05-23. */
 
-   Placement: the header renders first in the main flow and uses
-   `position: sticky; top: 0`, so it sits at the top of the viewport
-   from first paint and stays there for the rest of the scroll. There
-   is no resting-below-the-hero state in this variant; the bar is
-   always at the top, always carrying the lift shadow + contracted
-   height that the previous pattern reserved for its stuck state.
+/* Site header — marigold.global nav pattern.
 
-   The previous below-the-hero pattern (resting → stuck transition,
-   sentinel + IntersectionObserver) is preserved verbatim in
-   `Header-original.astro`. Restore by swapping the filenames back.
+   Placement: the header is NOT fixed to the top. It sits in normal
+   document flow and uses `position: sticky; top: 0`. On a page with a
+   hero it renders directly below the hero, so on load the nav rests
+   below the hero imagery. As the user scrolls past the hero the header
+   reaches the top of the viewport and sticks there for the rest of the
+   scroll. (marigold.global achieves this with a GSAP ScrollTrigger pin;
+   native CSS `sticky` gives the same behaviour with no JavaScript.)
 
-   The bar is opaque (Stephane, 2026-05-23 — translucency explicitly
-   rejected for this surface). The background colour is scroll-tied:
-   a script in this file samples the section directly beneath the nav
-   band and interpolates from opaque white to opaque cream as the
-   white→cream gradient wedge (`.range__bleed` in ProductSlider)
-   slides past the nav's bottom edge. See the script docstring below
-   for the geometry. The listener does not care about where in the
-   document the header lives — only about nav-bottom-to-wedge
-   geometry — so it carries over unchanged from the previous pattern.
+   Two visual states:
+   - RESTING — below the hero, in flow. Solid colour-tracked bar, gold
+     hairline underneath, no shadow. It belongs to the page.
+   - STUCK — detached at the top, content scrolling beneath it. Same
+     colour-tracked bar, plus a faint lift shadow so it reads as a
+     floating header, not part of the page body. No backdrop blur:
+     the bar is opaque (Stephane, 2026-05-23 — translucency explicitly
+     rejected for this surface).
 
-   `overHero` is retained as a prop so existing call-sites compile
-   unchanged; it no longer gates visual state (the header is always at
-   the top now) and is reserved purely for future signalling. */
+   The background colour is itself scroll-tied: a script in this file
+   samples the section directly beneath the nav band and interpolates
+   from opaque white to opaque cream as the white→cream gradient
+   wedge (`.range__bleed` in ProductSlider) slides past the nav's
+   bottom edge. See the script docstring below for the geometry.
+
+   `overHero` is true when the page has a hero (the header has somewhere
+   to rest below). When false — interior pages with no hero — the header
+   is the first element in flow and is therefore stuck from the first
+   paint: it renders in the stuck state immediately.
+
+   A 1px sentinel just above the header drives the resting/stuck class
+   toggle (a sticky element cannot reliably self-detect its stuck state
+   in pure CSS). Without JS the header still sticks correctly; it simply
+   keeps its initial styling rather than animating between the two
+   states. */
 import { withBase } from '../lib/path';
 
 interface Props {
-  /** Retained for API stability. The header sits at the top in either
-      case under this pattern; the prop no longer drives visual state. */
+  /** True when the page has a hero for the nav to rest below. */
   overHero?: boolean;
 }
-const { overHero: _overHero = false } = Astro.props;
+const { overHero = false } = Astro.props;
 /* Astro.url.pathname includes the base ('/mariposa/volage' on staging),
    so compare against base-prefixed hrefs. Normalise the trailing slash
    the GitHub Pages build adds to directory URLs. */
@@ -45,9 +57,15 @@ const isActive = (href: string) => {
 };
 ---
 
+{/* Sentinel — sits in flow right before the header. While it is in
+    view the header is resting; once it scrolls out the header is
+    stuck. Only rendered when there is a hero to rest below. */}
+{overHero && <div class="site-header__sentinel" aria-hidden="true"></div>}
+
 <header
-  class="site-header is-stuck"
+  class:list={['site-header', { 'is-stuck': !overHero }]}
   data-header
+  data-over-hero={overHero ? 'true' : 'false'}
   style="--nav-bg-current: var(--nav-white);"
 >
   <div class="site-header__inner container">
@@ -63,6 +81,14 @@ const isActive = (href: string) => {
 </header>
 
 <style>
+  /* The sentinel carries no height of its own; it just marks the
+     point above the header for the observer. */
+  .site-header__sentinel {
+    height: 1px;
+    margin-bottom: -1px;
+    pointer-events: none;
+  }
+
   /* Opaque palette anchors for the scroll-tied interpolation. The nav
      never sees translucency: the brief explicitly rejected it
      ("opaque, no translucency, no content visible through"). Cream
@@ -175,17 +201,19 @@ const isActive = (href: string) => {
 </style>
 
 <script>
-  /* Header behaviour: scroll-tied background colour only. The
-     resting/stuck toggle was retired with the move to header-at-the-top
-     (the bar is always at the top now; the previous sentinel + IO is
-     preserved in Header-original.astro).
+  /* Header behaviour, split in two:
 
-     The brief for the colour scrub: the nav should always carry the
-     colour of the section directly beneath it. As the cream gradient
-     wedge (`.range__bleed`) slides up past the nav's bottom edge, the
-     nav background interpolates from white to cream so it reads as a
-     seamless continuation of the page underneath rather than a
-     separately-skinned bar that snaps state at the seam.
+     1. Resting/stuck toggle — unchanged in principle. A sentinel
+        before the header drives an IntersectionObserver that flips the
+        `.is-stuck` class (carrying the lift shadow + height contract).
+
+     2. Scroll-tied background colour. The brief: the nav should always
+        carry the colour of the section directly beneath it. As the
+        cream gradient wedge (`.range__bleed`) slides up past the
+        nav's bottom edge, the nav background interpolates from white
+        to cream so it reads as a seamless continuation of the page
+        underneath rather than a separately-skinned bar that snaps
+        state at the seam.
 
         Anchors (per Stephane):
           - progress 0 → wedge BOTTOM at nav bottom → fully WHITE
@@ -213,7 +241,19 @@ const isActive = (href: string) => {
   const header = document.querySelector<HTMLElement>('[data-header]');
 
   if (header) {
-    // ── Scroll-tied background colour ────────────────────────────
+    // ── 1. Resting/stuck toggle ──────────────────────────────────
+    if (header.dataset.overHero === 'true') {
+      const sentinel = header.previousElementSibling;
+      if (sentinel) {
+        const io = new IntersectionObserver(
+          ([entry]) => header.classList.toggle('is-stuck', !entry.isIntersecting),
+          { threshold: 0 },
+        );
+        io.observe(sentinel);
+      }
+    }
+
+    // ── 2. Scroll-tied background colour ─────────────────────────
     const wedge = document.querySelector<HTMLElement>('.range__bleed');
     const creamSections = Array.from(
       document.querySelectorAll<HTMLElement>('[data-cream-bg]'),

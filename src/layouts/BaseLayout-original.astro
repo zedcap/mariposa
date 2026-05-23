@@ -1,24 +1,24 @@
 ---
+/* BACKUP: menu-below-hero pattern. Not loaded by the build (no import
+   references this filename). Restore by swapping back to Header.astro /
+   BaseLayout.astro if Stephane reverts. Kept verbatim as of 2026-05-23. */
+
 /* Base layout — the shared shell for every page.
    Wires the design tokens + base CSS, the age gate, the header,
    the sticky contact element, and the footer.
 
-   Nav placement — header-at-the-top trial (Stephane, 2026-05-23). The
-   header renders first in the main flow with `position: sticky; top: 0`,
-   so it sits at the top of the viewport from first paint and stays
-   there as the page scrolls. The hero (when present) is the first
-   content section below the header rather than the topmost layout
-   element.
+   Nav placement — marigold.global pattern. The header is NOT pinned to
+   the top of the viewport. It sits in normal document flow directly
+   below the hero, then `position: sticky; top: 0` makes it detach and
+   stick to the top once the hero has scrolled away. (marigold.global
+   does the same with a GSAP ScrollTrigger pin; native `sticky` gives
+   the identical behaviour with no JavaScript.)
 
-   The previous pattern — header rendered below the hero, sticking on
-   scroll — is preserved verbatim in `Header-original.astro` and
-   `BaseLayout-original.astro`. Restore by swapping the filenames back.
-
-   The cream-tracking scroll listener in Header.astro is untouched: it
-   samples `.range__bleed` against the nav's bottom edge regardless of
-   where the header lives in flow, so the colour-tied background still
-   reads white above the wedge, interpolates through it, and resolves
-   cream below. */
+   A page with a hero passes its hero markup into the named `hero` slot.
+   It renders before the header, so the header rests below it on load.
+   A page with no hero leaves the `hero` slot empty: the header is then
+   the first thing in flow and is stuck to the top from the start. One
+   mechanism, both cases. */
 import '../styles/tokens.css';
 import '../styles/base.css';
 import Header from '../components/Header.astro';
@@ -69,13 +69,11 @@ const grainImage = `url("${withBase('/paper-grain.svg')}")`;
 
     <AgeGate />
 
-    <Header overHero={hasHero} />
-
     <main id="main">
-      {/* Header renders above this. The hero (when present) is now the
-          first content section below the sticky nav, not the topmost
-          layout element. */}
+      {/* Hero renders first so the header rests below it on load.
+          Empty on hero-less pages — header then sits at the top. */}
       <slot name="hero" />
+      <Header overHero={hasHero} />
       <slot />
     </main>
 
