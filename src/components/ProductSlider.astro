@@ -29,8 +29,7 @@ import { withBase } from '../lib/path';
 interface ProductFrame {
   name: string;
   slug: string;
-  edition?: string;
-  tag?: string;
+  vitola: string;
   tagline: string;
   homeLede: string;
 }
@@ -72,7 +71,7 @@ const imageMode: Record<string, 'object' | 'scene'> = {
     <div class="range__track" data-range-track>
       {
         products.map((product, fi) => (
-          <article class="range__frame" data-range-frame data-frame-index={fi}>
+          <article class:list={['range__frame', `range__frame--${product.slug}`]} data-range-frame data-frame-index={fi}>
             {/* Ghost letter — a giant display initial behind the cigar,
                 the title-break depth move. Scrubs scale/rotate. */}
             <span class="range__ghost" data-range-ghost aria-hidden="true">
@@ -97,10 +96,7 @@ const imageMode: Record<string, 'object' | 'scene'> = {
               </div>
 
               <div class="range__copy" data-range-copy>
-                <div class="range__tags">
-                  {product.edition && <span class="range__tag">{product.edition}</span>}
-                  {product.tag && <span class="range__tag range__tag--muted">{product.tag}</span>}
-                </div>
+                <p class="range__vitola">{product.vitola}</p>
                 <h3 class="range__name">{product.name}</h3>
                 <p class="range__tagline">{product.tagline}</p>
                 <p class="range__lede">{product.homeLede}</p>
@@ -291,25 +287,19 @@ const imageMode: Record<string, 'object' | 'scene'> = {
   }
 
   /* ── Copy column ────────────────────────────────────────────── */
-  .range__tags {
-    display: flex;
-    gap: var(--space-3);
-    margin-bottom: var(--space-5);
-  }
-  .range__tag {
+  /* Vitola — the cigar's shape name (Canonazo, Gordito). Replaces
+     the earlier boxed edition/release pills. Eyebrow register: small,
+     uppercase, tracked, gold-deep. Identical treatment across both
+     SKUs — this is the only element the two cards still share at full
+     parity (the name / tagline / lede may differ in size per slug). */
+  .range__vitola {
     font-family: var(--font-body);
     font-size: var(--fs-eyebrow);
     font-weight: 600;
     letter-spacing: var(--ls-eyebrow);
     text-transform: uppercase;
     color: var(--gold-deep);
-    border: 1px solid var(--border-gold);
-    border-radius: var(--radius-xs);
-    padding: 5px 11px;
-  }
-  .range__tag--muted {
-    color: var(--ash);
-    border-color: var(--whisper);
+    margin: 0 0 var(--space-5) 0;
   }
 
   .range__name {
@@ -339,6 +329,25 @@ const imageMode: Record<string, 'object' | 'scene'> = {
     color: var(--ink-soft);
     margin-top: var(--space-4);
     max-width: 40ch;
+  }
+
+  /* Volage-only size step-down (Stephane review 2026-05-23). The Volage
+     lede grew substantially; the name and tagline step down one notch
+     to keep the copy column hierarchy intact and let the longer lede
+     breathe in the existing card. Caprice keeps the base sizes above
+     for side-by-side comparison — do not touch those. Same clamp
+     shape, lower bounds. Lede drops from --fs-body (17px) to
+     --fs-small (14px), the next named token down. */
+  .range__frame--volage .range__name {
+    font-size: clamp(1.6rem, 4.0vw, 2.8rem);
+  }
+  .range__frame--volage .range__tagline {
+    font-size: clamp(1.05rem, 2.0vw, 1.35rem);
+  }
+  .range__frame--volage .range__lede {
+    font-size: var(--fs-small);
+    /* Slightly wider measure so the longer paragraph doesn't tower. */
+    max-width: 46ch;
   }
 
   .range__link {
@@ -499,7 +508,7 @@ const imageMode: Record<string, 'object' | 'scene'> = {
     // frame plays on scroll-in; subsequent frames play when activated.
     const frameState = frames.map((frame) => {
       const copyEls = frame.querySelectorAll<HTMLElement>(
-        '.range__tags, .range__name, .range__tagline, .range__lede, .range__link',
+        '.range__vitola, .range__name, .range__tagline, .range__lede, .range__link',
       );
       const media = frame.querySelector<HTMLElement>('[data-range-media]');
       const ghost = frame.querySelector<HTMLElement>('[data-range-ghost]');
