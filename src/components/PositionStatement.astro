@@ -56,17 +56,19 @@ const { positionPink, positionInk, subline } = Astro.props;
 <style>
   .position {
     background: var(--white);
-    /* Symmetric vertical breathing room: top and bottom both equal one
-       nav-height. Desktop: 84px (resting nav height). Mobile: 66px. The
-       headline sits one nav-height below the nav-bar's bottom edge; the
-       sub-line sits one nav-height above the next section. */
+    /* Top padding equals one nav-height (84px desktop / 66px mobile),
+       matching the gap from the nav-bar's bottom edge to the headline.
+       Bottom padding is intentionally tighter (~2/3 of top) per
+       Stephane's 2026-05-23 iteration: closes the gap between the
+       sub-line and the top of the Volage frame in the product section.
+       Asymmetry is deliberate; do not re-symmetrise. */
     padding-top: 84px;
-    padding-bottom: 84px;
+    padding-bottom: 56px;
   }
   @media (max-width: 720px) {
     .position {
       padding-top: 66px;
-      padding-bottom: 66px;
+      padding-bottom: 44px;
     }
   }
 
