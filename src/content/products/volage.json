@@ -52,9 +52,9 @@
   ],
   "condensedSpecKeys": ["Vitola", "Format", "Wrapper", "Origin", "Strength", "Release"],
   "tasting": [
-    { "stage": "First third", "note": "Creamy and woody, grounded by an underlying note of coffee." },
-    { "stage": "Second third", "note": "The creaminess lingers as a rich sweetness begins to emerge." },
-    { "stage": "Final third", "note": "Spice arrives, the sweetness holds, and deep earth closes the smoke." }
+    { "stage": "First third", "note": "Creamy and woody, grounded by a rich, underlying note of roasted coffee." },
+    { "stage": "Second third", "note": "The creaminess lingers as a deep, soft sweetness begins to unfold." },
+    { "stage": "Final third", "note": "Warm spice arrives, the sweetness holds, and rich volcanic earth closes the smoke." }
   ],
   "packaging": [
     { "placeholderCaption": "PLACEHOLDER: Single Volage cigar in presentation packaging — closed box, front three-quarter view." },

@@ -107,16 +107,21 @@ const fullMarks = marks.length >= tasting.length + 1
   }
 
   /* ── Timeline ────────────────────────────────────────────── */
+  /* Rail spans the full height of the thirds column (2026-05-23):
+     the grid row auto-sizes to the taller child (the thirds stack),
+     and `align-self: stretch` (default) lets this column match.
+     The rail's first and last ticks then sit exactly at the top of
+     the first third and the bottom of the final third, with the
+     intermediate ticks landing on the thirds' transitions.
+     Previously: `height: 60vh; min-height: 360px` with `position:
+     sticky` — gave a fixed-height rail decoupled from the notes. */
   .smoke__timeline {
-    position: sticky;
-    top: 96px;     /* clears the stuck nav (66px) + breathing room */
-    align-self: start;
-    height: 60vh;  /* the rail's standing height while sticky */
-    min-height: 360px;
+    /* no fixed height — fills the grid row */
   }
   .smoke__rail {
     position: relative;
     height: 100%;
+    min-height: 100%;
     margin-left: var(--space-3);
   }
   .smoke__line {
@@ -187,6 +192,25 @@ const fullMarks = marks.length >= tasting.length + 1
        is set on the timeline column itself). */
     display: flex;
     flex-direction: column;
+    /* Progressive reveal (2026-05-23): each third starts hidden
+       and fades in when its corresponding tick activates. The
+       `.is-revealed` class is set once by the IntersectionObserver
+       in the script below and never removed. */
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 420ms var(--ease-paper),
+                transform 420ms var(--ease-paper);
+  }
+  .smoke__third.is-revealed {
+    opacity: 1;
+    transform: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .smoke__third {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
   }
   .smoke__stage {
     font-family: var(--font-body);
@@ -250,21 +274,26 @@ const fullMarks = marks.length >= tasting.length + 1
 </style>
 
 <script>
-  /* Each third reveals on enter; the sticky timeline ticks an active
-     class so the dot lights up as you read it. Two IntersectionObservers
-     are excessive — one watcher does both jobs. */
-  import { reveal } from '../lib/motion';
+  /* The timeline ticks an active class so the dot lights up as you
+     read each third. The same trigger also flips `.is-revealed` on
+     the third itself (CSS handles the fade). One watcher does both
+     jobs. Per-third GSAP reveal was removed 2026-05-23 — the CSS
+     fade tied to tick activation replaces it. */
 
   const thirds = document.querySelectorAll<HTMLElement>('.smoke [data-third-index]');
   const ticks  = document.querySelectorAll<HTMLElement>('.smoke [data-tick-index]');
 
-  // Reveal each third's text once on enter.
-  thirds.forEach((third) => {
-    reveal(third, { y: 26, duration: 0.95, start: 'top 78%' });
-  });
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // If reduced motion, snap all thirds visible immediately so the
+  // observer-driven fade never holds them back.
+  if (prefersReduced) {
+    thirds.forEach((t) => t.classList.add('is-revealed'));
+  }
 
   // Tick activation — the tick at index N lights when third N is the
-  // most-centred third in the viewport. The final tick (index N+1)
+  // most-centred third in the viewport. The same enter also reveals
+  // third N (and is sticky thereafter). The final tick (index N+1)
   // lights when the user has scrolled past the last third.
   if (thirds.length && ticks.length) {
     const setActive = (i: number) => {
@@ -273,9 +302,21 @@ const fullMarks = marks.length >= tasting.length + 1
       if (tick) tick.classList.add('is-active');
     };
 
+    const revealThird = (i: number) => {
+      const third = thirds[i];
+      if (third) third.classList.add('is-revealed');
+    };
+
     const io = new IntersectionObserver(
       (entries) => {
-        // Pick the entry that's most visible right now.
+        // Reveal any entering third immediately (one-shot, additive).
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            const idx = Number((entry.target as HTMLElement).dataset.thirdIndex);
+            revealThird(idx);
+          }
+        }
+        // Pick the entry that's most visible right now for tick activation.
         let bestEntry: IntersectionObserverEntry | null = null;
         for (const entry of entries) {
           if (!entry.isIntersecting) continue;
@@ -298,7 +339,9 @@ const fullMarks = marks.length >= tasting.length + 1
     thirds.forEach((t) => io.observe(t));
 
     // Light the first tick on load so the rail isn't blank before
-    // the first third is centred.
+    // the first third is centred. The first third itself stays
+    // hidden until it enters the centre band (per the brief: notes
+    // appear one by one as you scroll).
     setActive(0);
 
     // After the last third has scrolled past, light the closing tick.
