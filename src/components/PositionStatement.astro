@@ -102,21 +102,18 @@ const { positionPink, positionInk, subline } = Astro.props;
     text-align: center;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: stretch;
   }
 
-  /* Position sentence — display italic, wraps naturally.
-     The conventions overlay forbids locking it to one line.
+  /* Position sentence — display italic, staircase cascade.
      ----------------------------------------------------------------
-     Stagger (Stephane 2026-05-23): the two halves stack on separate
-     lines, left-aligned within a fixed-width column that itself sits
-     centred in the section. The second half is pushed right relative
-     to the first to read as an editorial cascade. The cascade column
-     is sized so the longer half ("24-Carat Gold." + its indent) fits
-     within `max-width: 18ch` at the headline's italic advance — i.e.
-     the column width is the cascade's bounding box, not the line
-     length. Per-half slide-in motion is unaffected (the masks sit
-     inside the offset halves). */
+     Stagger (Stephane 2026-05-23, revised): the two halves stack on
+     separate lines across the full container width. Each half is
+     `white-space: nowrap` so neither can wrap internally regardless
+     of column width — the max-width cap is gone, the staircase does
+     all the line-breaking. First half hugs the left third, second
+     half hugs the right third, on a wide stage. Per-half slide-in
+     motion is unaffected (the masks sit inside the offset halves). */
   .position__line {
     font-family: var(--font-display);
     font-style: italic;
@@ -125,28 +122,33 @@ const { positionPink, positionInk, subline } = Astro.props;
     line-height: 1.08;
     letter-spacing: var(--ls-display);
     margin: 0;
-    /* Cascade column: wide enough to hold the second half at its
-       indent without forcing the headline to wrap. Roughly the
-       width of "24-Carat Gold." plus the indent. */
-    max-width: 16ch;
+    /* No max-width cap: white-space: nowrap on each half does the
+       line-breaking job. Full container width is the cascade stage. */
     text-align: left;
+    width: 100%;
   }
   .position__half {
     display: block;
+    /* Force each half on one line regardless of cascade offsets or
+       container width. Stops "24-Carat Gold." from breaking onto two
+       lines at the display italic size. */
+    white-space: nowrap;
   }
-  /* Second half indents to the right relative to the first, creating
-     the editorial cascade. ~14% of the cascade column matches the
-     screenshot proportions (first half ~23% from viewport edge, second
-     ~35%). */
+  /* First half anchored hard left of the cascade stage. */
+  .position__half--first {
+    margin-left: 0;
+  }
+  /* Second half pushed right to read as a clearly diagonal staircase.
+     Was 14% — now 30% desktop. */
   .position__half--second {
-    margin-left: 14%;
+    margin-left: 30%;
   }
   @media (max-width: 480px) {
-    /* On narrow viewports the cascade still reads but the indent
-       eats into the right edge. Smaller indent keeps the staircase
-       legible without forcing internal wraps on the second half. */
+    /* Narrower viewport, tighter (but still bigger than the old 10%)
+       stagger so the staircase still reads without the second half
+       running off the right edge. */
     .position__half--second {
-      margin-left: 10%;
+      margin-left: 18%;
     }
   }
   /* Half-level colour spans. `--em` = pink (left half: "Volcanic
@@ -189,6 +191,8 @@ const { positionPink, positionInk, subline } = Astro.props;
        gold-leaf divider sat between them (top + bottom margins of the
        divider summed to roughly this value). Removed divider 2026-05-23. */
     margin-top: clamp(var(--space-4), 4vw, var(--space-6));
+    margin-left: auto;
+    margin-right: auto;
     max-width: 46ch;
   }
   /* Forces the break immediately after "occasions,". Both halves are
@@ -209,6 +213,8 @@ const { positionPink, positionInk, subline } = Astro.props;
     width: clamp(64px, 8vw, 96px);
     margin-top: clamp(var(--space-5), 3.5vw, var(--space-6));
     margin-bottom: var(--space-3);
+    margin-left: auto;
+    margin-right: auto;
     line-height: 0;
   }
   .position__divider :global(svg) {
