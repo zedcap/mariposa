@@ -1,9 +1,6 @@
 {
   "hero": {
     "slides": [
-      { "key": "poolside-bw", "caption": "Mariposa collage in monochrome: a woman with a cigar, a palm-fringed poolside at dusk revealed through her portrait." },
-      { "key": "pavilion-bw", "caption": "Mariposa collage in monochrome: a woman with a cigar, a palm vista revealed through her portrait, the wordmark on the gold band." },
-      { "key": "jungle-bw", "caption": "Mariposa collage in monochrome: a woman with a cigar, a jungle vista at sunset revealed through her portrait." },
       { "key": "poolside", "caption": "Mariposa collage in colour: a woman with a cigar, a palm-fringed poolside at dusk revealed through her portrait." },
       { "key": "pavilion", "caption": "Mariposa collage in colour: a woman with a cigar, a palm vista revealed through her portrait, the wordmark on the gold band." },
       { "key": "jungle", "caption": "Mariposa collage in colour: a woman with a cigar, a jungle vista at sunset revealed through her portrait." }

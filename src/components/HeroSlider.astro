@@ -20,28 +20,19 @@
    the design system's "full-bleed photography = B&W / duotone" rule.
    Stephane's call (2026-05-22); recorded in mariposa-design-conventions.md.
 
-   6 frames, slow auto-advance (7s), pause on hover, manual dots.
+   3 frames, slow auto-advance (7s), pause on hover, manual dots.
    prefers-reduced-motion: no Ken Burns, instant cross-fade, scroll cue
    static. */
 import { Image } from 'astro:assets';
 
 /* Mariposa hero frames — the collage device: the same faceless woman
-   with a cigar on three worlds, shown twice. Order is deliberate and
-   fixed: three monochrome treatments first (scenes 1, 3, 2), then the
-   same three scenes in colour (1, 3, 2). The slider reads as a
-   transition device, monochrome → colour. Landscape source, 3200×1800
-   (16:9). */
-import heroImage1Bw from '../assets/hero-mariposa-1-bw.jpg';
-import heroImage3Bw from '../assets/hero-mariposa-3-bw.jpg';
-import heroImage2Bw from '../assets/hero-mariposa-2-bw.jpg';
+   with a cigar on three worlds, in colour. Order is deliberate and
+   fixed: scenes 1, 3, 2. Landscape source, 3200×1800 (16:9). */
 import heroImage1Color from '../assets/hero-mariposa-1-color.jpg';
 import heroImage3Color from '../assets/hero-mariposa-3-color.jpg';
 import heroImage2Color from '../assets/hero-mariposa-2-color.jpg';
 
 const heroImages = [
-  heroImage1Bw,
-  heroImage3Bw,
-  heroImage2Bw,
   heroImage1Color,
   heroImage3Color,
   heroImage2Color,
