@@ -50,10 +50,11 @@ const brandTail = brandParts.length > 1 ? brandParts.slice(1).join('. ') : '';
     font-family: var(--font-display);
     font-style: italic;
     font-weight: 400;
-    /* Fluid: 14px at ~320px viewport, scales to 22px desktop ceiling.
-       One named step down from the prior --fs-h4 ceiling; floor and
-       middle drop proportionately (~0.79x) to preserve the clamp shape. */
-    font-size: clamp(14px, 4.4vw, var(--fs-h5));
+    /* Fluid: 12px at ~320px viewport, scales to 18px desktop ceiling.
+       Another named step down (--fs-h5 → --fs-h6, 22 → 18px). Floor
+       and middle drop by the same ~0.82x ratio (14 → 12px, 4.4 → 3.6vw)
+       to preserve the clamp shape. */
+    font-size: clamp(12px, 3.6vw, var(--fs-h6));
     line-height: var(--lh-snug);
     color: var(--ink);
     margin: 0;

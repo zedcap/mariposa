@@ -58,10 +58,13 @@ const { paragraphs } = Astro.props;
     background: #f2f0e9;
     /* Top padding halved (Stephane review 2026-05-23): paired cut
        with .range's padding-bottom to close the slider-controls →
-       story-card gap ~50%. Bottom padding preserved at the original
-       value so the story-to-footer rhythm below is unchanged. */
+       story-card gap ~50%. Bottom padding halved in the same shape
+       (Stephane review 2026-05-23, later) to close the story-card →
+       footer gap ~50%; mirrors the top value exactly. Footer's own
+       padding-top (--footer-rhythm: 48px) left alone — modest next
+       to the story's 96–179px range, so one knob does the work. */
     padding-top: clamp(var(--space-7), 7vw, calc(var(--space-10) * 0.7));
-    padding-bottom: clamp(var(--space-9), 14vw, calc(var(--space-10) * 1.4));
+    padding-bottom: clamp(var(--space-7), 7vw, calc(var(--space-10) * 0.7));
   }
 
   /* ── Story card ─────────────────────────────────────────────── */
