@@ -21,7 +21,7 @@ const brandTail = brandParts.length > 1 ? brandParts.slice(1).join('. ') : '';
 <footer class="site-footer grain" data-footer>
   <div class="site-footer__inner container">
     <p class="site-footer__brandline" data-footer-brandline>
-      {brandLead}
+      <span class="site-footer__brandline-lead">{brandLead}</span>
       {brandTail && <span class="site-footer__brandline-tail">{brandTail}</span>}
     </p>
 
@@ -50,14 +50,18 @@ const brandTail = brandParts.length > 1 ? brandParts.slice(1).join('. ') : '';
     font-family: var(--font-display);
     font-style: italic;
     font-weight: 400;
-    font-size: var(--fs-h4);
+    /* Fluid: 18px at ~320px viewport, scales to 28px desktop ceiling.
+       Floor chosen so the lead sentence (33ch) fits in the 272px
+       content width at narrowest target without wrapping. */
+    font-size: clamp(18px, 5.6vw, var(--fs-h4));
     line-height: var(--lh-snug);
     color: var(--ink);
-    max-width: 22ch;
     margin: 0;
   }
+  .site-footer__brandline-lead,
   .site-footer__brandline-tail {
     display: block;
+    white-space: nowrap;
   }
 
   .site-footer__rule {
