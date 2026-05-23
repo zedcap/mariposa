@@ -146,9 +146,14 @@ const imageMode: Record<string, 'object' | 'scene'> = {
     position: relative;
     /* Cream product bed — begins the cream zone that runs through to
        the lifestyle section below. The handoff from the white position
-       statement above is graded via .range__bleed. */
+       statement above is graded via .range__bleed.
+       Top padding tightened ~25% (Stephane 2026-05-23) as part of the
+       position-to-slider gap reduction; bottom padding kept on the same
+       token shape but expressed asymmetrically so only the top closes
+       toward the sub-line above. */
     background: #f2f0e9;
-    padding-block: clamp(var(--space-9), 12vw, var(--space-10));
+    padding-top: clamp(var(--space-7), 9vw, var(--space-9));
+    padding-bottom: clamp(var(--space-9), 12vw, var(--space-10));
     overflow: hidden;
   }
 
@@ -161,7 +166,12 @@ const imageMode: Record<string, 'object' | 'scene'> = {
   .range__bleed {
     position: absolute;
     inset: 0 0 auto 0;
-    height: clamp(120px, 18vh, 220px);
+    /* Height reduced ~25% (Stephane 2026-05-23): clamp(120/18vh/220)
+       → clamp(90/13.5vh/165). Gradient stops and colour treatment
+       unchanged; only the height shrinks. 90px floor preserves the
+       three-stop fade (~30px per stop), well above the ~20px-per-stop
+       threshold where a soft warming starts to read as a banded edge. */
+    height: clamp(90px, 13.5vh, 165px);
     background: linear-gradient(
       to bottom,
       var(--white) 0%,
