@@ -22,7 +22,7 @@
    not decoration) but without the kinetic overshoot. */
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
-import cigarVolage from '../assets/cigar-volage.png';
+import cigarVolage from '../assets/cigar-volage-terrasse.jpg';
 import cigarCaprice from '../assets/cigar-caprice.png';
 import { withBase } from '../lib/path';
 
@@ -42,6 +42,16 @@ const { products } = Astro.props;
 const cigarImages: Record<string, ImageMetadata> = {
   volage: cigarVolage,
   caprice: cigarCaprice,
+};
+
+// Per-slug image mode. 'object' = cigar-on-void PNG, floats inside the
+// padded card with drop-shadow. 'scene' = full editorial photograph,
+// fills the frame edge-to-edge. The frame's gold border and pink
+// hairline are preserved in both modes; the inner treatment is what
+// changes. Default is 'object' so adding a new SKU stays predictable.
+const imageMode: Record<string, 'object' | 'scene'> = {
+  volage: 'scene',
+  caprice: 'object',
 };
 ---
 
@@ -71,12 +81,12 @@ const cigarImages: Record<string, ImageMetadata> = {
 
             <div class="range__frame-inner container">
               <div class="range__media" data-range-media>
-                <div class="range__media-frame">
+                <div class:list={['range__media-frame', `range__media-frame--${imageMode[product.slug] ?? 'object'}`]}>
                   {/* Pink hairline — the pager wink — drawn in on
                       activation; a real element so GSAP can scale it. */}
                   <span class="range__hairline" data-range-hairline aria-hidden="true"></span>
                   <Image
-                    class="range__cigar"
+                    class:list={['range__cigar', `range__cigar--${imageMode[product.slug] ?? 'object'}`]}
                     src={cigarImages[product.slug]}
                     alt={`The Mariposa ${product.name} cigar, ${product.tagline.toLowerCase()}`}
                     widths={[260, 420, 640]}
@@ -257,6 +267,29 @@ const cigarImages: Record<string, ImageMetadata> = {
     will-change: transform;
   }
 
+  /* Scene mode — the frame holds a full editorial photograph instead of
+     a cigar-on-void PNG. The card padding is collapsed so the image
+     fills the frame edge-to-edge, the drop-shadow is dropped (a
+     rectangular photo doesn't want one), and object-fit becomes cover
+     with object-position favouring the cigar (lower-right in the
+     terrasse shot). The gold border and pink hairline are preserved. */
+  .range__media-frame--scene {
+    padding: 0;
+  }
+  .range__media-frame--scene::before {
+    /* Tone the grain overlay down over a real photograph; the photo
+       carries its own texture. */
+    opacity: 0.025;
+  }
+  .range__cigar--scene {
+    width: 100%;
+    height: 100%;
+    max-height: none;
+    object-fit: cover;
+    object-position: 50% 60%;
+    filter: none;
+  }
+
   /* ── Copy column ────────────────────────────────────────────── */
   .range__tags {
     display: flex;
@@ -282,7 +315,11 @@ const cigarImages: Record<string, ImageMetadata> = {
   .range__name {
     font-family: var(--font-display);
     font-weight: 300;
-    font-size: clamp(3rem, 6.5vw, 5.25rem);
+    /* Sized to match the position-statement headline above (same clamp
+       values), so the two display headlines tune together at every
+       viewport width. Applies to both Volage and Caprice — they share
+       this class and should not size differently in the same slider. */
+    font-size: clamp(1.9rem, 4.8vw, 3.4rem);
     line-height: 0.96;
     letter-spacing: var(--ls-display);
     margin: 0;
