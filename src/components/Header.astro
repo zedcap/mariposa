@@ -86,11 +86,14 @@ const isActive = (href: string) => {
     border-bottom: 1px solid var(--border-gold);
     /* Backdrop blur and shadow are introduced only in the stuck state;
        transition them so the detach reads as a quiet settle, not a
-       jump — the design system's slow analogue motion. */
+       jump — the design system's slow analogue motion. Background
+       transitions faster (200ms) so the white-to-cream swap when the
+       nav crosses into the lifestyle section catches up with the
+       scroll rather than lagging behind it. */
     transition:
       box-shadow var(--dur-default) var(--ease-paper),
       backdrop-filter var(--dur-default) var(--ease-paper),
-      background-color var(--dur-default) var(--ease-paper);
+      background-color 200ms var(--ease-paper);
   }
 
   /* STUCK — detached at the top of the viewport. The white bar gains
@@ -102,6 +105,17 @@ const isActive = (href: string) => {
     backdrop-filter: blur(var(--nav-blur));
     -webkit-backdrop-filter: blur(var(--nav-blur));
     box-shadow: 0 1px 16px rgba(31, 27, 23, 0.08);
+  }
+
+  /* OVER CREAM — the nav is overlapping a cream-bedded section (the
+     lifestyle section). Background warms to a translucent cream so the
+     bar reads as continuous with the content beneath rather than as a
+     white strip floating over a warm page. The 200ms transition is
+     gentle enough not to read as a snap; ~half the default duration so
+     the colour shift catches up with the scroll rather than lagging
+     behind it. */
+  .site-header.is-over-cream {
+    background: rgba(242, 240, 233, 0.82);
   }
 
   .site-header__inner {
@@ -164,8 +178,9 @@ const isActive = (href: string) => {
     }
   }
 
-  /* No motion preference — the two states still apply, just without
-     the transition between them. */
+  /* Reduced motion — both the stuck-state settle and the cream-swap
+     snap instantly. The states still apply (they are information, not
+     decoration); only the animated handoff is suppressed. */
   @media (prefers-reduced-motion: reduce) {
     .site-header,
     .site-header__inner { transition: none; }
@@ -180,14 +195,38 @@ const isActive = (href: string) => {
   // the header is stuck.
   const header = document.querySelector<HTMLElement>('[data-header]');
 
-  if (header && header.dataset.overHero === 'true') {
-    const sentinel = header.previousElementSibling;
-    if (sentinel) {
-      const io = new IntersectionObserver(
-        ([entry]) => header.classList.toggle('is-stuck', !entry.isIntersecting),
-        { threshold: 0 },
+  if (header) {
+    if (header.dataset.overHero === 'true') {
+      const sentinel = header.previousElementSibling;
+      if (sentinel) {
+        const io = new IntersectionObserver(
+          ([entry]) => header.classList.toggle('is-stuck', !entry.isIntersecting),
+          { threshold: 0 },
+        );
+        io.observe(sentinel);
+      }
+    }
+
+    // Cream sections (`[data-cream-bg]`, e.g. the lifestyle section)
+    // warm the nav background while the header is overlapping them.
+    // The negative top rootMargin matches the stuck header's bottom
+    // edge — when the section crosses that line, it is "intersecting"
+    // and the cream class flips on; once it scrolls past, it flips
+    // off. A single observer covers both edges; cheaper than scroll
+    // math and survives layout shifts. The -72px figure is generous
+    // enough to cover both the 66px desktop stuck-bar and the 56px
+    // mobile stuck-bar without needing a runtime measurement.
+    const creamSections = document.querySelectorAll('[data-cream-bg]');
+    if (creamSections.length) {
+      const creamIO = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            header.classList.toggle('is-over-cream', entry.isIntersecting);
+          }
+        },
+        { rootMargin: '-72px 0px 0px 0px', threshold: 0 },
       );
-      io.observe(sentinel);
+      creamSections.forEach((el) => creamIO.observe(el));
     }
   }
 </script>

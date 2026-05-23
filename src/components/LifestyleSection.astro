@@ -35,7 +35,12 @@ interface Props {
 const { eyebrow, paragraphs, closingLine, aboutLinkLabel } = Astro.props;
 ---
 
-<section class="story" aria-labelledby="story-heading" data-story>
+<section class="story" aria-labelledby="story-heading" data-story data-cream-bg>
+  {/* Cream-bleed wedge — softens the edge where the (pearl) product
+      slider above meets the cream lifestyle bed. Sits above the image
+      bed so it does not interfere with the parallax. */}
+  <div class="story__bleed" aria-hidden="true"></div>
+
   {/* Full-bleed image bed with a parallax/scale drift. */}
   <div class="story__bed" data-story-bed>
     <div class="story__bed-media" data-story-media>
@@ -81,11 +86,39 @@ const { eyebrow, paragraphs, closingLine, aboutLinkLabel } = Astro.props;
 <style>
   .story {
     position: relative;
-    background: var(--white);
+    /* Cream lifestyle bed — warmer than the pearl product section
+       above. The transition is graded via .story__bleed; see below. */
+    background: #f2f0e9;
     /* The section is tall — the image bed and the lifted card need
        room to overlap with deliberate negative space. */
     padding-block: clamp(var(--space-9), 14vw, calc(var(--space-10) * 1.4));
   }
+
+  /* Cream-bleed wedge — the gradual handoff from the pearl section
+     above (--bg-elevated, #FAFAF7) into the cream lifestyle bed.
+     Sits ABOVE the image bed at the top of the section, fading from
+     opaque pearl down to transparent so the image (and the cream
+     beneath it) emerges gradually. Without this the top edge of the
+     section reads as a banded horizontal cut between the pearl page
+     above and the darkened image below. */
+  .story__bleed {
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: clamp(120px, 18vh, 220px);
+    background: linear-gradient(
+      to bottom,
+      var(--bg-elevated) 0%,
+      rgba(250, 250, 247, 0.6) 45%,
+      rgba(250, 250, 247, 0) 100%
+    );
+    /* Above the image bed (z-index 1) so it can soften the bed's
+       top edge; below the story layer/card (z-index 2) so the card
+       still sits cleanly above. */
+    z-index: 1;
+    pointer-events: none;
+  }
+  /* Image bed sits between the page background and the bleed wedge. */
+  .story__bed { z-index: 0; }
 
   /* ── Image bed ──────────────────────────────────────────────── */
   .story__bed {
@@ -109,13 +142,15 @@ const { eyebrow, paragraphs, closingLine, aboutLinkLabel } = Astro.props;
     object-position: center;
     filter: grayscale(1) sepia(0.24) contrast(1.04) brightness(0.86);
   }
-  /* Wash — grades the image into the white page so the card reads. */
+  /* Wash — grades the image into the cream page so the card reads.
+     Bottom stop matches the section background (#f2f0e9) so the bed
+     dissolves into the cream rather than reintroducing a white edge. */
   .story__bed-wash {
     position: absolute;
     inset: 0;
     background:
       linear-gradient(to bottom, rgba(28, 25, 21, 0.28) 0%, transparent 30%),
-      linear-gradient(to top, var(--white) 0%, rgba(255, 255, 255, 0.2) 38%, transparent 60%);
+      linear-gradient(to top, #f2f0e9 0%, rgba(242, 240, 233, 0.2) 38%, transparent 60%);
   }
 
   /* ── Story card ─────────────────────────────────────────────── */
