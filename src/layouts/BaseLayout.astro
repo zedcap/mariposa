@@ -40,12 +40,17 @@ const hasHero = Astro.slots.has('hero');
 /* --grain-image carries the paper-grain SVG with the Astro `base` baked
    in. CSS url() references are not rewritten for the base, so the grain
    utilities in base.css / ProductSlider read this variable instead.
-   Set on <html> so it resolves as a :root-level custom property. */
+   Set on <html> so it resolves as a :root-level custom property.
+
+   --bg-texture does the same job for the body's tiled paper-fibre
+   background (texture.jpg, served from /public). Same reason: CSS url()
+   cannot be hard-coded under a subpath deployment. */
 const grainImage = `url("${withBase('/paper-grain.svg')}")`;
+const bgTexture  = `url("${withBase('/texture.jpg')}")`;
 ---
 
 <!doctype html>
-<html lang="en" style={`--grain-image: ${grainImage};`}>
+<html lang="en" style={`--grain-image: ${grainImage}; --bg-texture: ${bgTexture};`}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
