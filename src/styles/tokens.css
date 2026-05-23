@@ -121,10 +121,13 @@
   --page-pad-m: 24px;
 
   /* ─── Sticky nav ─────────────────────────────────────────── */
-  /* White-based translucent. The design system's cream nav-bar value
-     (rgba(239,234,226,0.78)) and --cream-edge token are overridden by
-     the conventions overlay: white only, including translucent/blurred
-     nav backgrounds. No cream, no ivory. */
-  --nav-blur:   24px;
-  --nav-bg:     rgba(255, 255, 255, 0.82);
+  /* The nav surface is now opaque and scroll-tied (it samples the
+     section directly beneath it and interpolates from white to cream
+     as the gradient bleed wedge passes through the nav band — see
+     Header.astro). The previous translucent --nav-bg + --nav-blur
+     tokens were retired with that change (Stephane, 2026-05-23:
+     translucency explicitly rejected for this surface). The opaque
+     endpoints live in Header.astro as --nav-white / --nav-cream, kept
+     local to the component because nothing else in the system pulls
+     them. */
 }
