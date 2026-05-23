@@ -1,9 +1,12 @@
 {
   "hero": {
     "slides": [
-      { "key": "poolside", "caption": "Mariposa collage in colour: a woman with a cigar, a palm-fringed poolside at dusk revealed through her portrait." },
-      { "key": "pavilion", "caption": "Mariposa collage in colour: a woman with a cigar, a palm vista revealed through her portrait, the wordmark on the gold band." },
-      { "key": "jungle", "caption": "Mariposa collage in colour: a woman with a cigar, a jungle vista at sunset revealed through her portrait." }
+      { "key": "poolside-pink", "caption": "Mariposa collage in colour: a woman with a cigar on a pink ground, a palm-fringed infinity pool at dusk revealed through her portrait." },
+      { "key": "pavilion-gold", "caption": "Mariposa collage in colour: a woman with a cigar on a soft-gold ground, a jungle pavilion at sunset revealed through her portrait." },
+      { "key": "sail-pink", "caption": "Mariposa collage in colour: a woman with a cigar on a pink ground, a sailboat on a pastel sea revealed through her portrait." },
+      { "key": "poolside-gold", "caption": "Mariposa collage in colour: a woman with a cigar on a soft-gold ground, a palm-fringed infinity pool at dusk revealed through her portrait." },
+      { "key": "pavilion-pink", "caption": "Mariposa collage in colour: a woman with a cigar on a pink ground, a jungle pavilion at sunset revealed through her portrait." },
+      { "key": "sail-gold", "caption": "Mariposa collage in colour: a woman with a cigar on a soft-gold ground, a sailboat on a pastel sea revealed through her portrait." }
     ]
   },
   "position": {
