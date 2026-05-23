@@ -50,10 +50,10 @@ const brandTail = brandParts.length > 1 ? brandParts.slice(1).join('. ') : '';
     font-family: var(--font-display);
     font-style: italic;
     font-weight: 400;
-    /* Fluid: 18px at ~320px viewport, scales to 28px desktop ceiling.
-       Floor chosen so the lead sentence (33ch) fits in the 272px
-       content width at narrowest target without wrapping. */
-    font-size: clamp(18px, 5.6vw, var(--fs-h4));
+    /* Fluid: 14px at ~320px viewport, scales to 22px desktop ceiling.
+       One named step down from the prior --fs-h4 ceiling; floor and
+       middle drop proportionately (~0.79x) to preserve the clamp shape. */
+    font-size: clamp(14px, 4.4vw, var(--fs-h5));
     line-height: var(--lh-snug);
     color: var(--ink);
     margin: 0;
