@@ -8,13 +8,11 @@
    nav-height of breathing room (84px desktop, 66px mobile, matching
    Header.astro). The line is split into two halves that slide in from
    opposite sides ("Volcanic Soul." from the left, "24-Carat Gold."
-   from the right) and settle into one composed sentence. A small
-   gold-leaf divider sits halfway between the headline and the sub-line.
+   from the right) and settle into one composed sentence.
 
    Treatment per the conventions overlay: "Volcanic Soul." pink, the rest
    ink, both halves display italic, wrapping naturally — not locked to
    one line. The sub-line follows, quieter. */
-import dividerGoldLeaf from '../assets/divider-gold-leaf.svg?raw';
 
 interface Props {
   /** Brand position copy split into the pink half and the ink half. */
@@ -55,11 +53,6 @@ const { positionPink, positionInk, subline } = Astro.props;
         </span>
       </span>
     </h2>
-
-    {/* Quiet gold-leaf ornament, halfway between the headline and the
-        sub-line. Inlined so the SVG inherits the page's coloring and
-        loads with no extra request. */}
-    <div class="position__divider" aria-hidden="true" set:html={dividerGoldLeaf} />
 
     {/* Deterministic two-line sub-line. Both halves are wrapped in
         block-display, nowrap spans so the break sits exactly after
@@ -138,24 +131,6 @@ const { positionPink, positionInk, subline } = Astro.props;
        place — no flash of off-stage content. */
   }
 
-  /* Quiet gold-leaf divider — centred, narrow. "Very short": 96px on
-     desktop, scaling down on mobile. Reads as a hairline ornament, not
-     a feature. Static; no draw-in. */
-  .position__divider {
-    display: block;
-    /* Halved from clamp(var(--space-5), 4vw, var(--space-7)) per
-       Stephane 2026-05-23. Tighter ornament-to-text spacing top and
-       bottom; divider width and centring unchanged. */
-    margin: clamp(var(--space-3), 2vw, var(--space-5)) auto;
-    width: clamp(64px, 8vw, 96px);
-    line-height: 0;
-  }
-  .position__divider :global(svg) {
-    display: block;
-    width: 100%;
-    height: auto;
-  }
-
   .position__subline {
     font-family: var(--font-display);
     font-style: italic;
@@ -167,7 +142,10 @@ const { positionPink, positionInk, subline } = Astro.props;
     font-size: clamp(14px, 4.4vw, 1.75rem);
     line-height: var(--lh-snug);
     color: var(--ink-soft);
-    margin-top: 0;
+    /* Headline-to-subline gap. Approximates the prior rhythm when a
+       gold-leaf divider sat between them (top + bottom margins of the
+       divider summed to roughly this value). Removed divider 2026-05-23. */
+    margin-top: clamp(var(--space-4), 4vw, var(--space-6));
     max-width: 46ch;
   }
   /* Forces the break immediately after "occasions,". Both halves are
