@@ -14,6 +14,8 @@
    ink, both halves display italic, wrapping naturally — not locked to
    one line. The sub-line follows, quieter. */
 
+import dividerGoldLeaf from '../assets/divider-gold-leaf.svg?raw';
+
 interface Props {
   /** Brand position copy split into the pink half and the ink half. */
   positionPink: string;
@@ -62,6 +64,13 @@ const { positionPink, positionInk, subline } = Astro.props;
     <p class="position__subline" data-position-subline>
       <span class="position__subline-lead">For those who don't wait for special occasions,</span><span class="position__subline-tail">but create them.</span>
     </p>
+
+    {/* Gold-leaf divider. Reintroduced 2026-05-23 below the sub-line as
+        a quiet close to the section, separating the position statement
+        from the product section that follows. Inlined via `?raw` so the
+        stroke inherits currentColor and the file ships as part of the
+        component bundle. Static — no draw-in. */}
+    <div class="position__divider" aria-hidden="true" set:html={dividerGoldLeaf} />
   </div>
 </section>
 
@@ -155,6 +164,23 @@ const { positionPink, positionInk, subline } = Astro.props;
   .position__subline-tail {
     display: block;
     white-space: nowrap;
+  }
+
+  /* Gold-leaf divider under the sub-line. Width clamped per the
+     conventions overlay; vertical margins give air above (separating
+     from the sub-line) and a smaller breath below before the section
+     ends. The asset's gradient handles the fade — no extra colour
+     here. Static, per Stephane 2026-05-23. */
+  .position__divider {
+    width: clamp(64px, 8vw, 96px);
+    margin-top: clamp(var(--space-5), 3.5vw, var(--space-6));
+    margin-bottom: var(--space-3);
+    line-height: 0;
+  }
+  .position__divider :global(svg) {
+    display: block;
+    width: 100%;
+    height: auto;
   }
 
   @media (prefers-reduced-motion: reduce) {
