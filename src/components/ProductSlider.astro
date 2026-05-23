@@ -22,8 +22,8 @@
    not decoration) but without the kinetic overshoot. */
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
-import cigarVolage from '../assets/cigar-volage-terrasse.jpg';
-import cigarCaprice from '../assets/cigar-caprice.png';
+import cigarVolage from '../assets/cigar-volage-woman.jpg';
+import cigarCaprice from '../assets/cigar-caprice-terrasse.jpg';
 import { withBase } from '../lib/path';
 
 interface ProductFrame {
@@ -50,7 +50,7 @@ const cigarImages: Record<string, ImageMetadata> = {
 // changes. Default is 'object' so adding a new SKU stays predictable.
 const imageMode: Record<string, 'object' | 'scene'> = {
   volage: 'scene',
-  caprice: 'object',
+  caprice: 'scene',
 };
 ---
 
@@ -409,7 +409,7 @@ const imageMode: Record<string, 'object' | 'scene'> = {
     align-items: center;
     justify-content: center;
     gap: var(--space-6);
-    margin-top: clamp(var(--space-5), 3vw, var(--space-7));
+    margin-top: clamp(var(--space-3), 1.5vw, var(--space-5));
   }
   /* Step buttons — bare arrow glyphs. Stephane review 2026-05-23:
      the circle/border treatment read too button-like for a sub-control;
