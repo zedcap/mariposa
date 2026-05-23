@@ -9,11 +9,21 @@ const global = (await getEntry('site', 'global'))!.data as {
   footer: { brandLine: string; copyright: string };
 };
 const { footer } = global;
+
+/* Deterministic break: "Create them." always lands on its own line,
+   regardless of viewport width. Split on the final sentence break so
+   the content config stays a single string. */
+const brandParts = footer.brandLine.split(/\.\s+(?=[^.]+\.?$)/);
+const brandLead = brandParts.length > 1 ? `${brandParts[0]}.` : footer.brandLine;
+const brandTail = brandParts.length > 1 ? brandParts.slice(1).join('. ') : '';
 ---
 
 <footer class="site-footer grain" data-footer>
   <div class="site-footer__inner container">
-    <p class="site-footer__brandline" data-footer-brandline>{footer.brandLine}</p>
+    <p class="site-footer__brandline" data-footer-brandline>
+      {brandLead}
+      {brandTail && <span class="site-footer__brandline-tail">{brandTail}</span>}
+    </p>
 
     <hr class="rule-gold site-footer__rule" />
 
@@ -45,6 +55,9 @@ const { footer } = global;
     color: var(--ink);
     max-width: 22ch;
     margin: 0;
+  }
+  .site-footer__brandline-tail {
+    display: block;
   }
 
   .site-footer__rule {
