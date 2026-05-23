@@ -18,13 +18,13 @@
    Since the About page ships, this section stays atmospheric and
    points to /about.
 
-   IMAGERY: shot-list frame 13 — the Mariposa brand composition
-   (header-collage.png) stands in until a commissioned collage lands.
+   IMAGERY: the Mariposa brandmark composition (brandmark-sq.jpg) —
+   the square brand artwork from the creative-assets set.
 
    prefers-reduced-motion: no parallax, no scale; copy shown in place. */
 import { Image } from 'astro:assets';
 import { withBase } from '../lib/path';
-import lifestyleCollage from '../assets/header-collage.png';
+import lifestyleCollage from '../assets/brandmark-sq.jpg';
 
 interface Props {
   eyebrow: string;
@@ -42,7 +42,7 @@ const { eyebrow, paragraphs, closingLine, aboutLinkLabel } = Astro.props;
       <Image
         class="story__img"
         src={lifestyleCollage}
-        alt="Mariposa brand composition — the lowercase wordmark, the gold band, and the butterfly motif."
+        alt="Mariposa brandmark composition: the lowercase wordmark, the gold band, and the butterfly motif."
         widths={[720, 1200, 1800]}
         sizes="100vw"
         loading="lazy"

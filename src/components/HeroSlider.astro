@@ -20,20 +20,32 @@
    the design system's "full-bleed photography = B&W / duotone" rule.
    Stephane's call (2026-05-22); recorded in mariposa-design-conventions.md.
 
-   3 frames, slow auto-advance (7s), pause on hover, manual dots.
+   6 frames, slow auto-advance (7s), pause on hover, manual dots.
    prefers-reduced-motion: no Ken Burns, no progress ring sweep, instant
    cross-fade, scroll cue static. */
 import { Image } from 'astro:assets';
 
 /* Mariposa hero frames — the collage device: the same faceless woman
-   with a cigar on three worlds (palm poolside, jungle lodge, Bali
-   pavilion). Order is fixed: 1 → 2 → 3, matching the three caption
-   slides. Landscape source, 1250×720. */
-import heroImage1 from '../assets/hero-mariposa-1.jpg';
-import heroImage2 from '../assets/hero-mariposa-2.jpg';
-import heroImage3 from '../assets/hero-mariposa-3.jpg';
+   with a cigar on three worlds, shown twice. Order is deliberate and
+   fixed: three monochrome treatments first (scenes 1, 3, 2), then the
+   same three scenes in colour (1, 3, 2). The slider reads as a
+   transition device, monochrome → colour. Landscape source, 3200×1800
+   (16:9). */
+import heroImage1Bw from '../assets/hero-mariposa-1-bw.jpg';
+import heroImage3Bw from '../assets/hero-mariposa-3-bw.jpg';
+import heroImage2Bw from '../assets/hero-mariposa-2-bw.jpg';
+import heroImage1Color from '../assets/hero-mariposa-1-color.jpg';
+import heroImage3Color from '../assets/hero-mariposa-3-color.jpg';
+import heroImage2Color from '../assets/hero-mariposa-2-color.jpg';
 
-const heroImages = [heroImage1, heroImage2, heroImage3];
+const heroImages = [
+  heroImage1Bw,
+  heroImage3Bw,
+  heroImage2Bw,
+  heroImage1Color,
+  heroImage3Color,
+  heroImage2Color,
+];
 
 interface Slide {
   key: string;
@@ -59,7 +71,7 @@ const { slides } = Astro.props;
               class="hero__img"
               src={heroImages[i] ?? heroImages[0]}
               alt={slide.caption}
-              widths={[720, 1024, 1250]}
+              widths={[720, 1280, 1920, 2560]}
               sizes="100vw"
               loading={i === 0 ? 'eager' : 'lazy'}
               fetchpriority={i === 0 ? 'high' : 'auto'}
@@ -256,14 +268,14 @@ const { slides } = Astro.props;
   @media (max-width: 720px) {
     .hero {
       /* On a phone the band drops the crop entirely: it takes the hero
-         images' native landscape ratio (1250×720 = 125/72) and scales
+         images' native landscape ratio (3200×1800 = 16/9) and scales
          down proportionally as the viewport narrows. The full image
          shows, uncropped, no letterboxing — the header just gets
          smaller. No fixed svh height, no min/max. */
       height: auto;
       min-height: 0;
       max-height: none;
-      aspect-ratio: 125 / 72;
+      aspect-ratio: 16 / 9;
     }
 
     /* No crop on mobile, so the frame fills with the whole image. */
