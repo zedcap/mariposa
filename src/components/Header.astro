@@ -207,22 +207,27 @@ const isActive = (href: string) => {
       }
     }
 
-    // Cream sections (`[data-cream-bg]`, e.g. the lifestyle section)
-    // warm the nav background while the header is overlapping them.
-    // The negative top rootMargin matches the stuck header's bottom
-    // edge — when the section crosses that line, it is "intersecting"
-    // and the cream class flips on; once it scrolls past, it flips
-    // off. A single observer covers both edges; cheaper than scroll
-    // math and survives layout shifts. The -72px figure is generous
+    // Cream sections (`[data-cream-bg]`) warm the nav background while
+    // the header is overlapping them. With multiple adjacent cream
+    // targets (product + lifestyle) we cannot toggle per-entry: the
+    // last-evaluated entry would win and the class would flicker at the
+    // seam. Instead we keep a Set of currently-intersecting targets and
+    // toggle the class on whether ANY remain. The negative top
+    // rootMargin matches the stuck header's bottom edge — when a
+    // section crosses that line it is "intersecting" and joins the set;
+    // once it scrolls past it leaves. The -72px figure is generous
     // enough to cover both the 66px desktop stuck-bar and the 56px
     // mobile stuck-bar without needing a runtime measurement.
     const creamSections = document.querySelectorAll('[data-cream-bg]');
     if (creamSections.length) {
+      const active = new Set<Element>();
       const creamIO = new IntersectionObserver(
         (entries) => {
           for (const entry of entries) {
-            header.classList.toggle('is-over-cream', entry.isIntersecting);
+            if (entry.isIntersecting) active.add(entry.target);
+            else active.delete(entry.target);
           }
+          header.classList.toggle('is-over-cream', active.size > 0);
         },
         { rootMargin: '-72px 0px 0px 0px', threshold: 0 },
       );

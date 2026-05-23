@@ -45,11 +45,19 @@ const cigarImages: Record<string, ImageMetadata> = {
 };
 ---
 
-<section class="range grain" id="range" aria-label="The Mariposa range" data-range>
+<section class="range grain" id="range" aria-label="The Mariposa range" data-range data-cream-bg>
   {/* No section heading — Stephane review (2026-05-21): the slider
       stands alone, no eyebrow, no title. The brand statement opens the
       page in the position section above. The section's "modern" energy
       comes from the per-frame choreography, not a header. */}
+
+  {/* Cream-bleed wedge — softens the edge where the white position
+      statement above meets the cream product bed. Fades from white at
+      the top (matching the section above) down to cream so the boundary
+      reads as a gradient, not a horizontal cut. Sits behind the product
+      content (z-index 0); the slider's frames render above. */}
+  <div class="range__bleed" aria-hidden="true"></div>
+
   <div class="range__viewport" data-range-viewport>
     <div class="range__track" data-range-track>
       {
@@ -127,13 +135,39 @@ const cigarImages: Record<string, ImageMetadata> = {
 
 <style>
   .range {
-    background: var(--bg-elevated);
+    position: relative;
+    /* Cream product bed — begins the cream zone that runs through to
+       the lifestyle section below. The handoff from the white position
+       statement above is graded via .range__bleed. */
+    background: #f2f0e9;
     padding-block: clamp(var(--space-9), 12vw, var(--space-10));
     overflow: hidden;
   }
 
+  /* Cream-bleed wedge — the gradual handoff from the white position
+     statement above into the cream product bed. Sits at the top of the
+     section, fading from opaque white down to transparent so the cream
+     bed emerges gradually. Without this the top edge reads as a banded
+     horizontal cut. Stays behind the product content so the slider's
+     imagery, hairline and ghost letter render cleanly above. */
+  .range__bleed {
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: clamp(120px, 18vh, 220px);
+    background: linear-gradient(
+      to bottom,
+      var(--white) 0%,
+      rgba(255, 255, 255, 0.6) 45%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    z-index: 0;
+    pointer-events: none;
+  }
+
   /* ── Viewport / track ───────────────────────────────────────── */
   .range__viewport {
+    position: relative;
+    z-index: 1;
     overflow: hidden;
   }
   .range__track {
@@ -312,6 +346,8 @@ const cigarImages: Record<string, ImageMetadata> = {
 
   /* ── Controls ───────────────────────────────────────────────── */
   .range__controls {
+    position: relative;
+    z-index: 1;
     display: flex;
     align-items: center;
     justify-content: center;
