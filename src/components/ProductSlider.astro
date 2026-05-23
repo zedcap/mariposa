@@ -367,10 +367,28 @@ const imageMode: Record<string, 'object' | 'scene'> = {
   }
 
   /* ── Per-slug overrides ─────────────────────────────────────── */
-  /* (Currently none — the prior `.range__frame--volage` halved-gap
-     override was promoted to base on 2026-05-23 so Caprice inherits
-     it. The `range__frame--<slug>` classes remain on the markup and
-     are available for future per-SKU tweaks.) */
+  /* Caprice — editorial spread flip (Stephane review 2026-05-23):
+     image on the right, copy on the left. Volage stays as the base
+     (image left, copy right). Mechanism: reassign grid-column on the
+     two children inside .range__frame-inner so the media slots into
+     column 2 and the copy into column 1. grid-template-columns,
+     gaps, widths, aspect-ratio, padding and the motion choreography
+     are all untouched — only the left/right position swaps. The
+     ghost display initial moves to the right edge to sit opposite
+     the image, preserving the editorial-spread sense (ghost letter
+     hugs the copy side, image floats off the opposite edge).
+     Mobile (≤720px) collapses to single column and is unaffected. */
+  .range__frame--caprice .range__media {
+    grid-column: 2;
+  }
+  .range__frame--caprice .range__copy {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .range__frame--caprice .range__ghost {
+    left: auto;
+    right: 4%;
+  }
 
   .range__link {
     display: inline-flex;
@@ -508,6 +526,13 @@ const imageMode: Record<string, 'object' | 'scene'> = {
       grid-template-columns: 1fr;
       gap: var(--space-6);
       text-align: left;
+    }
+    /* Reset the Caprice desktop flip on mobile — single column,
+       image first, copy below, identical to Volage. */
+    .range__frame--caprice .range__media,
+    .range__frame--caprice .range__copy {
+      grid-column: auto;
+      grid-row: auto;
     }
     .range__media-frame {
       aspect-ratio: 1 / 1;
