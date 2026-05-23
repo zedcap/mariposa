@@ -196,7 +196,17 @@ const imageMode: Record<string, 'object' | 'scene'> = {
   .range__frame {
     flex: 0 0 100%;
     position: relative;
-    min-height: 560px;
+    /* min-height halved 560 → 280 (Stephane review 2026-05-23). Set
+       originally to accommodate the long Volage lede + a taller image
+       aspect; with squared 1:1 images and the promoted shorter copy
+       scale, natural content height now exceeds 280px in every case,
+       so this floor is effectively inert at desktop widths. Kept
+       (rather than removed) as a guard against the frame collapsing
+       to nothing if a future SKU ships with very short copy. Dominant
+       contributor to the image-bottom → controls-top gap: the prior
+       560 floor + align-items:center was padding void above and below
+       the content inside the viewport. */
+    min-height: 280px;
     display: flex;
     align-items: center;
   }
