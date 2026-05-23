@@ -10,12 +10,20 @@
    with the footer brand-line; the closing thought now lives inline
    as the final sentence of the second paragraph.
 
+   2026-05-23 (later). The mariposa wordmark now opens the card as a
+   centred masthead, sized to match the .range__name SKU type in the
+   product slider (clamp(1.6rem, 4.0vw, 2.8rem) — height, with auto
+   width). Space-6 separates the mark from the first prose paragraph.
+
    The cream section background and [data-cream-bg] attribute stay
    so the sticky nav continues to adopt cream over this section.
    Card geometry, padding rhythm, and paragraph-by-paragraph reveal
    are preserved.
 
    prefers-reduced-motion: copy shown in place (handled by reveal). */
+
+import { Image } from 'astro:assets';
+import wordmarkBlack from '../assets/mariposa-logo-black.png';
 
 interface Props {
   paragraphs: string[];
@@ -27,6 +35,15 @@ const { paragraphs } = Astro.props;
   <div class="story__layer container">
     <article class="story__card grain" data-story-card>
       <h2 class="visually-hidden" id="story-heading">The Mariposa story</h2>
+
+      <Image
+        class="story__wordmark"
+        src={wordmarkBlack}
+        alt="Mariposa"
+        widths={[260, 420, 640]}
+        sizes="(max-width: 720px) 50vw, 320px"
+        loading="lazy"
+      />
 
       <div class="story__prose">
         {paragraphs.map((para) => <p class="story__para" data-story-para>{para}</p>)}
@@ -69,6 +86,19 @@ const { paragraphs } = Astro.props;
   /* Paper-grain over the card surface. */
   .story__card.grain::before {
     opacity: 0.06;
+  }
+
+  /* Wordmark masthead — centred above the prose, sized to match the
+     SKU name in the product slider (.range__name). Width auto so the
+     mark's natural aspect ratio (~6.66:1) is preserved. Block element
+     with auto inline margins so the centre call is one-line to flip
+     to left-alignment if Stephane prefers. */
+  .story__wordmark {
+    display: block;
+    height: clamp(1.6rem, 4.0vw, 2.8rem);
+    width: auto;
+    margin-inline: auto;
+    margin-bottom: var(--space-6);
   }
 
   .story__para {
