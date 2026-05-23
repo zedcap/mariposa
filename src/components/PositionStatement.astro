@@ -134,21 +134,30 @@ const { positionPink, positionInk, subline } = Astro.props;
        lines at the display italic size. */
     white-space: nowrap;
   }
-  /* First half anchored hard left of the cascade stage. */
+  /* First half sits roughly halfway between the left edge and the
+     second half's offset — the cascade reads as a clear diagonal but
+     "Volcanic Soul." no longer hugs the gutter. */
   .position__half--first {
-    margin-left: 0;
+    margin-left: 14%;
   }
   /* Second half pushed right to read as a clearly diagonal staircase.
-     Was 14% — now 30% desktop. */
+     Was 14% — now 30% desktop. Plus one character of additional offset
+     (Stephane 2026-05-23) so "24-Carat Gold." nudges right by the width
+     of one display-italic letter. */
   .position__half--second {
-    margin-left: 30%;
+    margin-left: calc(30% + 0.7ch);
   }
   @media (max-width: 480px) {
     /* Narrower viewport, tighter (but still bigger than the old 10%)
        stagger so the staircase still reads without the second half
-       running off the right edge. */
+       running off the right edge. First half also pulled back from
+       its desktop offset so the cascade keeps the same shape at a
+       narrower stage. */
+    .position__half--first {
+      margin-left: 9%;
+    }
     .position__half--second {
-      margin-left: 18%;
+      margin-left: calc(18% + 0.7ch);
     }
   }
   /* Half-level colour spans. `--em` = pink (left half: "Volcanic
