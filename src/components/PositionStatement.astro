@@ -1,17 +1,21 @@
 ---
 /* Home position statement — the brand's opening line on the page.
    ------------------------------------------------------------------
-   REBUILD (2026-05-21). The first cut centred a small italic line in a
-   tidy block — correct, restrained, and exactly the wrong energy. This
-   rebuild gives the statement room and weight: a tall section the line
-   commands, the position sentence at display scale, revealed line by
-   line through clipping masks as the section enters, and a slow gold
-   hairline that draws itself in. The Marigold text-animation move,
-   applied to the brand's defining sentence.
+   REBUILD (2026-05-23). The first cut centred the line vertically in a
+   tall section and unveiled it with a single masked rise. This version
+   anchors the line at the top of the section — the gap from the
+   nav-bar's bottom edge to the top of the headline equals one
+   nav-height of breathing room (84px desktop, 66px mobile, matching
+   Header.astro). The line is split into two halves that slide in from
+   opposite sides ("Cuban Soul." from the left, "24 Carat Swiss Gold."
+   from the right) and settle into one composed sentence. A small
+   gold-leaf divider sits halfway between the headline and the sub-line.
 
    Treatment per the conventions overlay: "Cuban Soul." pink, the rest
    ink, both halves display italic, wrapping naturally — not locked to
    one line. The sub-line follows, quieter. */
+import dividerGoldLeaf from '../assets/divider-gold-leaf.svg?raw';
+
 interface Props {
   /** Brand position copy split into the pink half and the ink half. */
   positionPink: string;
@@ -23,18 +27,27 @@ const { positionPink, positionInk, subline } = Astro.props;
 
 <section class="position" aria-label="Mariposa" data-position>
   <div class="position__inner container">
-    {/* The position sentence. Each half is wrapped in a clipping mask;
-        the inner line slides up from below the mask edge on entry —
-        the Marigold masked-headline reveal. */}
+    {/* The position sentence. Each half lives inside a horizontal
+        clipping mask; the inner line slides in from its side on entry
+        and settles into the centred composition. */}
     <h2 class="position__line">
-      <span class="motion-mask">
-        <span class="motion-line position__em">{positionPink}</span>
+      <span class="position__half">
+        <span class="slide-mask">
+          <span class="slide-inner position__em" data-direction="left">{positionPink}</span>
+        </span>
       </span>
       {' '}
-      <span class="motion-mask">
-        <span class="motion-line position__ink">{positionInk}</span>
+      <span class="position__half">
+        <span class="slide-mask">
+          <span class="slide-inner position__ink" data-direction="right">{positionInk}</span>
+        </span>
       </span>
     </h2>
+
+    {/* Quiet gold-leaf ornament, halfway between the headline and the
+        sub-line. Inlined so the SVG inherits the page's coloring and
+        loads with no extra request. */}
+    <div class="position__divider" aria-hidden="true" set:html={dividerGoldLeaf} />
 
     <p class="position__subline" data-position-subline>{subline}</p>
   </div>
@@ -43,12 +56,18 @@ const { positionPink, positionInk, subline } = Astro.props;
 <style>
   .position {
     background: var(--white);
-    /* A tall section — the statement is given room to be the only thing
-       in the viewport when it lands. */
-    min-height: 86svh;
-    display: grid;
-    place-items: center;
-    padding-block: clamp(var(--space-9), 14vw, var(--space-10));
+    /* Symmetric vertical breathing room: top and bottom both equal one
+       nav-height. Desktop: 84px (resting nav height). Mobile: 66px. The
+       headline sits one nav-height below the nav-bar's bottom edge; the
+       sub-line sits one nav-height above the next section. */
+    padding-top: 84px;
+    padding-bottom: 84px;
+  }
+  @media (max-width: 720px) {
+    .position {
+      padding-top: 66px;
+      padding-bottom: 66px;
+    }
   }
 
   .position__inner {
@@ -70,29 +89,42 @@ const { positionPink, positionInk, subline } = Astro.props;
     margin: 0;
     max-width: 18ch;
   }
-  .position__em {
-    color: var(--pink);
+  .position__half {
+    display: inline;
   }
-  .position__ink {
-    color: var(--ink);
-  }
+  .position__em { color: var(--pink); }
+  .position__ink { color: var(--ink); }
 
-  /* Masked reveal — each half of the sentence lives in a clipping box.
-     The box is padded top/bottom (and pulled back by an equal negative
-     margin) so the italic's ascenders and descenders have room at
-     rest; only the slide-up travel is clipped, never the glyph. A
-     touch of x-padding clears the italic overshoot. */
-  .motion-mask {
+  /* Horizontal slide-in mask. Each half is wrapped in a clipping box
+     wide enough to absorb the off-stage transform; the inner element
+     translates in from its side. Padding/negative margin pairs leave
+     room for the italic's ascenders/descenders without clipping. */
+  .slide-mask {
     display: inline-block;
     overflow: hidden;
     padding: 0.16em 0.06em;
     margin: -0.16em -0.06em;
     vertical-align: bottom;
   }
-  .motion-line {
+  .slide-inner {
     display: inline-block;
     /* JS sets the entry transform. Without JS the line is simply in
-       place — no flash of clipped content. */
+       place — no flash of off-stage content. */
+  }
+
+  /* Quiet gold-leaf divider — centred, narrow. "Very short": 96px on
+     desktop, scaling down on mobile. Reads as a hairline ornament, not
+     a feature. Static; no draw-in. */
+  .position__divider {
+    display: block;
+    margin: clamp(var(--space-5), 4vw, var(--space-7)) auto;
+    width: clamp(64px, 8vw, 96px);
+    line-height: 0;
+  }
+  .position__divider :global(svg) {
+    display: block;
+    width: 100%;
+    height: auto;
   }
 
   .position__subline {
@@ -102,7 +134,7 @@ const { positionPink, positionInk, subline } = Astro.props;
     font-size: clamp(1.35rem, 2.8vw, 1.75rem);
     line-height: var(--lh-snug);
     color: var(--ink-soft);
-    margin-top: var(--space-7);
+    margin-top: 0;
     max-width: 34ch;
   }
 
@@ -112,17 +144,17 @@ const { positionPink, positionInk, subline } = Astro.props;
 </style>
 
 <script>
-  import { revealLines, reveal } from '../lib/motion';
+  import { slideIn, reveal } from '../lib/motion';
 
   const section = document.querySelector<HTMLElement>('[data-position]');
   if (section) {
-    const masks = section.querySelectorAll('.motion-mask');
+    const halves = section.querySelectorAll<HTMLElement>('.slide-inner');
     const subline = section.querySelector<HTMLElement>('[data-position-subline]');
 
-    // The sentence unveils line by line through the masks.
-    revealLines(masks, { start: 'top 78%', stagger: 0.14 });
+    // Two halves slide in from opposite sides and settle.
+    slideIn(halves, { start: 'top 78%' });
 
     // Sub-line settles in last.
-    if (subline) reveal(subline, { y: 18, duration: 0.8, delay: 0.15, start: 'top 72%' });
+    if (subline) reveal(subline, { y: 18, duration: 0.8, delay: 0.25, start: 'top 72%' });
   }
 </script>
