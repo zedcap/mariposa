@@ -1,0 +1,37 @@
+---
+/* PLACEHOLDER — About page.
+   ------------------------------------------------------------------
+   Currently displays the Origin Arc content imported from Volage as
+   a starting point. To be properly designed in a later round.
+
+   Created 2026-05-23. Stephane's review of the Volage page moved the
+   Origin arc off /volage and into /about so the content isn't lost
+   while About is authored. The page is intentionally minimal: header,
+   the three-beat OriginArc, footer.
+
+   Data source: src/content/products/volage.json (the `origin` field).
+   When About gets its own copy, either:
+     (a) duplicate the array into src/content/site/about.json and
+         import from there, or
+     (b) move the origin field out of volage.json into a dedicated
+         site entry and update both pages' imports.
+   Flagged so the dependency is visible. */
+
+import { getEntry } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import OriginArc from '../components/OriginArc.astro';
+
+const volage = (await getEntry('products', 'volage'))!.data;
+
+const originBeats = (volage.origin ?? []).map((b) => ({
+  label: b.label,
+  copy: b.copy,
+  placeholderCaption: b.placeholderCaption,
+}));
+---
+
+<BaseLayout title="Mariposa — About">
+  {originBeats.length > 0 && (
+    <OriginArc beats={originBeats} />
+  )}
+</BaseLayout>

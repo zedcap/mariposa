@@ -165,22 +165,28 @@ const fullMarks = marks.length >= tasting.length + 1
   }
 
   /* ── Thirds ──────────────────────────────────────────────── */
+  /* Spacing tightened 2026-05-23: the thirds previously read as
+     three separated landscapes (50vh-min each, large between-gap)
+     which Stephane called out as "way too much space" between the
+     three notes. Cut the min-height and roughly quartered the gap
+     so they now read as a tight vertical succession; the sticky
+     timeline still tracks the three beats, the active-tick logic
+     is unchanged. */
   .smoke__thirds {
     list-style: none;
     margin: 0;
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: clamp(var(--space-8), 10vw, var(--space-10));
+    gap: clamp(var(--space-5), 3vw, var(--space-6));
   }
   .smoke__third {
     max-width: 56ch;
-    /* Keeps each third tall enough for the timeline tracking to
-       feel like motion as the reader scrolls through it. */
-    min-height: 50vh;
+    /* No artificial min-height: each third is as tall as its own
+       copy. The timeline still has room to track (the rail height
+       is set on the timeline column itself). */
     display: flex;
     flex-direction: column;
-    justify-content: center;
   }
   .smoke__stage {
     font-family: var(--font-body);
@@ -189,13 +195,16 @@ const fullMarks = marks.length >= tasting.length + 1
     letter-spacing: var(--ls-section);
     text-transform: uppercase;
     color: var(--gold-deep);
-    margin: 0 0 var(--space-5) 0;
+    margin: 0 0 var(--space-4) 0;
   }
+  /* Tasting-note size matched to the Presentation section's intro
+     line (.packaging__lede in volage.astro) so the two read at the
+     same register. Was clamp(1.25rem, 2.4vw, 1.65rem). */
   .smoke__note {
     font-family: var(--font-display);
     font-style: italic;
     font-weight: 400;
-    font-size: clamp(1.25rem, 2.4vw, 1.65rem);
+    font-size: clamp(1.05rem, 1.8vw, 1.25rem);
     line-height: var(--lh-loose);
     color: var(--ink);
     margin: 0;
@@ -216,10 +225,7 @@ const fullMarks = marks.length >= tasting.length + 1
       display: none;
     }
     .smoke__thirds {
-      gap: var(--space-9);
-    }
-    .smoke__third {
-      min-height: 0;
+      gap: var(--space-6);
     }
     .smoke__inline-mark {
       display: flex;
