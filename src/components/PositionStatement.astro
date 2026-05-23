@@ -61,7 +61,14 @@ const { positionPink, positionInk, subline } = Astro.props;
         loads with no extra request. */}
     <div class="position__divider" aria-hidden="true" set:html={dividerGoldLeaf} />
 
-    <p class="position__subline" data-position-subline>{subline}</p>
+    {/* Deterministic line break after "occasions,". The trailing clause
+        is wrapped in a block-display span so the sub-line always reads
+        as two lines, regardless of viewport width. Same pattern as the
+        footer brand-line tail. The whole .position__subline still drives
+        the fade-in as one element; both lines reveal together. */}
+    <p class="position__subline" data-position-subline>
+      For those who don't wait for special occasions,<span class="position__subline-tail">but create them.</span>
+    </p>
   </div>
 </section>
 
@@ -75,12 +82,12 @@ const { positionPink, positionInk, subline } = Astro.props;
        sub-line and the top of the Volage frame in the product section.
        Asymmetry is deliberate; do not re-symmetrise. */
     padding-top: 84px;
-    padding-bottom: 56px;
+    padding-bottom: 28px;
   }
   @media (max-width: 720px) {
     .position {
       padding-top: 66px;
-      padding-bottom: 44px;
+      padding-bottom: 22px;
     }
   }
 
@@ -136,7 +143,10 @@ const { positionPink, positionInk, subline } = Astro.props;
      a feature. Static; no draw-in. */
   .position__divider {
     display: block;
-    margin: clamp(var(--space-5), 4vw, var(--space-7)) auto;
+    /* Halved from clamp(var(--space-5), 4vw, var(--space-7)) per
+       Stephane 2026-05-23. Tighter ornament-to-text spacing top and
+       bottom; divider width and centring unchanged. */
+    margin: clamp(var(--space-3), 2vw, var(--space-5)) auto;
     width: clamp(64px, 8vw, 96px);
     line-height: 0;
   }
@@ -155,6 +165,12 @@ const { positionPink, positionInk, subline } = Astro.props;
     color: var(--ink-soft);
     margin-top: 0;
     max-width: 34ch;
+  }
+  /* Forces the trailing clause onto its own line. Block display puts
+     the break immediately after "occasions,"; the comma stays on the
+     first line. No other treatment change. */
+  .position__subline-tail {
+    display: block;
   }
 
   @media (prefers-reduced-motion: reduce) {
