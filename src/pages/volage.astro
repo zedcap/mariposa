@@ -1,38 +1,76 @@
 ---
-/* Volage product page.
+/* Volage product page — seven-section rebuild.
    ------------------------------------------------------------------
-   Scope §4. One shared template, two instances later (Caprice next).
-   The other SKU lives at /caprice (route not built yet — the cross-link
-   at the foot will 404 for now; route arrives in the next pass).
+   Refactor on 2026-05-23 from the original five-section spec page
+   (hero / narrative lede / 12-row spec / 3-column tasting / cross-link).
+   Replaced per Pax's research brief, Part 3, and Stephane's sign-off
+   on the structure. Section-by-section sources:
 
-   Sections, top to bottom:
-     1. Product hero      — large image, SKU name, vitola, format,
-                            tagline, edition label.
-     2. Narrative lede    — the two italic display paragraphs.
-     3. Specifications    — two-column definition list at desktop,
-                            stacked on mobile.
-     4. Tasting notes     — three columns at desktop, stacked on mobile.
-     5. Cross-link        — "Also from Mariposa — Caprice" → /caprice.
-     6. Footer            — shared (BaseLayout).
+     1. Hero               — refined. Format line stripped (duplicates
+                             vitola). Existing image, existing rhythm.
+     2. The signature      — NEW. Gold-leaf differentiator surfaced
+                             out of the body copy and given its own
+                             pearl-bed section, second on the page.
+                             Image is a placeholder (commissioned
+                             macro pending).
+     3. Origin arc         — three beats (Argopuro / Jember / Time),
+                             tall image + copy per beat. All three
+                             images are placeholders.
+     4. The cigar          — two-paragraph narrative, six-row
+                             condensed spec strip, native <details>
+                             for full specifications.
+     5. The smoke arc      — three tasting thirds in a vertical
+                             stack, sticky gold timeline marks the
+                             0' / 15' / 30' / 45' beats. Existing
+                             tasting copy preserved. Pairings NOT
+                             included (future addition).
+     6. Packaging          — three-up static gallery. All three
+                             slots are placeholders.
+     7. Cross-link         — existing centred crosslink to Caprice
+                             preserved verbatim.
 
-   No hero slot. The page opens with the product hero section, so the
-   nav header sits stuck at the top from first paint (BaseLayout
-   handles this: hasHero = false → Header renders in is-stuck state).
+   Components: sections 2, 3, 5 are extracted into reusable
+   components so Caprice can drop in its own content unchanged.
+   Sections 1, 4, 6, 7 stay inline on this page — they either
+   carry SKU-specific layout (hero) or are simple enough that
+   componentising would cost more than it saves at this scale.
 
-   Motion: each section reveals on scroll-in (rise-and-fade) via the
-   shared `reveal` helper. Restrained — no parallax, no scrub. */
+   Motion: rise-and-fade reveals via the shared helper. Sticky
+   timeline in section 5 is CSS-only (no GSAP pin); active-tick
+   tracking is a small IntersectionObserver inside the component.
+   No scrubbed parallax anywhere. */
 
 import { getEntry } from 'astro:content';
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import SignatureBlock from '../components/SignatureBlock.astro';
+import OriginArc from '../components/OriginArc.astro';
+import SmokeArc from '../components/SmokeArc.astro';
 import { withBase } from '../lib/path';
 import cigarVolage from '../assets/cigar-volage-woman.jpg';
 
 const product = (await getEntry('products', 'volage'))!.data;
+
+/* Split specs into condensed + remainder for the section-4 strip
+   and the full-specs reveal. If no condensedSpecKeys is supplied,
+   all specs go in the strip. */
+const condensedKeys = new Set(product.condensedSpecKeys ?? product.specs.map((s) => s.label));
+const condensedSpecs = product.specs.filter((s) => condensedKeys.has(s.label));
+const remainderSpecs = product.specs.filter((s) => !condensedKeys.has(s.label));
+
+/* Per-beat shape for OriginArc. Image is omitted here — every beat
+   is a placeholder until the commissioned shots land. When a beat
+   gets an image, it imports from src/assets and passes the
+   ImageMetadata in. */
+const originBeats = (product.origin ?? []).map((b) => ({
+  label: b.label,
+  copy: b.copy,
+  placeholderCaption: b.placeholderCaption,
+}));
 ---
 
 <BaseLayout title={`Mariposa — ${product.name}`}>
-  {/* ── 1. Product hero ─────────────────────────────────────────── */}
+  {/* ─── 1. Hero ──────────────────────────────────────────────── */}
   <section class="hero" data-reveal-section>
     <div class="hero__inner container">
       <div class="hero__media" data-reveal-media>
@@ -55,52 +93,102 @@ const product = (await getEntry('products', 'volage'))!.data;
         )}
         <h1 class="hero__name">{product.name}</h1>
         <p class="hero__vitola">{product.vitola}</p>
-        <p class="hero__format">{product.format}</p>
+        {/* Format line removed (per brief): duplicates vitola and adds
+            noise. Format lives in the spec strip in section 4. */}
         <p class="hero__tagline">{product.tagline}</p>
       </div>
     </div>
   </section>
 
-  {/* ── 2. Narrative lede ───────────────────────────────────────── */}
-  <section class="narrative" aria-label="The cigar" data-reveal-section>
-    <div class="narrative__inner container">
-      {product.narrative.map((para) => (
-        <p class="narrative__para" data-reveal-para>{para}</p>
-      ))}
-    </div>
-  </section>
+  {/* ─── 2. The signature — gold leaf ────────────────────────── */}
+  {product.signature && (
+    <SignatureBlock
+      lede={product.signature.lede}
+      paragraph={product.signature.paragraph}
+      placeholderCaption={product.signature.placeholderCaption}
+    />
+  )}
 
-  {/* ── 3. Specifications ───────────────────────────────────────── */}
-  <section class="specs" aria-labelledby="specs-heading" data-reveal-section>
-    <div class="specs__inner container">
-      <p class="eyebrow" id="specs-heading">Specifications</p>
-      <dl class="specs__list">
-        {product.specs.map((row) => (
-          <div class="specs__row">
-            <dt class="specs__label">{row.label}</dt>
-            <dd class="specs__value">{row.value}</dd>
+  {/* ─── 3. Origin arc ───────────────────────────────────────── */}
+  {originBeats.length > 0 && (
+    <OriginArc beats={originBeats} />
+  )}
+
+  {/* ─── 4. The cigar — narrative + selective specs ──────────── */}
+  <section class="cigar" aria-labelledby="cigar-heading" data-reveal-section>
+    <div class="cigar__inner container">
+      <p class="eyebrow cigar__eyebrow" id="cigar-heading">The cigar</p>
+
+      {/* Two short narrative paragraphs — italic display, same body
+          treatment used elsewhere on the page. */}
+      <div class="cigar__narrative">
+        {product.narrative.map((para) => (
+          <p class="cigar__para" data-reveal-para>{para}</p>
+        ))}
+      </div>
+
+      {/* Six-row condensed spec strip — single horizontal row at
+          desktop, two-col at tablet, stacked at mobile. */}
+      <dl class="cigar__strip" data-reveal-strip>
+        {condensedSpecs.map((row) => (
+          <div class="cigar__strip-row">
+            <dt class="cigar__strip-label">{row.label}</dt>
+            <dd class="cigar__strip-value">{row.value}</dd>
           </div>
         ))}
       </dl>
+
+      {/* Full specs — native <details>, no JS dependency. Summary
+          styled as a quiet eyebrow link. */}
+      {remainderSpecs.length > 0 && (
+        <details class="cigar__full">
+          <summary class="cigar__full-summary">
+            <span class="cigar__full-label">Full specifications</span>
+            <span class="cigar__full-glyph" aria-hidden="true">+</span>
+          </summary>
+          <dl class="cigar__full-list">
+            {remainderSpecs.map((row) => (
+              <div class="cigar__full-row">
+                <dt class="cigar__full-label-row">{row.label}</dt>
+                <dd class="cigar__full-value">{row.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </details>
+      )}
     </div>
   </section>
 
-  {/* ── 4. Tasting notes ────────────────────────────────────────── */}
-  <section class="tasting" aria-labelledby="tasting-heading" data-reveal-section>
-    <div class="tasting__inner container">
-      <p class="eyebrow" id="tasting-heading">Tasting notes</p>
-      <div class="tasting__grid">
-        {product.tasting.map((stage) => (
-          <div class="tasting__stage">
-            <p class="tasting__stage-label">{stage.stage}</p>
-            <p class="tasting__note">{stage.note}</p>
-          </div>
-        ))}
+  {/* ─── 5. The smoke arc ────────────────────────────────────── */}
+  <SmokeArc tasting={product.tasting} />
+
+  {/* ─── 6. Packaging — static gallery ───────────────────────── */}
+  {product.packaging && product.packaging.length > 0 && (
+    <section class="packaging" aria-labelledby="packaging-heading" data-reveal-section>
+      <div class="packaging__inner container">
+        <p class="eyebrow packaging__eyebrow" id="packaging-heading">Presentation</p>
+        <p class="packaging__lede">
+          Presented as a single cigar, the gold leaf set against the
+          band and the postcard tucked alongside.
+        </p>
+        <div class="packaging__grid">
+          {product.packaging.map((slot, i) => (
+            <figure class="placeholder placeholder--square" aria-label={slot.placeholderCaption ?? `Packaging placeholder ${i + 1}`} data-reveal-pack>
+              <span class="placeholder__corner placeholder__corner--tl" aria-hidden="true"></span>
+              <span class="placeholder__corner placeholder__corner--tr" aria-hidden="true"></span>
+              <span class="placeholder__corner placeholder__corner--bl" aria-hidden="true"></span>
+              <span class="placeholder__corner placeholder__corner--br" aria-hidden="true"></span>
+              <figcaption class="placeholder__caption">
+                {slot.placeholderCaption ?? 'PLACEHOLDER: packaging shot required.'}
+              </figcaption>
+            </figure>
+          ))}
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
+  )}
 
-  {/* ── 5. Cross-link ───────────────────────────────────────────── */}
+  {/* ─── 7. Cross-link — preserved ───────────────────────────── */}
   <section class="crosslink" data-reveal-section>
     <div class="crosslink__inner container">
       <a class="crosslink__link" href={withBase('/caprice')}>
@@ -114,16 +202,12 @@ const product = (await getEntry('products', 'volage'))!.data;
 
 <style>
   /* ── Shared section rhythm ─────────────────────────────────── */
-  /* Each section breathes on the same clamp; mirrors the home page's
-     restrained vertical pacing. */
   section[data-reveal-section] {
     padding-block: clamp(var(--space-7), 7vw, var(--space-9));
   }
 
-  /* ── 1. Product hero ───────────────────────────────────────── */
+  /* ── 1. Hero ───────────────────────────────────────────────── */
   .hero {
-    /* Slightly more air above so the first thing under the nav doesn't
-       press against it. */
     padding-top: clamp(var(--space-8), 9vw, var(--space-10));
   }
   .hero__inner {
@@ -142,7 +226,6 @@ const product = (await getEntry('products', 'volage'))!.data;
     aspect-ratio: 1 / 1;
     overflow: hidden;
   }
-  /* The pink hairline — the pager wink — at the top of the media frame. */
   .hero__hairline {
     position: absolute;
     inset: 0 auto auto 0;
@@ -157,12 +240,10 @@ const product = (await getEntry('products', 'volage'))!.data;
     object-fit: cover;
     object-position: 50% 100%;
   }
-
   .hero__copy {
     display: flex;
     flex-direction: column;
   }
-  /* Edition — eyebrow register, subtle, sits above the name. */
   .hero__edition {
     font-family: var(--font-body);
     font-size: var(--fs-eyebrow);
@@ -172,9 +253,6 @@ const product = (await getEntry('products', 'volage'))!.data;
     color: var(--gold-deep);
     margin: 0 0 var(--space-5) 0;
   }
-  /* SKU name — display serif, a touch larger than the slider's
-     .range__name (which is clamp(1.6rem, 4.0vw, 2.8rem)). This is the
-     product page's H1; it earns more weight. */
   .hero__name {
     font-family: var(--font-display);
     font-weight: 300;
@@ -184,7 +262,6 @@ const product = (await getEntry('products', 'volage'))!.data;
     margin: 0;
     color: var(--ink);
   }
-  /* Vitola — eyebrow under the name. */
   .hero__vitola {
     font-family: var(--font-body);
     font-size: var(--fs-eyebrow);
@@ -194,14 +271,6 @@ const product = (await getEntry('products', 'volage'))!.data;
     color: var(--gold-deep);
     margin: var(--space-5) 0 0 0;
   }
-  /* Format — quiet body line directly below the vitola. */
-  .hero__format {
-    font-family: var(--font-body);
-    font-size: var(--fs-small);
-    color: var(--ink-soft);
-    margin: var(--space-2) 0 0 0;
-  }
-  /* Tagline — italic display, sits below with a clear break. */
   .hero__tagline {
     font-family: var(--font-display);
     font-style: italic;
@@ -213,46 +282,41 @@ const product = (await getEntry('products', 'volage'))!.data;
     max-width: 22ch;
   }
 
-  /* ── 2. Narrative lede ─────────────────────────────────────── */
-  /* Italic display body. Same treatment as the lifestyle prose on the
-     home page and the position sub-line: Spectral italic, loose
-     line-height, generous measure. */
-  .narrative__inner {
-    max-width: 760px;
-    margin-inline: auto;
-  }
-  .narrative__para {
-    font-family: var(--font-display);
-    font-style: italic;
-    font-weight: 400;
-    /* Display body — matched to the home position sub-line ceiling
-       (1.5rem in conversation; here clamped from a higher floor since
-       this is body, not a sub-line). Sits a step above the lifestyle
-       paragraphs (which were dropped to clamp(0.8, 1.5vw, 1rem) in the
-       same review) — this is the product page's hero prose, it earns
-       more presence. */
-    font-size: clamp(1.05rem, 2vw, 1.35rem);
-    line-height: var(--lh-loose);
-    color: var(--ink);
-  }
-  .narrative__para + .narrative__para {
-    margin-top: var(--space-5);
-  }
-
-  /* ── 3. Specifications ─────────────────────────────────────── */
-  .specs__inner {
+  /* ── 4. The cigar ──────────────────────────────────────────── */
+  .cigar__inner {
     max-width: 880px;
     margin-inline: auto;
   }
-  .specs__list {
-    margin: var(--space-6) 0 0 0;
-    /* Two-column list: column-fill: balance gives even split. */
+  .cigar__eyebrow {
+    margin-bottom: var(--space-7);
+  }
+  .cigar__narrative {
+    max-width: 720px;
+    margin-inline: auto;
+  }
+  .cigar__para {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.1rem, 2.1vw, 1.45rem);
+    line-height: var(--lh-loose);
+    color: var(--ink);
+    margin: 0;
+  }
+  .cigar__para + .cigar__para {
+    margin-top: var(--space-5);
+  }
+
+  /* Condensed spec strip — six rows, two columns at desktop. */
+  .cigar__strip {
+    margin: clamp(var(--space-7), 6vw, var(--space-8)) 0 0 0;
     display: grid;
     grid-template-columns: 1fr 1fr;
     column-gap: clamp(var(--space-6), 5vw, var(--space-9));
     row-gap: 0;
+    border-top: 1px solid var(--border-gold);
   }
-  .specs__row {
+  .cigar__strip-row {
     display: grid;
     grid-template-columns: minmax(7rem, 9rem) 1fr;
     gap: var(--space-5);
@@ -260,11 +324,7 @@ const product = (await getEntry('products', 'volage'))!.data;
     padding-block: var(--space-4);
     border-bottom: 1px solid var(--border-gold);
   }
-  /* Top border on the very first row of each column. */
-  .specs__row:nth-child(-n+2) {
-    border-top: 1px solid var(--border-gold);
-  }
-  .specs__label {
+  .cigar__strip-label {
     font-family: var(--font-body);
     font-size: var(--fs-eyebrow);
     font-weight: 500;
@@ -273,7 +333,7 @@ const product = (await getEntry('products', 'volage'))!.data;
     color: var(--gold-deep);
     margin: 0;
   }
-  .specs__value {
+  .cigar__strip-value {
     font-family: var(--font-body);
     font-size: var(--fs-small);
     color: var(--ink);
@@ -281,25 +341,64 @@ const product = (await getEntry('products', 'volage'))!.data;
     line-height: var(--lh-snug);
   }
 
-  /* ── 4. Tasting notes ──────────────────────────────────────── */
-  .tasting__inner {
-    max-width: 1040px;
-    margin-inline: auto;
+  /* Full-specs disclosure — quiet, no chrome, summary as an
+     underlined eyebrow with a plus glyph that rotates on open. */
+  .cigar__full {
+    margin-top: var(--space-7);
   }
-  .tasting__grid {
+  .cigar__full-summary {
+    /* Remove default marker (Safari + Firefox). */
+    list-style: none;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    cursor: pointer;
+    padding-bottom: 2px;
+    border-bottom: 1px solid var(--gold-deep);
+    transition: color var(--dur-default) var(--ease-paper);
+  }
+  .cigar__full-summary::-webkit-details-marker {
+    display: none;
+  }
+  .cigar__full-summary:hover {
+    color: var(--ink);
+  }
+  .cigar__full-label {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 500;
+    letter-spacing: var(--ls-section);
+    text-transform: uppercase;
+    color: var(--gold-deep);
+  }
+  .cigar__full-glyph {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    color: var(--gold-deep);
+    transition: transform var(--dur-default) var(--ease-paper);
+    display: inline-block;
+    line-height: 1;
+  }
+  .cigar__full[open] .cigar__full-glyph {
+    transform: rotate(45deg);
+  }
+  .cigar__full-list {
     margin: var(--space-6) 0 0 0;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: clamp(var(--space-6), 5vw, var(--space-8));
-  }
-  .tasting__stage {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-    padding-top: var(--space-5);
+    grid-template-columns: 1fr 1fr;
+    column-gap: clamp(var(--space-6), 5vw, var(--space-9));
+    row-gap: 0;
     border-top: 1px solid var(--border-gold);
   }
-  .tasting__stage-label {
+  .cigar__full-row {
+    display: grid;
+    grid-template-columns: minmax(7rem, 9rem) 1fr;
+    gap: var(--space-5);
+    align-items: baseline;
+    padding-block: var(--space-4);
+    border-bottom: 1px solid var(--border-gold);
+  }
+  .cigar__full-label-row {
     font-family: var(--font-body);
     font-size: var(--fs-eyebrow);
     font-weight: 500;
@@ -308,20 +407,84 @@ const product = (await getEntry('products', 'volage'))!.data;
     color: var(--gold-deep);
     margin: 0;
   }
-  .tasting__note {
+  .cigar__full-value {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    color: var(--ink);
+    margin: 0;
+    line-height: var(--lh-snug);
+  }
+
+  /* ── 6. Packaging ──────────────────────────────────────────── */
+  .packaging {
+    background: var(--pearl);
+  }
+  .packaging__inner {
+    text-align: center;
+  }
+  .packaging__eyebrow {
+    margin-bottom: var(--space-5);
+  }
+  .packaging__lede {
     font-family: var(--font-display);
     font-style: italic;
     font-weight: 400;
-    font-size: clamp(1rem, 1.7vw, 1.15rem);
+    font-size: clamp(1.05rem, 1.8vw, 1.25rem);
     line-height: var(--lh-loose);
     color: var(--ink);
-    margin: 0;
+    max-width: 44ch;
+    margin: 0 auto var(--space-7) auto;
+  }
+  .packaging__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(var(--space-5), 4vw, var(--space-7));
+    text-align: left;
+  }
+  .placeholder--square {
+    aspect-ratio: 1 / 1;
+  }
+  @media (max-width: 720px) {
+    .packaging__grid {
+      grid-template-columns: 1fr;
+    }
   }
 
-  /* ── 5. Cross-link ─────────────────────────────────────────── */
-  /* Quiet routing link at the foot. Same .range__link treatment from
-     the home slider: uppercase eyebrow tracking, gold-deep, arrow
-     glyph, underline drawn left-to-right on hover. */
+  /* ── Placeholder grammar (page-scoped, used by section 6) ──
+     Same primitives as the components — kept inline here so the
+     packaging grid doesn't depend on a shared partial. If a fourth
+     placeholder use lands, extract. */
+  .placeholder {
+    position: relative;
+    margin: 0;
+    background: var(--white);
+    border: 1px dashed var(--gold-deep);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(var(--space-5), 4vw, var(--space-7));
+  }
+  .placeholder__caption {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    line-height: var(--lh-snug);
+    letter-spacing: 0.02em;
+    color: var(--gold-deep);
+    text-align: center;
+    max-width: 32ch;
+  }
+  .placeholder__corner {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border: 1px solid var(--gold-deep);
+  }
+  .placeholder__corner--tl { top: -1px;  left: -1px;  border-right: 0; border-bottom: 0; }
+  .placeholder__corner--tr { top: -1px;  right: -1px; border-left: 0;  border-bottom: 0; }
+  .placeholder__corner--bl { bottom: -1px; left: -1px;  border-right: 0; border-top: 0; }
+  .placeholder__corner--br { bottom: -1px; right: -1px; border-left: 0;  border-top: 0; }
+
+  /* ── 7. Cross-link ─────────────────────────────────────────── */
   .crosslink {
     padding-bottom: clamp(var(--space-8), 9vw, var(--space-10));
   }
@@ -343,8 +506,6 @@ const product = (await getEntry('products', 'volage'))!.data;
     text-decoration: none;
     border-top: 1px solid var(--border-gold);
     border-bottom: 1px solid var(--border-gold);
-    /* Width set on the link itself so the rules above and below sit at
-       the same measure as the SKU label. */
   }
   .crosslink__lead {
     color: var(--ash);
@@ -377,7 +538,7 @@ const product = (await getEntry('products', 'volage'))!.data;
     transform: translateX(5px);
   }
 
-  /* ── Mobile collapse (≤720px) ──────────────────────────────── */
+  /* ── Mobile collapse ───────────────────────────────────────── */
   @media (max-width: 720px) {
     .hero__inner {
       grid-template-columns: 1fr;
@@ -387,46 +548,38 @@ const product = (await getEntry('products', 'volage'))!.data;
       max-width: 360px;
       margin-inline: auto;
     }
-    .specs__list {
+    .cigar__strip,
+    .cigar__full-list {
       grid-template-columns: 1fr;
-    }
-    .specs__row:nth-child(-n+2) {
-      border-top: none;
-    }
-    .specs__row:first-child {
-      border-top: 1px solid var(--border-gold);
-    }
-    .tasting__grid {
-      grid-template-columns: 1fr;
-      gap: var(--space-6);
     }
   }
 </style>
 
 <script>
-  /* Section reveals — restrained editorial entry. Each section's
-     animatable children rise-and-fade as the section scrolls into view.
-     One rule for all sections; the helper handles reduced-motion. */
+  /* Section reveals — restrained editorial entry. Each block's
+     animatable children rise-and-fade as it scrolls into view.
+     Reveals for the three componentised sections (signature,
+     origin, smoke) are handled inside the components themselves. */
   import { reveal, refreshOnLoad } from '../lib/motion';
 
   // Hero — media and copy column rise together with a small stagger.
   const heroMedia = document.querySelector<HTMLElement>('[data-reveal-media]');
-  const heroCopy = document.querySelector<HTMLElement>('[data-reveal-copy]');
-  if (heroMedia) reveal(heroMedia, { y: 32, duration: 1, start: 'top 88%' });
-  if (heroCopy) reveal(heroCopy, { y: 26, duration: 0.9, delay: 0.12, start: 'top 88%' });
+  const heroCopy  = document.querySelector<HTMLElement>('[data-reveal-copy]');
+  if (heroMedia) reveal(heroMedia, { y: 32, duration: 1,   start: 'top 88%' });
+  if (heroCopy)  reveal(heroCopy,  { y: 26, duration: 0.9, delay: 0.12, start: 'top 88%' });
 
-  // Narrative — paragraphs cascade.
-  const narrativeParas = document.querySelectorAll('[data-reveal-para]');
-  if (narrativeParas.length) {
-    reveal(narrativeParas, { y: 22, duration: 0.9, stagger: 0.14, start: 'top 82%' });
-  }
+  // Section 4 — narrative paragraphs cascade, spec strip lifts in.
+  const cigarParas = document.querySelectorAll('.cigar [data-reveal-para]');
+  const cigarStrip = document.querySelector<HTMLElement>('.cigar [data-reveal-strip]');
+  if (cigarParas.length) reveal(cigarParas, { y: 22, duration: 0.9, stagger: 0.14, start: 'top 82%' });
+  if (cigarStrip) reveal(cigarStrip, { y: 24, duration: 0.9, start: 'top 82%' });
 
-  // Specs, tasting, crosslink — each as a block.
-  const specs = document.querySelector<HTMLElement>('.specs__inner');
-  const tasting = document.querySelector<HTMLElement>('.tasting__inner');
+  // Section 6 — packaging slots fade in as a block.
+  const packs = document.querySelectorAll('.packaging [data-reveal-pack]');
+  if (packs.length) reveal(packs, { y: 22, duration: 0.85, stagger: 0.12, start: 'top 84%' });
+
+  // Section 7 — cross-link.
   const crosslink = document.querySelector<HTMLElement>('.crosslink__inner');
-  if (specs) reveal(specs, { y: 28, duration: 0.9, start: 'top 82%' });
-  if (tasting) reveal(tasting, { y: 28, duration: 0.9, start: 'top 82%' });
   if (crosslink) reveal(crosslink, { y: 22, duration: 0.8, start: 'top 88%' });
 
   refreshOnLoad();

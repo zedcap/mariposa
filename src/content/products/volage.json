@@ -10,9 +10,31 @@
     "An elegant, slow-burning journey for the senses. It opens with a remarkably creamy profile, seamlessly transitioning into layers of earth, wood, and dark coffee. A soft sweetness lingers on the palate just as a sophisticated spice emerges.",
     "Cultivated in the shadow of the Argopuro range, the filler leverages Java's volcanic terroir, offering a unique Indonesian expression of classic Havana-seed tobacco."
   ],
+  "signature": {
+    "lede": "Each Mariposa wears 24-carat gold, laid by hand.",
+    "paragraph": "The leaf is applied by Wrights of Lymm, the British supplier whose gold has dressed Westminster, Versailles, and St Paul's. On a Mariposa, the same craft is brought to the band of a single cigar. The reasoning is the brand's: the finer things are meant to be enjoyed, not waited for.",
+    "placeholderCaption": "PLACEHOLDER: Macro shot of 24-carat gold leaf on Volage cigar, ideally application in progress or freshly applied."
+  },
+  "origin": [
+    {
+      "label": "Argopuro",
+      "copy": "Volcanic soil at the foot of an East Javan range. Havana-seed tobacco, learning what Indonesia tastes like.",
+      "placeholderCaption": "PLACEHOLDER: Argopuro range, East Java — tobacco field or volcanic landscape."
+    },
+    {
+      "label": "Jember",
+      "copy": "Hand-rolled by torcedoras in the BIN workshop. Entubado bunching, three-part construction, Cuban triple cap.",
+      "placeholderCaption": "PLACEHOLDER: Jember rolling room — torcedoras at work, hands and leaf."
+    },
+    {
+      "label": "Time",
+      "copy": "Twenty-four months of fermentation. Twelve months of ageing. Then the leaf goes on.",
+      "placeholderCaption": "PLACEHOLDER: Ageing room — rows of bundled cigars in maturation."
+    }
+  ],
   "narrative": [
-    "The first draw is creamy and slow. Wood arrives, followed by coffee, and a lingering sweetness that holds while the spice walks in. Hand-rolled in Java, it is born from tobacco grown in the volcanic soil at the foot of the Argopuro range, from Havana seed that has learned what Indonesia tastes like.",
-    "The 24-carat gold leaf laid by hand on every Mariposa is the brand's signature. It stands as a quiet reminder that the finer things in life are meant to be enjoyed."
+    "A Canonazo, hand-rolled in Java from Havana-seed Criollo 98 grown in the volcanic soil at the foot of the Argopuro range. Full-bodied, slow-burning, forty-five minutes of evolution.",
+    "The first draw is creamy and slow. Wood arrives, then coffee, then a sweetness that holds while the spice walks in. A cigar that does not wait for an occasion."
   ],
   "specs": [
     { "label": "Vitola", "value": "Canonazo" },
@@ -28,9 +50,15 @@
     { "label": "Strength", "value": "Full body" },
     { "label": "Release", "value": "Limited release" }
   ],
+  "condensedSpecKeys": ["Vitola", "Format", "Wrapper", "Origin", "Strength", "Release"],
   "tasting": [
     { "stage": "First third", "note": "Creamy and woody, grounded by an underlying note of coffee." },
     { "stage": "Second third", "note": "The creaminess lingers as a rich sweetness begins to emerge." },
     { "stage": "Final third", "note": "Spice arrives, the sweetness holds, and deep earth closes the smoke." }
+  ],
+  "packaging": [
+    { "placeholderCaption": "PLACEHOLDER: Single Volage cigar in presentation packaging — closed box, front three-quarter view." },
+    { "placeholderCaption": "PLACEHOLDER: Packaging detail — band and gold-leaf at close range, paired with the postcard insert." },
+    { "placeholderCaption": "PLACEHOLDER: Packaging open — box interior with cigar in situ, postcard visible." }
   ]
 }

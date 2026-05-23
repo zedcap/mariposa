@@ -1,0 +1,311 @@
+---
+/* SmokeArc — tasting notes as a vertical sequence.
+   ------------------------------------------------------------------
+   Section 5 of a SKU page. The brief's Option B (preferred over a
+   horizontal scroll): a sticky gold timeline on the left margin
+   tracks the three thirds as the reader scrolls through them.
+
+   Implementation: CSS `position: sticky` for the timeline column,
+   no JS dependency for the pin. Active-tick highlighting uses an
+   IntersectionObserver that watches each third and toggles a class
+   on the corresponding marker. Reduced-motion: no animation; the
+   sticky behaviour still works (it's layout, not motion), but if
+   it ever feels intrusive at that setting the sticky can be
+   neutralised under the media query.
+
+   Mobile: timeline collapses inline above each third — the brief's
+   stated mobile fallback.
+
+   Each tasting third carries its own time marker (0', 15', 30',
+   45'). The smoke time is the Volage spec; Caprice will pass its
+   own time array.
+
+   Pairings: NOT implemented this build. The brief flags them as a
+   future addition pending Axel-drafted copy. */
+
+interface Stage {
+  stage: string;        // e.g. "First third"
+  note: string;
+}
+
+interface Props {
+  tasting: Stage[];     // expected length 3, but the component is
+                        // agnostic; whatever it gets, it lays out.
+  /* Time markers paired one-to-one with `tasting`. Strings so the
+     component doesn't have to know about formatting. */
+  marks?: string[];
+}
+
+const {
+  tasting,
+  marks = ["0'", "15'", "30'", "45'"],
+} = Astro.props;
+
+/* The marker count is tasting.length + 1 (a final tick that closes
+   the line). Pad the marks array if the caller supplied fewer. */
+const fullMarks = marks.length >= tasting.length + 1
+  ? marks.slice(0, tasting.length + 1)
+  : [...marks, ...Array(tasting.length + 1 - marks.length).fill('')];
+---
+
+<section class="smoke" aria-labelledby="smoke-heading" data-reveal-section>
+  <div class="smoke__inner container">
+    <p class="eyebrow smoke__eyebrow" id="smoke-heading">The smoke arc</p>
+
+    <div class="smoke__layout">
+      {/* Sticky timeline — gold rule with marker ticks. aria-label so
+          screen readers announce the structural role. */}
+      <nav class="smoke__timeline" aria-label="Smoke arc timeline">
+        <div class="smoke__rail" aria-hidden="true">
+          <span class="smoke__line"></span>
+          {fullMarks.map((m, i) => (
+            <span
+              class="smoke__tick"
+              data-tick-index={i}
+              style={`top: ${(i / (fullMarks.length - 1)) * 100}%`}
+            >
+              <span class="smoke__dot"></span>
+              <span class="smoke__time">{m}</span>
+            </span>
+          ))}
+        </div>
+      </nav>
+
+      {/* The three thirds — stacked vertically. Each one a generous
+          70vh-ish block so the sticky timeline has room to track. */}
+      <ol class="smoke__thirds">
+        {tasting.map((stage, i) => (
+          <li class="smoke__third" data-third-index={i} data-reveal-third>
+            {/* Mobile-only inline marker — the timeline collapses to
+                a stack on small viewports, per the brief's mobile note. */}
+            <p class="smoke__inline-mark" aria-hidden="true">
+              <span class="smoke__inline-dot"></span>
+              {fullMarks[i]}
+            </p>
+            <p class="smoke__stage">{stage.stage}</p>
+            <p class="smoke__note">{stage.note}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+</section>
+
+<style>
+  .smoke {
+    padding-block: clamp(var(--space-8), 9vw, var(--space-10));
+  }
+  .smoke__eyebrow {
+    margin-bottom: var(--space-7);
+  }
+
+  /* Two columns at desktop: sticky timeline left, thirds stack right. */
+  .smoke__layout {
+    display: grid;
+    grid-template-columns: minmax(120px, 160px) 1fr;
+    gap: clamp(var(--space-7), 6vw, var(--space-9));
+  }
+
+  /* ── Timeline ────────────────────────────────────────────── */
+  .smoke__timeline {
+    position: sticky;
+    top: 96px;     /* clears the stuck nav (66px) + breathing room */
+    align-self: start;
+    height: 60vh;  /* the rail's standing height while sticky */
+    min-height: 360px;
+  }
+  .smoke__rail {
+    position: relative;
+    height: 100%;
+    margin-left: var(--space-3);
+  }
+  .smoke__line {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--gold-deep);
+    opacity: 0.5;
+  }
+  .smoke__tick {
+    position: absolute;
+    left: -6px;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    transition: opacity var(--dur-default) var(--ease-paper);
+    opacity: 0.5;
+  }
+  .smoke__tick.is-active {
+    opacity: 1;
+  }
+  .smoke__dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: var(--white);
+    border: 1px solid var(--gold-deep);
+    transition: background var(--dur-default) var(--ease-paper),
+                transform var(--dur-default) var(--ease-paper);
+  }
+  .smoke__tick.is-active .smoke__dot {
+    background: var(--gold);
+    transform: scale(1.15);
+  }
+  .smoke__time {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 500;
+    letter-spacing: var(--ls-section);
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    white-space: nowrap;
+  }
+
+  /* ── Thirds ──────────────────────────────────────────────── */
+  .smoke__thirds {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(var(--space-8), 10vw, var(--space-10));
+  }
+  .smoke__third {
+    max-width: 56ch;
+    /* Keeps each third tall enough for the timeline tracking to
+       feel like motion as the reader scrolls through it. */
+    min-height: 50vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .smoke__stage {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 500;
+    letter-spacing: var(--ls-section);
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    margin: 0 0 var(--space-5) 0;
+  }
+  .smoke__note {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.25rem, 2.4vw, 1.65rem);
+    line-height: var(--lh-loose);
+    color: var(--ink);
+    margin: 0;
+  }
+
+  /* Inline mobile marker — hidden on desktop. */
+  .smoke__inline-mark {
+    display: none;
+  }
+
+  /* ── Mobile ──────────────────────────────────────────────── */
+  @media (max-width: 720px) {
+    .smoke__layout {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    .smoke__timeline {
+      display: none;
+    }
+    .smoke__thirds {
+      gap: var(--space-9);
+    }
+    .smoke__third {
+      min-height: 0;
+    }
+    .smoke__inline-mark {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      font-family: var(--font-body);
+      font-size: var(--fs-eyebrow);
+      font-weight: 500;
+      letter-spacing: var(--ls-section);
+      text-transform: uppercase;
+      color: var(--gold-deep);
+      margin: 0 0 var(--space-4) 0;
+    }
+    .smoke__inline-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--gold);
+      border: 1px solid var(--gold-deep);
+    }
+  }
+</style>
+
+<script>
+  /* Each third reveals on enter; the sticky timeline ticks an active
+     class so the dot lights up as you read it. Two IntersectionObservers
+     are excessive — one watcher does both jobs. */
+  import { reveal } from '../lib/motion';
+
+  const thirds = document.querySelectorAll<HTMLElement>('.smoke [data-third-index]');
+  const ticks  = document.querySelectorAll<HTMLElement>('.smoke [data-tick-index]');
+
+  // Reveal each third's text once on enter.
+  thirds.forEach((third) => {
+    reveal(third, { y: 26, duration: 0.95, start: 'top 78%' });
+  });
+
+  // Tick activation — the tick at index N lights when third N is the
+  // most-centred third in the viewport. The final tick (index N+1)
+  // lights when the user has scrolled past the last third.
+  if (thirds.length && ticks.length) {
+    const setActive = (i: number) => {
+      ticks.forEach((t) => t.classList.remove('is-active'));
+      const tick = ticks[i];
+      if (tick) tick.classList.add('is-active');
+    };
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        // Pick the entry that's most visible right now.
+        let bestEntry: IntersectionObserverEntry | null = null;
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          if (!bestEntry || entry.intersectionRatio > bestEntry.intersectionRatio) {
+            bestEntry = entry;
+          }
+        }
+        if (bestEntry) {
+          const idx = Number((bestEntry.target as HTMLElement).dataset.thirdIndex);
+          setActive(idx);
+        }
+      },
+      {
+        /* A band centred on the viewport — the third the reader is
+           reading is the one lighting up. */
+        rootMargin: '-35% 0px -35% 0px',
+        threshold: [0, 0.25, 0.5, 0.75, 1],
+      },
+    );
+    thirds.forEach((t) => io.observe(t));
+
+    // Light the first tick on load so the rail isn't blank before
+    // the first third is centred.
+    setActive(0);
+
+    // After the last third has scrolled past, light the closing tick.
+    const lastThird = thirds[thirds.length - 1];
+    const tailIo = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          const past = entry.boundingClientRect.bottom < 0;
+          if (past) setActive(ticks.length - 1);
+        }
+      },
+      { threshold: 0 },
+    );
+    tailIo.observe(lastThird);
+  }
+</script>

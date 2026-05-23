@@ -1,0 +1,204 @@
+---
+/* OriginArc — three-beat provenance arc.
+   ------------------------------------------------------------------
+   Section 3 of a SKU page. Sequential reveal: each beat is a label
+   + a short note + a tall image (placeholder until commissioned).
+   Beats stack vertically, image left and copy right at desktop;
+   alternating sides would noise the read, so the side is fixed.
+
+   Per the brief: no scrubbed parallax, no horizontal scroll. Each
+   beat reveals once on enter via the standard helper. Mobile
+   collapses to image-then-text pairs.
+
+   Caprice will reuse this with its own three beats. */
+
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Beat {
+  label: string;
+  copy: string;
+  image?: ImageMetadata;
+  alt?: string;
+  placeholderCaption?: string;
+}
+
+interface Props {
+  beats: Beat[];
+}
+
+const { beats } = Astro.props;
+---
+
+<section class="origin" aria-label="Origin" data-reveal-section>
+  <div class="origin__inner container">
+    <p class="eyebrow origin__eyebrow">Origin</p>
+    <ol class="origin__list">
+      {beats.map((beat, i) => (
+        <li class="origin__beat" data-reveal-beat>
+          <div class="origin__media">
+            {beat.image ? (
+              <Image
+                class="origin__image"
+                src={beat.image}
+                alt={beat.alt ?? `${beat.label} — ${beat.copy}`}
+                widths={[480, 720, 1080]}
+                sizes="(max-width: 720px) 90vw, 48vw"
+                loading="lazy"
+              />
+            ) : (
+              <figure class="placeholder placeholder--tall" aria-label={beat.placeholderCaption ?? `${beat.label} placeholder`}>
+                <span class="placeholder__corner placeholder__corner--tl" aria-hidden="true"></span>
+                <span class="placeholder__corner placeholder__corner--tr" aria-hidden="true"></span>
+                <span class="placeholder__corner placeholder__corner--bl" aria-hidden="true"></span>
+                <span class="placeholder__corner placeholder__corner--br" aria-hidden="true"></span>
+                <figcaption class="placeholder__caption">
+                  {beat.placeholderCaption ?? 'PLACEHOLDER: image required.'}
+                </figcaption>
+              </figure>
+            )}
+          </div>
+          <div class="origin__copy">
+            <p class="origin__step" aria-hidden="true">{String(i + 1).padStart(2, '0')}</p>
+            <h3 class="origin__label">{beat.label}</h3>
+            <p class="origin__note">{beat.copy}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .origin {
+    padding-block: clamp(var(--space-8), 9vw, var(--space-10));
+  }
+  .origin__eyebrow {
+    margin-bottom: var(--space-7);
+  }
+  .origin__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(var(--space-7), 7vw, var(--space-9));
+  }
+
+  /* Each beat — two columns at desktop, image left. */
+  .origin__beat {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(var(--space-6), 6vw, var(--space-9));
+    align-items: center;
+  }
+
+  .origin__media {
+    position: relative;
+  }
+  .origin__image {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border: 1px solid var(--border-gold);
+  }
+
+  /* Tall placeholder variant — matches the image aspect ratio. */
+  .placeholder--tall {
+    aspect-ratio: 4 / 5;
+  }
+
+  .origin__copy {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    max-width: 40ch;
+  }
+  /* The step number — quiet eyebrow register, sits above the label. */
+  .origin__step {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 500;
+    letter-spacing: var(--ls-section);
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    margin: 0;
+  }
+  .origin__label {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(1.8rem, 3.6vw, 2.6rem);
+    line-height: var(--lh-snug);
+    letter-spacing: var(--ls-display);
+    color: var(--ink);
+    margin: 0;
+  }
+  .origin__note {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+    line-height: var(--lh-loose);
+    color: var(--ink);
+    margin: 0;
+  }
+
+  /* Placeholder grammar — repeated from SignatureBlock for now. If a
+     third use lands, lift into a shared partial. Two uses earns
+     duplication, three earns extraction. */
+  .placeholder {
+    position: relative;
+    margin: 0;
+    background: var(--pearl);
+    border: 1px dashed var(--gold-deep);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(var(--space-5), 4vw, var(--space-7));
+  }
+  .placeholder__caption {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    line-height: var(--lh-snug);
+    letter-spacing: 0.02em;
+    color: var(--gold-deep);
+    text-align: center;
+    max-width: 32ch;
+  }
+  .placeholder__corner {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border: 1px solid var(--gold-deep);
+  }
+  .placeholder__corner--tl { top: -1px;  left: -1px;  border-right: 0; border-bottom: 0; }
+  .placeholder__corner--tr { top: -1px;  right: -1px; border-left: 0;  border-bottom: 0; }
+  .placeholder__corner--bl { bottom: -1px; left: -1px;  border-right: 0; border-top: 0; }
+  .placeholder__corner--br { bottom: -1px; right: -1px; border-left: 0;  border-top: 0; }
+
+  /* Mobile — image stacks above copy, beat by beat. */
+  @media (max-width: 720px) {
+    .origin__beat {
+      grid-template-columns: 1fr;
+      gap: var(--space-6);
+    }
+    .origin__copy {
+      max-width: none;
+    }
+  }
+</style>
+
+<script>
+  /* Each beat reveals once on enter. Image scales subtly into place,
+     copy rises with a short stagger — restrained per the brief. */
+  import { reveal } from '../lib/motion';
+
+  const beats = document.querySelectorAll<HTMLElement>('.origin [data-reveal-beat]');
+  beats.forEach((beat) => {
+    const media = beat.querySelector<HTMLElement>('.origin__media');
+    const copy  = beat.querySelector<HTMLElement>('.origin__copy');
+    if (media) reveal(media, { y: 28, duration: 1,    start: 'top 82%' });
+    if (copy)  reveal(copy,  { y: 22, duration: 0.9,  delay: 0.14, start: 'top 82%' });
+  });
+</script>
