@@ -21,7 +21,6 @@ const home = (await getEntry('site', 'home'))!.data as {
     eyebrow: string;
     paragraphs: string[];
     closingLine: string;
-    aboutLinkLabel: string;
   };
 };
 
@@ -41,10 +40,7 @@ const products = (await getCollection('products'))
 
   <ProductSlider products={products} />
 
-  <LifestyleSection
-    paragraphs={home.lifestyle.paragraphs}
-    aboutLinkLabel={home.lifestyle.aboutLinkLabel}
-  />
+  <LifestyleSection paragraphs={home.lifestyle.paragraphs} />
 </BaseLayout>
 
 <script>

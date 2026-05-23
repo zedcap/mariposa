@@ -16,13 +16,11 @@
    are preserved.
 
    prefers-reduced-motion: copy shown in place (handled by reveal). */
-import { withBase } from '../lib/path';
 
 interface Props {
   paragraphs: string[];
-  aboutLinkLabel: string;
 }
-const { paragraphs, aboutLinkLabel } = Astro.props;
+const { paragraphs } = Astro.props;
 ---
 
 <section class="story" aria-labelledby="story-heading" data-story data-cream-bg>
@@ -33,11 +31,6 @@ const { paragraphs, aboutLinkLabel } = Astro.props;
       <div class="story__prose">
         {paragraphs.map((para) => <p class="story__para" data-story-para>{para}</p>)}
       </div>
-
-      <a class="story__link" href={withBase('/about')} data-story-link>
-        <span class="story__link-text">{aboutLinkLabel}</span>
-        <span class="story__link-arrow" aria-hidden="true">&rarr;</span>
-      </a>
     </article>
   </div>
 </section>
@@ -73,51 +66,12 @@ const { paragraphs, aboutLinkLabel } = Astro.props;
     font-family: var(--font-display);
     font-style: italic;
     font-weight: 400;
-    font-size: clamp(1.15rem, 1.9vw, 1.4rem);
+    font-size: clamp(1.05rem, 2.0vw, 1.35rem);
     line-height: var(--lh-loose);
     color: var(--ink);
   }
   .story__para + .story__para {
     margin-top: var(--space-5);
-  }
-
-  .story__link {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-3);
-    margin-top: var(--space-7);
-    font-family: var(--font-body);
-    font-size: var(--fs-small);
-    font-weight: 600;
-    letter-spacing: var(--ls-small);
-    color: var(--gold-deep);
-    text-decoration: none;
-  }
-  .story__link-text {
-    position: relative;
-    padding-bottom: 3px;
-  }
-  .story__link-text::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    height: 1px;
-    background: var(--gold-deep);
-    transform: scaleX(0);
-    transform-origin: left center;
-    transition: transform var(--dur-default) var(--ease-paper);
-  }
-  .story__link:hover .story__link-text::after,
-  .story__link:focus-visible .story__link-text::after {
-    transform: scaleX(1);
-  }
-  .story__link-arrow {
-    transition: transform var(--dur-default) var(--ease-paper);
-  }
-  .story__link:hover .story__link-arrow {
-    transform: translateX(5px);
   }
 
   @media (max-width: 720px) {
@@ -135,12 +89,9 @@ const { paragraphs, aboutLinkLabel } = Astro.props;
   if (section) {
     const card = section.querySelector<HTMLElement>('[data-story-card]');
     const paras = section.querySelectorAll('[data-story-para]');
-    const link = section.querySelector('[data-story-link]');
 
     // The card lifts in as a whole, then its paragraphs cascade.
     if (card) reveal(card, { y: 40, duration: 1, start: 'top 82%' });
     reveal(paras, { y: 22, duration: 0.8, stagger: 0.14, delay: 0.2, start: 'top 78%' });
-
-    if (link) reveal(link, { y: 16, duration: 0.7, delay: 0.1, start: 'top 88%' });
   }
 </script>
