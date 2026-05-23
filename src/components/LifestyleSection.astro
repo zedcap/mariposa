@@ -3,22 +3,23 @@
    ------------------------------------------------------------------
    2026-05-23. The image bed (brandmark-sq.jpg) and the duotone wash
    that floated behind the card have been removed; the card now sits
-   on the cream section background alone. The card-level "Mariposa"
-   eyebrow has also been removed — the story opens straight into the
-   italic prose. The closing display-scale line ("Don't wait for
-   special occasions. Create them.") has been stripped as redundant
-   with the footer brand-line; the closing thought now lives inline
-   as the final sentence of the second paragraph.
+   directly on the page surface. The card-level "Mariposa" eyebrow has
+   also been removed — the story opens straight into the italic prose.
+   The closing display-scale line ("Don't wait for special occasions.
+   Create them.") has been stripped as redundant with the footer
+   brand-line; the closing thought now lives inline as the final
+   sentence of the second paragraph.
 
    2026-05-23 (later). The mariposa wordmark now opens the card as a
    centred masthead, sized to match the .range__name SKU type in the
    product slider (clamp(1.6rem, 4.0vw, 2.8rem) — height, with auto
    width). Space-6 separates the mark from the first prose paragraph.
 
-   The cream section background and [data-cream-bg] attribute stay
-   so the sticky nav continues to adopt cream over this section.
-   Card geometry, padding rhythm, and paragraph-by-paragraph reveal
-   are preserved.
+   2026-05-23 (later still). The cream section background (#f2f0e9)
+   and the [data-cream-bg] hook for the nav observer were stripped;
+   the body paper-fibre texture now reads through the section behind
+   the card. Card geometry, padding rhythm, and paragraph-by-paragraph
+   reveal are preserved.
 
    prefers-reduced-motion: copy shown in place (handled by reveal). */
 
@@ -31,7 +32,7 @@ interface Props {
 const { paragraphs } = Astro.props;
 ---
 
-<section class="story" aria-labelledby="story-heading" data-story data-cream-bg>
+<section class="story" aria-labelledby="story-heading" data-story>
   <div class="story__layer container">
     <article class="story__card grain" data-story-card>
       <h2 class="visually-hidden" id="story-heading">The Mariposa story</h2>
@@ -55,8 +56,11 @@ const { paragraphs } = Astro.props;
 <style>
   .story {
     position: relative;
-    background: #f2f0e9;
-    /* Top padding halved (Stephane review 2026-05-23): paired cut
+    /* No section background — the body paper-fibre texture reads
+       through (Stephane 2026-05-23). The cream bed (#f2f0e9) was
+       stripped in the same pass that removed the product slider's
+       cream bed and the white→cream nav bleed wedge.
+       Top padding halved (Stephane review 2026-05-23): paired cut
        with .range's padding-bottom to close the slider-controls →
        story-card gap ~50%. Bottom padding halved in the same shape
        (Stephane review 2026-05-23, later) to close the story-card →
@@ -108,7 +112,11 @@ const { paragraphs } = Astro.props;
     font-family: var(--font-display);
     font-style: italic;
     font-weight: 400;
-    font-size: clamp(0.95rem, 1.8vw, 1.2rem);
+    /* One step smaller (Stephane review 2026-05-23, later). Proportional
+       drop on all three clamp values, ~83%: floor 0.95→0.8rem, middle
+       1.8→1.5vw, ceiling 1.2→1.0rem. Italic treatment, line-height,
+       paragraph reveal motion all preserved. */
+    font-size: clamp(0.8rem, 1.5vw, 1rem);
     line-height: var(--lh-loose);
     color: var(--ink);
   }

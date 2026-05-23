@@ -10,19 +10,20 @@
    native CSS `sticky` gives the same behaviour with no JavaScript.)
 
    Two visual states:
-   - RESTING — below the hero, in flow. Solid colour-tracked bar, gold
-     hairline underneath, no shadow. It belongs to the page.
+   - RESTING — below the hero, in flow. Solid white bar, gold hairline
+     underneath, no shadow. It belongs to the page.
    - STUCK — detached at the top, content scrolling beneath it. Same
-     colour-tracked bar, plus a faint lift shadow so it reads as a
-     floating header, not part of the page body. No backdrop blur:
-     the bar is opaque (Stephane, 2026-05-23 — translucency explicitly
-     rejected for this surface).
+     white bar, plus a faint lift shadow so it reads as a floating
+     header, not part of the page body. No backdrop blur: the bar is
+     opaque (Stephane, 2026-05-23 — translucency explicitly rejected
+     for this surface).
 
-   The background colour is itself scroll-tied: a script in this file
-   samples the section directly beneath the nav band and interpolates
-   from opaque white to opaque cream as the white→cream gradient
-   wedge (`.range__bleed` in ProductSlider) slides past the nav's
-   bottom edge. See the script docstring below for the geometry.
+   Background colour: single opaque white. An earlier iteration
+   scroll-interpolated white→cream over a white→cream gradient wedge
+   at the top of the product section; that wedge and the cream beds
+   below it were stripped 2026-05-23 so the body paper-fibre texture
+   reads through the page. With no cream to track, the per-frame
+   rAF observer was removed; the nav now sits at a single colour.
 
    `overHero` is true when the page has a hero (the header has somewhere
    to rest below). When false — interior pages with no hero — the header
@@ -62,7 +63,6 @@ const isActive = (href: string) => {
   class:list={['site-header', { 'is-stuck': !overHero }]}
   data-header
   data-over-hero={overHero ? 'true' : 'false'}
-  style="--nav-bg-current: var(--nav-white);"
 >
   <div class="site-header__inner container">
     <a class="site-header__mark wordmark" href={withBase('/')} aria-label="Mariposa, home">
@@ -85,33 +85,19 @@ const isActive = (href: string) => {
     pointer-events: none;
   }
 
-  /* Opaque palette anchors for the scroll-tied interpolation. The nav
-     never sees translucency: the brief explicitly rejected it
-     ("opaque, no translucency, no content visible through"). Cream
-     value matches the product + lifestyle bed (#f2f0e9) verbatim, so
-     when the interpolation lands at 1 the nav is literally the same
-     colour as the section behind it. */
-  :root {
-    --nav-white: #ffffff;
-    --nav-cream: #f2f0e9;
-  }
-
   .site-header {
     /* The pattern: rests in flow below the hero, sticks at the top
        once it gets there. */
     position: sticky;
     top: 0;
     z-index: 60;
-    /* Background is driven by --nav-bg-current, a CSS custom property
-       that the scroll script updates on every frame. It carries an
-       interpolated colour sampled from the section directly beneath
-       the nav band, so the bar reads as a seamless extension of the
-       page — not a separately-skinned strip. Opaque throughout. */
-    background-color: var(--nav-bg-current, var(--nav-white));
+    /* Single opaque white surface. The earlier scroll-tied white→cream
+       interpolation was stripped 2026-05-23 with the cream beds it
+       tracked. Translucency stays off the table for this surface per
+       Stephane (the brief explicitly rejected it). */
+    background-color: #ffffff;
     border-bottom: 1px solid var(--border-gold);
-    /* Shadow eases in on stuck; the background itself is driven
-       per-frame by the scroll script so no CSS transition on
-       background-color (it would lag behind the scrub). */
+    /* Shadow eases in on stuck. */
     transition: box-shadow var(--dur-default) var(--ease-paper);
   }
 
@@ -197,162 +183,26 @@ const isActive = (href: string) => {
 </style>
 
 <script>
-  /* Header behaviour, split in two:
+  /* Resting/stuck toggle. A 1px sentinel before the header drives an
+     IntersectionObserver that flips the `.is-stuck` class (carrying the
+     lift shadow + height contract). Only attached when the page has a
+     hero for the header to rest below; interior pages render stuck from
+     first paint and stay there.
 
-     1. Resting/stuck toggle — unchanged in principle. A sentinel
-        before the header drives an IntersectionObserver that flips the
-        `.is-stuck` class (carrying the lift shadow + height contract).
-
-     2. Scroll-tied background colour. The brief: the nav should always
-        carry the colour of the section directly beneath it. As the
-        cream gradient wedge (`.range__bleed`) slides up past the
-        nav's bottom edge, the nav background interpolates from white
-        to cream so it reads as a seamless continuation of the page
-        underneath rather than a separately-skinned bar that snaps
-        state at the seam.
-
-        Anchors (per Stephane):
-          - progress 0 → wedge BOTTOM at nav bottom → fully WHITE
-          - progress 1 → wedge TOP    at nav bottom → fully CREAM
-        i.e. the interpolation range is exactly the wedge height,
-        measured in scroll distance, and the sample point is the nav's
-        bottom edge.
-
-        Beyond the cream zone:
-          - above the wedge: opaque white (endpoint).
-          - inside the cream sections, past the wedge: opaque cream.
-          - past the bottom of the cream zone (lifestyle → footer):
-            snap back to white. The cream→footer boundary is a clean
-            horizontal cut (no return gradient exists on the page),
-            so the snap is honest; interpolating against a non-existent
-            gradient would invent motion. Flagged.
-
-        Mechanism: a single requestAnimationFrame-throttled scroll
-        listener. No GSAP ScrollTrigger here — this is one element
-        sampled relative to the viewport per frame, cheaper as raw
-        rAF + getBoundingClientRect than as a registered trigger
-        instance. Stays consistent with the rest of the site because
-        the result is the same colour-tracked surface; the choice is
-        purely about overhead. */
+     An earlier scroll-tied background interpolation (white → cream as
+     the product section's bleed wedge passed the nav's bottom edge)
+     was removed 2026-05-23 along with the cream beds it tracked; the
+     nav now sits at a single opaque white throughout. */
   const header = document.querySelector<HTMLElement>('[data-header]');
 
-  if (header) {
-    // ── 1. Resting/stuck toggle ──────────────────────────────────
-    if (header.dataset.overHero === 'true') {
-      const sentinel = header.previousElementSibling;
-      if (sentinel) {
-        const io = new IntersectionObserver(
-          ([entry]) => header.classList.toggle('is-stuck', !entry.isIntersecting),
-          { threshold: 0 },
-        );
-        io.observe(sentinel);
-      }
+  if (header && header.dataset.overHero === 'true') {
+    const sentinel = header.previousElementSibling;
+    if (sentinel) {
+      const io = new IntersectionObserver(
+        ([entry]) => header.classList.toggle('is-stuck', !entry.isIntersecting),
+        { threshold: 0 },
+      );
+      io.observe(sentinel);
     }
-
-    // ── 2. Scroll-tied background colour ─────────────────────────
-    const wedge = document.querySelector<HTMLElement>('.range__bleed');
-    const creamSections = Array.from(
-      document.querySelectorAll<HTMLElement>('[data-cream-bg]'),
-    );
-
-    if (wedge && creamSections.length) {
-      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-      // Endpoint colours — read once from CSS so a token change
-      // propagates without touching this script. RGB tuples for a
-      // cheap per-frame mix; `color-mix()` in CSS would suffice on
-      // modern browsers but the JS path is universal and avoids a
-      // computed-style read every frame.
-      const styles = getComputedStyle(header);
-      const white = parseRGB(styles.getPropertyValue('--nav-white').trim() || '#ffffff');
-      const cream = parseRGB(styles.getPropertyValue('--nav-cream').trim() || '#f2f0e9');
-
-      let lastApplied = '';
-      const apply = (t: number) => {
-        // Clamp + (in reduced-motion) discretise to the nearest endpoint.
-        const k = reduced ? (t < 0.5 ? 0 : 1) : Math.max(0, Math.min(1, t));
-        const r = Math.round(white[0] + (cream[0] - white[0]) * k);
-        const g = Math.round(white[1] + (cream[1] - white[1]) * k);
-        const b = Math.round(white[2] + (cream[2] - white[2]) * k);
-        const next = `rgb(${r}, ${g}, ${b})`;
-        if (next !== lastApplied) {
-          header.style.setProperty('--nav-bg-current', next);
-          lastApplied = next;
-        }
-      };
-
-      const lastCream = creamSections[creamSections.length - 1];
-
-      const compute = () => {
-        const navRect = header.getBoundingClientRect();
-        const navBottom = navRect.bottom; // viewport-relative y of the sample line
-
-        // Past the bottom of the cream zone → snap white. The cream→
-        // footer join is a clean horizontal cut; snapping here is the
-        // honest read.
-        const creamZoneBottom = lastCream.getBoundingClientRect().bottom;
-        if (creamZoneBottom <= navBottom) {
-          apply(0);
-          return;
-        }
-
-        // Wedge geometry, viewport-relative.
-        const wedgeRect = wedge.getBoundingClientRect();
-        const wedgeTop = wedgeRect.top;
-        const wedgeBottom = wedgeRect.bottom;
-
-        if (wedgeBottom >= navBottom && wedgeTop <= navBottom) {
-          // Inside the wedge band. Linear interpolation:
-          //   k = (wedgeBottom - navBottom) / wedgeHeight
-          // → k = 0 when wedgeBottom == navBottom (white)
-          // → k = 1 when wedgeTop    == navBottom (cream)
-          const h = wedgeBottom - wedgeTop;
-          const k = h > 0 ? (wedgeBottom - navBottom) / h : 0;
-          apply(k);
-        } else if (wedgeTop > navBottom) {
-          // Wedge still entirely below the nav bottom → above the
-          // cream zone → fully white.
-          apply(0);
-        } else {
-          // Wedge entirely above the nav bottom → past it, inside the
-          // cream sections → fully cream.
-          apply(1);
-        }
-      };
-
-      let pending = false;
-      const onScroll = () => {
-        if (pending) return;
-        pending = true;
-        requestAnimationFrame(() => {
-          pending = false;
-          compute();
-        });
-      };
-
-      compute();
-      window.addEventListener('scroll', onScroll, { passive: true });
-      window.addEventListener('resize', onScroll, { passive: true });
-      // Late-loading webfonts/images shift the wedge position; recompute.
-      window.addEventListener('load', compute);
-      if ('fonts' in document) {
-        (document as Document & { fonts: FontFaceSet }).fonts.ready.then(compute);
-      }
-    }
-  }
-
-  function parseRGB(value: string): [number, number, number] {
-    const v = value.trim();
-    if (v.startsWith('#')) {
-      const hex = v.slice(1);
-      const full = hex.length === 3
-        ? hex.split('').map((c) => c + c).join('')
-        : hex;
-      const n = parseInt(full, 16);
-      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
-    }
-    const m = v.match(/\d+(\.\d+)?/g);
-    if (m && m.length >= 3) return [parseInt(m[0]), parseInt(m[1]), parseInt(m[2])];
-    return [255, 255, 255];
   }
 </script>
