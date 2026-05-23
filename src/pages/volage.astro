@@ -1,0 +1,433 @@
+---
+/* Volage product page.
+   ------------------------------------------------------------------
+   Scope §4. One shared template, two instances later (Caprice next).
+   The other SKU lives at /caprice (route not built yet — the cross-link
+   at the foot will 404 for now; route arrives in the next pass).
+
+   Sections, top to bottom:
+     1. Product hero      — large image, SKU name, vitola, format,
+                            tagline, edition label.
+     2. Narrative lede    — the two italic display paragraphs.
+     3. Specifications    — two-column definition list at desktop,
+                            stacked on mobile.
+     4. Tasting notes     — three columns at desktop, stacked on mobile.
+     5. Cross-link        — "Also from Mariposa — Caprice" → /caprice.
+     6. Footer            — shared (BaseLayout).
+
+   No hero slot. The page opens with the product hero section, so the
+   nav header sits stuck at the top from first paint (BaseLayout
+   handles this: hasHero = false → Header renders in is-stuck state).
+
+   Motion: each section reveals on scroll-in (rise-and-fade) via the
+   shared `reveal` helper. Restrained — no parallax, no scrub. */
+
+import { getEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { withBase } from '../lib/path';
+import cigarVolage from '../assets/cigar-volage-woman.jpg';
+
+const product = (await getEntry('products', 'volage'))!.data;
+---
+
+<BaseLayout title={`Mariposa — ${product.name}`}>
+  {/* ── 1. Product hero ─────────────────────────────────────────── */}
+  <section class="hero" data-reveal-section>
+    <div class="hero__inner container">
+      <div class="hero__media" data-reveal-media>
+        <div class="hero__media-frame">
+          <span class="hero__hairline" aria-hidden="true"></span>
+          <Image
+            class="hero__cigar"
+            src={cigarVolage}
+            alt={`The Mariposa ${product.name} cigar, ${product.tagline.toLowerCase()}`}
+            widths={[420, 720, 1080, 1440]}
+            sizes="(max-width: 720px) 90vw, 48vw"
+            loading="eager"
+          />
+        </div>
+      </div>
+
+      <div class="hero__copy" data-reveal-copy>
+        {product.edition && (
+          <p class="hero__edition">{product.edition}</p>
+        )}
+        <h1 class="hero__name">{product.name}</h1>
+        <p class="hero__vitola">{product.vitola}</p>
+        <p class="hero__format">{product.format}</p>
+        <p class="hero__tagline">{product.tagline}</p>
+      </div>
+    </div>
+  </section>
+
+  {/* ── 2. Narrative lede ───────────────────────────────────────── */}
+  <section class="narrative" aria-label="The cigar" data-reveal-section>
+    <div class="narrative__inner container">
+      {product.narrative.map((para) => (
+        <p class="narrative__para" data-reveal-para>{para}</p>
+      ))}
+    </div>
+  </section>
+
+  {/* ── 3. Specifications ───────────────────────────────────────── */}
+  <section class="specs" aria-labelledby="specs-heading" data-reveal-section>
+    <div class="specs__inner container">
+      <p class="eyebrow" id="specs-heading">Specifications</p>
+      <dl class="specs__list">
+        {product.specs.map((row) => (
+          <div class="specs__row">
+            <dt class="specs__label">{row.label}</dt>
+            <dd class="specs__value">{row.value}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  {/* ── 4. Tasting notes ────────────────────────────────────────── */}
+  <section class="tasting" aria-labelledby="tasting-heading" data-reveal-section>
+    <div class="tasting__inner container">
+      <p class="eyebrow" id="tasting-heading">Tasting notes</p>
+      <div class="tasting__grid">
+        {product.tasting.map((stage) => (
+          <div class="tasting__stage">
+            <p class="tasting__stage-label">{stage.stage}</p>
+            <p class="tasting__note">{stage.note}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {/* ── 5. Cross-link ───────────────────────────────────────────── */}
+  <section class="crosslink" data-reveal-section>
+    <div class="crosslink__inner container">
+      <a class="crosslink__link" href={withBase('/caprice')}>
+        <span class="crosslink__lead">Also from Mariposa</span>
+        <span class="crosslink__sku">Caprice</span>
+        <span class="crosslink__arrow" aria-hidden="true">&rarr;</span>
+      </a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* ── Shared section rhythm ─────────────────────────────────── */
+  /* Each section breathes on the same clamp; mirrors the home page's
+     restrained vertical pacing. */
+  section[data-reveal-section] {
+    padding-block: clamp(var(--space-7), 7vw, var(--space-9));
+  }
+
+  /* ── 1. Product hero ───────────────────────────────────────── */
+  .hero {
+    /* Slightly more air above so the first thing under the nav doesn't
+       press against it. */
+    padding-top: clamp(var(--space-8), 9vw, var(--space-10));
+  }
+  .hero__inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(var(--space-7), 7vw, var(--space-10));
+    align-items: center;
+  }
+  .hero__media {
+    position: relative;
+  }
+  .hero__media-frame {
+    position: relative;
+    background: var(--white);
+    border: 1px solid var(--border-gold);
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+  }
+  /* The pink hairline — the pager wink — at the top of the media frame. */
+  .hero__hairline {
+    position: absolute;
+    inset: 0 auto auto 0;
+    height: 2px;
+    width: 100%;
+    background: var(--pink);
+    z-index: 2;
+  }
+  .hero__cigar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 100%;
+  }
+
+  .hero__copy {
+    display: flex;
+    flex-direction: column;
+  }
+  /* Edition — eyebrow register, subtle, sits above the name. */
+  .hero__edition {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 400;
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    margin: 0 0 var(--space-5) 0;
+  }
+  /* SKU name — display serif, a touch larger than the slider's
+     .range__name (which is clamp(1.6rem, 4.0vw, 2.8rem)). This is the
+     product page's H1; it earns more weight. */
+  .hero__name {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(2.2rem, 5.6vw, 4rem);
+    line-height: 0.96;
+    letter-spacing: var(--ls-display);
+    margin: 0;
+    color: var(--ink);
+  }
+  /* Vitola — eyebrow under the name. */
+  .hero__vitola {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 400;
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    margin: var(--space-5) 0 0 0;
+  }
+  /* Format — quiet body line directly below the vitola. */
+  .hero__format {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    color: var(--ink-soft);
+    margin: var(--space-2) 0 0 0;
+  }
+  /* Tagline — italic display, sits below with a clear break. */
+  .hero__tagline {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.15rem, 2.2vw, 1.5rem);
+    line-height: var(--lh-snug);
+    color: var(--ink);
+    margin: var(--space-6) 0 0 0;
+    max-width: 22ch;
+  }
+
+  /* ── 2. Narrative lede ─────────────────────────────────────── */
+  /* Italic display body. Same treatment as the lifestyle prose on the
+     home page and the position sub-line: Spectral italic, loose
+     line-height, generous measure. */
+  .narrative__inner {
+    max-width: 760px;
+    margin-inline: auto;
+  }
+  .narrative__para {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    /* Display body — matched to the home position sub-line ceiling
+       (1.5rem in conversation; here clamped from a higher floor since
+       this is body, not a sub-line). Sits a step above the lifestyle
+       paragraphs (which were dropped to clamp(0.8, 1.5vw, 1rem) in the
+       same review) — this is the product page's hero prose, it earns
+       more presence. */
+    font-size: clamp(1.05rem, 2vw, 1.35rem);
+    line-height: var(--lh-loose);
+    color: var(--ink);
+  }
+  .narrative__para + .narrative__para {
+    margin-top: var(--space-5);
+  }
+
+  /* ── 3. Specifications ─────────────────────────────────────── */
+  .specs__inner {
+    max-width: 880px;
+    margin-inline: auto;
+  }
+  .specs__list {
+    margin: var(--space-6) 0 0 0;
+    /* Two-column list: column-fill: balance gives even split. */
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: clamp(var(--space-6), 5vw, var(--space-9));
+    row-gap: 0;
+  }
+  .specs__row {
+    display: grid;
+    grid-template-columns: minmax(7rem, 9rem) 1fr;
+    gap: var(--space-5);
+    align-items: baseline;
+    padding-block: var(--space-4);
+    border-bottom: 1px solid var(--border-gold);
+  }
+  /* Top border on the very first row of each column. */
+  .specs__row:nth-child(-n+2) {
+    border-top: 1px solid var(--border-gold);
+  }
+  .specs__label {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 500;
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    margin: 0;
+  }
+  .specs__value {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    color: var(--ink);
+    margin: 0;
+    line-height: var(--lh-snug);
+  }
+
+  /* ── 4. Tasting notes ──────────────────────────────────────── */
+  .tasting__inner {
+    max-width: 1040px;
+    margin-inline: auto;
+  }
+  .tasting__grid {
+    margin: var(--space-6) 0 0 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(var(--space-6), 5vw, var(--space-8));
+  }
+  .tasting__stage {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--border-gold);
+  }
+  .tasting__stage-label {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 500;
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    margin: 0;
+  }
+  .tasting__note {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1rem, 1.7vw, 1.15rem);
+    line-height: var(--lh-loose);
+    color: var(--ink);
+    margin: 0;
+  }
+
+  /* ── 5. Cross-link ─────────────────────────────────────────── */
+  /* Quiet routing link at the foot. Same .range__link treatment from
+     the home slider: uppercase eyebrow tracking, gold-deep, arrow
+     glyph, underline drawn left-to-right on hover. */
+  .crosslink {
+    padding-bottom: clamp(var(--space-8), 9vw, var(--space-10));
+  }
+  .crosslink__inner {
+    display: flex;
+    justify-content: center;
+  }
+  .crosslink__link {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--space-3);
+    padding: var(--space-5) 0;
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 400;
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    text-decoration: none;
+    border-top: 1px solid var(--border-gold);
+    border-bottom: 1px solid var(--border-gold);
+    /* Width set on the link itself so the rules above and below sit at
+       the same measure as the SKU label. */
+  }
+  .crosslink__lead {
+    color: var(--ash);
+  }
+  .crosslink__sku {
+    color: var(--gold-deep);
+    position: relative;
+    padding-bottom: 3px;
+  }
+  .crosslink__sku::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--gold-deep);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform var(--dur-default) var(--ease-paper);
+  }
+  .crosslink__link:hover .crosslink__sku::after,
+  .crosslink__link:focus-visible .crosslink__sku::after {
+    transform: scaleX(1);
+  }
+  .crosslink__arrow {
+    transition: transform var(--dur-default) var(--ease-paper);
+  }
+  .crosslink__link:hover .crosslink__arrow {
+    transform: translateX(5px);
+  }
+
+  /* ── Mobile collapse (≤720px) ──────────────────────────────── */
+  @media (max-width: 720px) {
+    .hero__inner {
+      grid-template-columns: 1fr;
+      gap: var(--space-7);
+    }
+    .hero__media-frame {
+      max-width: 360px;
+      margin-inline: auto;
+    }
+    .specs__list {
+      grid-template-columns: 1fr;
+    }
+    .specs__row:nth-child(-n+2) {
+      border-top: none;
+    }
+    .specs__row:first-child {
+      border-top: 1px solid var(--border-gold);
+    }
+    .tasting__grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-6);
+    }
+  }
+</style>
+
+<script>
+  /* Section reveals — restrained editorial entry. Each section's
+     animatable children rise-and-fade as the section scrolls into view.
+     One rule for all sections; the helper handles reduced-motion. */
+  import { reveal, refreshOnLoad } from '../lib/motion';
+
+  // Hero — media and copy column rise together with a small stagger.
+  const heroMedia = document.querySelector<HTMLElement>('[data-reveal-media]');
+  const heroCopy = document.querySelector<HTMLElement>('[data-reveal-copy]');
+  if (heroMedia) reveal(heroMedia, { y: 32, duration: 1, start: 'top 88%' });
+  if (heroCopy) reveal(heroCopy, { y: 26, duration: 0.9, delay: 0.12, start: 'top 88%' });
+
+  // Narrative — paragraphs cascade.
+  const narrativeParas = document.querySelectorAll('[data-reveal-para]');
+  if (narrativeParas.length) {
+    reveal(narrativeParas, { y: 22, duration: 0.9, stagger: 0.14, start: 'top 82%' });
+  }
+
+  // Specs, tasting, crosslink — each as a block.
+  const specs = document.querySelector<HTMLElement>('.specs__inner');
+  const tasting = document.querySelector<HTMLElement>('.tasting__inner');
+  const crosslink = document.querySelector<HTMLElement>('.crosslink__inner');
+  if (specs) reveal(specs, { y: 28, duration: 0.9, start: 'top 82%' });
+  if (tasting) reveal(tasting, { y: 28, duration: 0.9, start: 'top 82%' });
+  if (crosslink) reveal(crosslink, { y: 22, duration: 0.8, start: 'top 88%' });
+
+  refreshOnLoad();
+</script>
