@@ -336,23 +336,14 @@ const imageMode: Record<string, 'object' | 'scene'> = {
   }
 
   /* ── Per-slug overrides ─────────────────────────────────────── */
-  /* Volage-only modifier (Stephane review 2026-05-23, fresh round).
-     A new side-by-side: Volage gets a tightened vitola→name gap and
-     an uppercase, non-bold display name; Caprice stays as-is so the
-     two read against each other. Don't bake into the base — these
-     are explicitly Volage-only until the comparison resolves. */
+  /* Volage-only modifier (Stephane review 2026-05-23). The uppercase
+     SKU-name treatment was reverted; only the tightened vitola→name
+     gap survives. The SKU name returns to the base treatment so the
+     two cards read at parity on the name itself. */
   .range__frame--volage .range__vitola {
     /* Halve the vitola→name gap: --space-5 → --space-3, mirroring
        the divider halving from the prior round. */
     margin-bottom: var(--space-3);
-  }
-  .range__frame--volage .range__name {
-    /* Uppercase via CSS so the JSON string stays "Volage" (title
-       case). Display-light weight (300, the same weight as the
-       ghost initial) — uppercase caps want presence from the
-       letterforms, not from heft. Reads as elegant serif caps. */
-    text-transform: uppercase;
-    font-weight: 300;
   }
 
   .range__link {
@@ -362,8 +353,13 @@ const imageMode: Record<string, 'object' | 'scene'> = {
     margin-top: var(--space-7);
     font-family: var(--font-body);
     font-size: var(--fs-small);
-    font-weight: 600;
-    letter-spacing: var(--ls-small);
+    /* Stephane review 2026-05-23: uppercase + non-bold, shared by both
+       SKUs. The eyebrow/nav register — caps want presence from the
+       letterforms and the tracking, not weight. 400 reads as elegant
+       uppercase nav, where 600 reads as a button. */
+    font-weight: 400;
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
     color: var(--gold-deep);
     text-decoration: none;
   }
