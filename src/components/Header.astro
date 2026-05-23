@@ -154,7 +154,14 @@ const isActive = (href: string) => {
   @media (max-width: 720px) {
     .site-header__inner { height: 66px; }
     .site-header.is-stuck .site-header__inner { height: 56px; }
-    .site-header__nav { gap: var(--space-5); }
+    .site-header__nav {
+      gap: var(--space-5);
+      /* Optical alignment: uppercase Hanken nav vs lowercase Spectral
+         wordmark. Equal flex-centred boxes leave the caps reading
+         higher than the wordmark baseline; a 2px nudge lands them on
+         the same visual line. */
+      transform: translateY(2px);
+    }
   }
 
   /* No motion preference — the two states still apply, just without
