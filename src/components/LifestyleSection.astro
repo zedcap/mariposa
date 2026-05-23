@@ -27,7 +27,7 @@
    prefers-reduced-motion: copy shown in place (handled by reveal). */
 
 import { Image } from 'astro:assets';
-import wordmarkBlack from '../assets/mariposa-logo-black.png';
+import wordmarkWhite from '../assets/mariposa-logo-white.png';
 
 interface Props {
   paragraphs: string[];
@@ -42,7 +42,7 @@ const { paragraphs } = Astro.props;
 
       <Image
         class="story__wordmark"
-        src={wordmarkBlack}
+        src={wordmarkWhite}
         alt="Mariposa"
         widths={[260, 420, 640]}
         sizes="(max-width: 720px) 50vw, 320px"
@@ -81,22 +81,12 @@ const { paragraphs } = Astro.props;
     z-index: 2;
   }
   .story__card {
-    /* Paper-fibre texture scoped to the card interior (Stephane
-       2026-05-23, revert + re-scope). Tiled at 280px-wide (same scale
-       the body briefly used) so the grain reads as fine paper, not
-       wallpaper. The texture image sits over the pearl
-       background-color — the pearl carries the card's warmth, the
-       texture adds grain on top. background-attachment is scroll
-       (not fixed) because the card is a contained element on the
-       page, not a viewport-spanning surface; fixed would slide the
-       grain past the card as it scrolls, breaking the "paper-toned
-       interior" read. --bg-texture is set on <html> by BaseLayout
-       with the Astro `base` baked in. */
-    background-color: var(--pearl);
-    background-image: var(--bg-texture);
-    background-repeat: repeat;
-    background-size: 280px auto;
-    background-attachment: scroll;
+    /* Pink card on cream bed (Stephane 2026-05-23, later). Replaces
+       the pearl + paper-fibre treatment: solid --pink (#d06f98),
+       no texture overlay (it didn't read over pink). Wordmark and
+       prose flip to white below. Card geometry, border, lift, and
+       reveal motion all preserved. */
+    background-color: var(--pink);
     border: 1px solid var(--border-gold);
     box-shadow: var(--shadow-lift);
     /* Centered + widened (Stephane review 2026-05-23). Previous
@@ -137,7 +127,7 @@ const { paragraphs } = Astro.props;
        paragraph reveal motion all preserved. */
     font-size: clamp(0.8rem, 1.5vw, 1rem);
     line-height: var(--lh-loose);
-    color: var(--ink);
+    color: var(--white);
   }
   .story__para + .story__para {
     margin-top: var(--space-5);
