@@ -81,12 +81,13 @@ const { paragraphs } = Astro.props;
     z-index: 2;
   }
   .story__card {
-    /* Pink card on cream bed (Stephane 2026-05-23, later). Replaces
-       the pearl + paper-fibre treatment: solid --pink (#d06f98),
-       no texture overlay (it didn't read over pink). Wordmark and
-       prose flip to white below. Card geometry, border, lift, and
-       reveal motion all preserved. */
-    background-color: var(--pink);
+    /* Warm-gold exploratory pass (Stephane 2026-05-23). Card swapped
+       from --pink (#d06f98) to a hard-coded #c5ac6a — warm gold /
+       khaki — to test against the cream bed. Hex hard-coded
+       deliberately: exploratory, not yet a token. White wordmark and
+       white prose preserved. Card geometry, border, lift, and reveal
+       motion all unchanged. */
+    background-color: #c5ac6a;
     border: 1px solid var(--border-gold);
     box-shadow: var(--shadow-lift);
     /* Centered + widened (Stephane review 2026-05-23). Previous

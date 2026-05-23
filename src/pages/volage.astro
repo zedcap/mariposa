@@ -386,6 +386,16 @@ const product = (await getEntry('products', 'volage'))!.data;
 
   /* ── 6. Cross-link ─────────────────────────────────────────── */
   .crosslink {
+    /* Cream bed (Stephane 2026-05-23) so the surface above the
+       footer on Volage matches the home page's lifestyle band.
+       Footer component itself is --pearl on both pages; the
+       perceived "footer area" on home reads as cream-into-pearl
+       because LifestyleSection sits directly above it on #f2f0e9.
+       Volage previously dropped the crosslink straight onto body
+       white, so the same Footer read brighter. Same hex used by
+       the product + lifestyle sections; once a third use lands
+       this earns a token (e.g. --bg-cream). */
+    background: #f2f0e9;
     padding-bottom: clamp(var(--space-8), 9vw, var(--space-10));
   }
   .crosslink__inner {
