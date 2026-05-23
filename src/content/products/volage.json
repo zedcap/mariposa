@@ -6,7 +6,10 @@
   "vitola": "Canonazo",
   "format": "150 mm · 52 ring gauge",
   "tagline": "A cigar that doesn't wait for an occasion.",
-  "homeLede": "An elegant, slow-burning journey for the senses. It opens with a remarkably creamy profile, seamlessly transitioning into layers of earth, wood, and dark coffee. A soft sweetness lingers on the palate just as a sophisticated spice emerges. Cultivated in the shadow of the Argopuro range, the filler leverages Java's volcanic terroir, offering a unique Indonesian expression of classic Havana-seed tobacco.",
+  "homeLede": [
+    "An elegant, slow-burning journey for the senses. It opens with a remarkably creamy profile, seamlessly transitioning into layers of earth, wood, and dark coffee. A soft sweetness lingers on the palate just as a sophisticated spice emerges.",
+    "Cultivated in the shadow of the Argopuro range, the filler leverages Java's volcanic terroir, offering a unique Indonesian expression of classic Havana-seed tobacco."
+  ],
   "narrative": [
     "The first draw is creamy and slow. Wood arrives, followed by coffee, and a lingering sweetness that holds while the spice walks in. Hand-rolled in Java, it is born from tobacco grown in the volcanic soil at the foot of the Argopuro range, from Havana seed that has learned what Indonesia tastes like.",
     "The 24-carat gold leaf laid by hand on every Mariposa is the brand's signature. It stands as a quiet reminder that the finer things in life are meant to be enjoyed."

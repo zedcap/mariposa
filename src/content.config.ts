@@ -21,7 +21,7 @@ const products = defineCollection({
     vitola: z.string(),
     format: z.string(),                // e.g. "150 mm · 52 ring gauge"
     tagline: z.string(),
-    homeLede: z.string(),              // home product-section frame
+    homeLede: z.array(z.string()),     // home product-section frame; one entry per paragraph
     narrative: z.array(z.string()),    // product page narrative paragraphs
     specs: z.array(z.object({ label: z.string(), value: z.string() })),
     tasting: z.array(z.object({ stage: z.string(), note: z.string() })),

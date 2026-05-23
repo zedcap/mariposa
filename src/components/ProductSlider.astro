@@ -31,7 +31,7 @@ interface ProductFrame {
   slug: string;
   vitola: string;
   tagline: string;
-  homeLede: string;
+  homeLede: string[];
 }
 interface Props {
   products: ProductFrame[];
@@ -99,7 +99,9 @@ const imageMode: Record<string, 'object' | 'scene'> = {
                 <p class="range__vitola">{product.vitola}</p>
                 <h3 class="range__name">{product.name}</h3>
                 <p class="range__tagline">{product.tagline}</p>
-                <p class="range__lede">{product.homeLede}</p>
+                {product.homeLede.map((para) => (
+                  <p class="range__lede">{para}</p>
+                ))}
                 <a class="range__link" href={withBase(`/${product.slug}`)}>
                   <span class="range__link-text">Discover {product.name}</span>
                   <span class="range__link-arrow" aria-hidden="true">&rarr;</span>
@@ -295,11 +297,14 @@ const imageMode: Record<string, 'object' | 'scene'> = {
   .range__vitola {
     font-family: var(--font-body);
     font-size: var(--fs-eyebrow);
-    font-weight: 600;
+    font-weight: 400;
     letter-spacing: var(--ls-eyebrow);
     text-transform: uppercase;
     color: var(--gold-deep);
-    margin: 0 0 var(--space-5) 0;
+    /* Halved vitola→name gap promoted to base (Stephane review
+       2026-05-23): --space-5 → --space-3 now applies across the
+       range, tightening the Gordito→Caprice gap to match Volage. */
+    margin: 0 0 var(--space-3) 0;
   }
 
   /* Name / tagline / lede sizes (Stephane review 2026-05-23). The
@@ -336,15 +341,10 @@ const imageMode: Record<string, 'object' | 'scene'> = {
   }
 
   /* ── Per-slug overrides ─────────────────────────────────────── */
-  /* Volage-only modifier (Stephane review 2026-05-23). The uppercase
-     SKU-name treatment was reverted; only the tightened vitola→name
-     gap survives. The SKU name returns to the base treatment so the
-     two cards read at parity on the name itself. */
-  .range__frame--volage .range__vitola {
-    /* Halve the vitola→name gap: --space-5 → --space-3, mirroring
-       the divider halving from the prior round. */
-    margin-bottom: var(--space-3);
-  }
+  /* (Currently none — the prior `.range__frame--volage` halved-gap
+     override was promoted to base on 2026-05-23 so Caprice inherits
+     it. The `range__frame--<slug>` classes remain on the markup and
+     are available for future per-SKU tweaks.) */
 
   .range__link {
     display: inline-flex;
@@ -352,11 +352,11 @@ const imageMode: Record<string, 'object' | 'scene'> = {
     gap: var(--space-3);
     margin-top: var(--space-7);
     font-family: var(--font-body);
-    font-size: var(--fs-small);
-    /* Stephane review 2026-05-23: uppercase + non-bold, shared by both
-       SKUs. The eyebrow/nav register — caps want presence from the
-       letterforms and the tracking, not weight. 400 reads as elegant
-       uppercase nav, where 600 reads as a button. */
+    /* Stephane review 2026-05-23 (b): "it's just a link" — step down
+       one token from --fs-small to --fs-eyebrow so the discover link
+       reads as quiet nav, not a feature. Weight, case and tracking
+       unchanged. */
+    font-size: var(--fs-eyebrow);
     font-weight: 400;
     letter-spacing: var(--ls-eyebrow);
     text-transform: uppercase;
@@ -401,29 +401,34 @@ const imageMode: Record<string, 'object' | 'scene'> = {
     gap: var(--space-6);
     margin-top: clamp(var(--space-5), 3vw, var(--space-7));
   }
+  /* Step buttons — bare arrow glyphs. Stephane review 2026-05-23:
+     the circle/border treatment read too button-like for a sub-control;
+     the arrow alone is enough. Click-target preserved via padding
+     (matches the prior 46px target). Focus ring restored on
+     focus-visible so keyboard users still see the affordance. */
   .range__step {
-    width: 46px;
-    height: 46px;
     display: grid;
     place-items: center;
-    border: 1px solid var(--border-gold);
-    border-radius: var(--radius-pill);
+    padding: var(--space-3) var(--space-4);
+    border: 0;
     background: transparent;
     color: var(--gold-deep);
     font-size: 1rem;
     cursor: pointer;
     transition:
-      background-color var(--dur-default) var(--ease-paper),
-      transform var(--dur-default) var(--ease-paper),
-      border-color var(--dur-default) var(--ease-paper);
+      color var(--dur-default) var(--ease-paper),
+      transform var(--dur-default) var(--ease-paper);
   }
   .range__step:hover {
-    background: var(--white);
-    border-color: var(--gold);
-    transform: translateY(-2px);
+    color: var(--gold);
+    transform: translateY(-1px);
   }
   .range__step:active {
     transform: translateY(1px);
+  }
+  .range__step:focus-visible {
+    outline: 1px solid var(--gold);
+    outline-offset: 2px;
   }
   .range__dots {
     display: flex;
@@ -456,7 +461,7 @@ const imageMode: Record<string, 'object' | 'scene'> = {
   .range__dot-label {
     font-family: var(--font-body);
     font-size: var(--fs-eyebrow);
-    font-weight: 600;
+    font-weight: 400;
     letter-spacing: var(--ls-eyebrow);
     text-transform: uppercase;
     color: var(--ash);
