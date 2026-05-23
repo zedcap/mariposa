@@ -80,7 +80,7 @@ const fullMarks = marks.length >= tasting.length + 1
                 a stack on small viewports, per the brief's mobile note. */}
             <p class="smoke__inline-mark" aria-hidden="true">
               <span class="smoke__inline-dot"></span>
-              {fullMarks[i]}
+              <span class="smoke__inline-time">{fullMarks[i]}</span>
             </p>
             <p class="smoke__stage">{stage.stage}</p>
             <p class="smoke__note">{stage.note}</p>
@@ -269,6 +269,12 @@ const fullMarks = marks.length >= tasting.length + 1
       border-radius: 50%;
       background: var(--gold);
       border: 1px solid var(--gold-deep);
+    }
+    /* Hide the minute label on mobile (2026-05-24) — the dot alone
+       carries the timeline indicator above each third; the minute
+       text wasn't earning its space on a narrow viewport. */
+    .smoke__inline-time {
+      display: none;
     }
   }
 </style>
