@@ -15,11 +15,14 @@
    product slider (clamp(1.6rem, 4.0vw, 2.8rem) — height, with auto
    width). Space-6 separates the mark from the first prose paragraph.
 
-   2026-05-23 (later still). The cream section background (#f2f0e9)
-   and the [data-cream-bg] hook for the nav observer were stripped;
-   the body paper-fibre texture now reads through the section behind
-   the card. Card geometry, padding rhythm, and paragraph-by-paragraph
-   reveal are preserved.
+   2026-05-23 (revert). The cream section background (#f2f0e9) and
+   the [data-cream-bg] hook for the nav observer are restored after
+   Stephane reversed the strip-cream pass. The body is plain white
+   again, and the paper-fibre texture is now scoped to the story
+   card's interior only — applied as a tiled background on
+   .story__card so the card reads as a paper-toned surface against
+   the cream section bed. Card geometry, padding rhythm, and
+   paragraph-by-paragraph reveal are preserved.
 
    prefers-reduced-motion: copy shown in place (handled by reveal). */
 
@@ -32,7 +35,7 @@ interface Props {
 const { paragraphs } = Astro.props;
 ---
 
-<section class="story" aria-labelledby="story-heading" data-story>
+<section class="story" aria-labelledby="story-heading" data-story data-cream-bg>
   <div class="story__layer container">
     <article class="story__card grain" data-story-card>
       <h2 class="visually-hidden" id="story-heading">The Mariposa story</h2>
@@ -56,10 +59,10 @@ const { paragraphs } = Astro.props;
 <style>
   .story {
     position: relative;
-    /* No section background — the body paper-fibre texture reads
-       through (Stephane 2026-05-23). The cream bed (#f2f0e9) was
-       stripped in the same pass that removed the product slider's
-       cream bed and the white→cream nav bleed wedge.
+    /* Cream section bed restored (Stephane 2026-05-23, revert): the
+       lifestyle section returns to #f2f0e9, matching the product
+       section above so the cream zone reads as one continuous band
+       from the bleed wedge down to the footer.
        Top padding halved (Stephane review 2026-05-23): paired cut
        with .range's padding-bottom to close the slider-controls →
        story-card gap ~50%. Bottom padding halved in the same shape
@@ -67,6 +70,7 @@ const { paragraphs } = Astro.props;
        footer gap ~50%; mirrors the top value exactly. Footer's own
        padding-top (--footer-rhythm: 48px) left alone — modest next
        to the story's 96–179px range, so one knob does the work. */
+    background: #f2f0e9;
     padding-top: clamp(var(--space-7), 7vw, calc(var(--space-10) * 0.7));
     padding-bottom: clamp(var(--space-7), 7vw, calc(var(--space-10) * 0.7));
   }
@@ -77,7 +81,22 @@ const { paragraphs } = Astro.props;
     z-index: 2;
   }
   .story__card {
-    background: var(--pearl);
+    /* Paper-fibre texture scoped to the card interior (Stephane
+       2026-05-23, revert + re-scope). Tiled at 280px-wide (same scale
+       the body briefly used) so the grain reads as fine paper, not
+       wallpaper. The texture image sits over the pearl
+       background-color — the pearl carries the card's warmth, the
+       texture adds grain on top. background-attachment is scroll
+       (not fixed) because the card is a contained element on the
+       page, not a viewport-spanning surface; fixed would slide the
+       grain past the card as it scrolls, breaking the "paper-toned
+       interior" read. --bg-texture is set on <html> by BaseLayout
+       with the Astro `base` baked in. */
+    background-color: var(--pearl);
+    background-image: var(--bg-texture);
+    background-repeat: repeat;
+    background-size: 280px auto;
+    background-attachment: scroll;
     border: 1px solid var(--border-gold);
     box-shadow: var(--shadow-lift);
     /* Centered + widened (Stephane review 2026-05-23). Previous

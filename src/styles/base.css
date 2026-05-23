@@ -35,19 +35,16 @@ html {
 
 body {
   margin: 0;
-  /* Paper-fibre texture tiled at its native aspect over a transparent
-     body. Scaled down to 280px-wide tiles so the grain reads as fine
-     paper, not wallpaper (native 626x447 tiles only ~2x across a typical
-     desktop viewport, which makes the rectangle visible). --bg-texture
-     is set on <html> by BaseLayout with the Astro `base` baked in.
-     The body's own background-color is intentionally unset (Stephane
-     2026-05-23) so the texture is the only layer painting the body
-     surface; opaque sections (PositionStatement, ProductSlider cream
-     bed, LifestyleSection, Footer) still mask it where they sit. */
-  background-image: var(--bg-texture);
-  background-repeat: repeat;
-  background-size: 280px auto;
-  background-attachment: fixed;
+  /* Plain white body surface (Stephane 2026-05-23, revert). An earlier
+     pass tiled the paper-fibre texture across the whole body and stripped
+     the cream beds from the product + lifestyle sections so the texture
+     could read everywhere; Stephane reversed direction — cream returns
+     on those two sections, and the texture's scope contracts to the
+     story-card interior only (see LifestyleSection.astro). --bg-texture
+     stays defined on <html> in BaseLayout because the story card now
+     consumes it via the same custom property; only the body's own use
+     of it is removed here. */
+  background-color: var(--bg);
   color: var(--fg-1);
   font-family: var(--font-body);
   font-size: var(--fs-body);

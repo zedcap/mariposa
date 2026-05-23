@@ -54,11 +54,18 @@ const imageMode: Record<string, 'object' | 'scene'> = {
 };
 ---
 
-<section class="range grain" id="range" aria-label="The Mariposa range" data-range>
+<section class="range grain" id="range" aria-label="The Mariposa range" data-range data-cream-bg>
   {/* No section heading — Stephane review (2026-05-21): the slider
       stands alone, no eyebrow, no title. The brand statement opens the
       page in the position section above. The section's "modern" energy
       comes from the per-frame choreography, not a header. */}
+
+  {/* Cream-bleed wedge — softens the edge where the white position
+      statement above meets the cream product bed. Fades from white at
+      the top (matching the section above) down to cream so the boundary
+      reads as a gradient, not a horizontal cut. Sits behind the product
+      content (z-index 0); the slider's frames render above. */}
+  <div class="range__bleed" aria-hidden="true"></div>
 
   <div class="range__viewport" data-range-viewport>
     <div class="range__track" data-range-track>
@@ -137,15 +144,15 @@ const imageMode: Record<string, 'object' | 'scene'> = {
 <style>
   .range {
     position: relative;
-    /* No section background — the body paper-fibre texture reads through
-       (Stephane 2026-05-23). Earlier cream bed (#f2f0e9) and the
-       white→cream bleed wedge that handled the seam from the position
-       statement above were removed in the same pass; with no destination
-       colour the wedge had nothing to fade to. Top padding tightened
-       ~25% (Stephane 2026-05-23) as part of the position-to-slider gap
-       reduction; bottom padding kept on the same token shape but
-       expressed asymmetrically so only the top closes toward the
-       sub-line above. */
+    /* Cream product bed — begins the cream zone that runs through to
+       the lifestyle section below (restored 2026-05-23: Stephane
+       reversed the strip-cream pass). The handoff from the white
+       position statement above is graded via .range__bleed.
+       Top padding tightened ~25% (Stephane 2026-05-23) as part of the
+       position-to-slider gap reduction; bottom padding kept on the same
+       token shape but expressed asymmetrically so only the top closes
+       toward the sub-line above. */
+    background: #f2f0e9;
     padding-top: clamp(var(--space-7), 9vw, var(--space-9));
     /* Bottom padding matched to .range__controls margin-top (Stephane
        2026-05-23): the gap below the slider controls now mirrors the
@@ -155,6 +162,35 @@ const imageMode: Record<string, 'object' | 'scene'> = {
        controls' own top-gap token. */
     padding-bottom: clamp(var(--space-4), 2vw, var(--space-6));
     overflow: hidden;
+  }
+
+  /* Cream-bleed wedge — the gradual handoff from the white position
+     statement above into the cream product bed. Sits at the top of the
+     section, fading from opaque white down to transparent so the cream
+     bed emerges gradually. Without this the top edge reads as a banded
+     horizontal cut. Stays behind the product content so the slider's
+     imagery, hairline and ghost letter render cleanly above. The nav's
+     rAF observer (Header.astro) samples this element's geometry to
+     interpolate the nav's own background white→cream as the wedge
+     passes through the nav band — removing this rule will silently
+     disable the nav colour-track. */
+  .range__bleed {
+    position: absolute;
+    inset: 0 0 auto 0;
+    /* Height reduced ~25% (Stephane 2026-05-23): clamp(120/18vh/220)
+       → clamp(90/13.5vh/165). Gradient stops and colour treatment
+       unchanged; only the height shrinks. 90px floor preserves the
+       three-stop fade (~30px per stop), well above the ~20px-per-stop
+       threshold where a soft warming starts to read as a banded edge. */
+    height: clamp(90px, 13.5vh, 165px);
+    background: linear-gradient(
+      to bottom,
+      var(--white) 0%,
+      rgba(255, 255, 255, 0.6) 45%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    z-index: 0;
+    pointer-events: none;
   }
 
   /* ── Viewport / track ───────────────────────────────────────── */

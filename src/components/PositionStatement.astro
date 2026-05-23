@@ -76,36 +76,24 @@ const { positionPink, positionInk, subline } = Astro.props;
 
 <style>
   .position {
-    /* White solid through the section, fading to transparent across the
-       final 180px so the body's paper texture bleeds in rather than
-       meeting white at a hard horizontal line. Pixel-defined band (not
-       a percentage stop) so the fade depth is stable as the section
-       height varies; 180px reads as "warming into the texture" without
-       banding. Mobile band narrows to 140px to match the tighter
-       vertical rhythm. */
-    background: linear-gradient(
-      to bottom,
-      var(--white) 0,
-      var(--white) calc(100% - 180px),
-      transparent 100%
-    );
-    /* Top padding equals one nav-height (84px desktop / 66px mobile),
+    /* Plain opaque white through the section (Stephane 2026-05-23,
+       revert). An earlier iteration faded white→transparent over the
+       final 180px so the body texture could bleed in; with the body
+       texture gone and the cream wedge restored on the product
+       section below, the fade has no destination — the .range__bleed
+       handles the white→cream seam now. Reverted to flat white.
+       Top padding equals one nav-height (84px desktop / 66px mobile),
        matching the gap from the nav-bar's bottom edge to the headline.
        Bottom padding is intentionally tighter (~2/3 of top) per
        Stephane's 2026-05-23 iteration: closes the gap between the
        sub-line and the top of the Volage frame in the product section.
        Asymmetry is deliberate; do not re-symmetrise. */
+    background: var(--white);
     padding-top: 84px;
     padding-bottom: 21px;
   }
   @media (max-width: 720px) {
     .position {
-      background: linear-gradient(
-        to bottom,
-        var(--white) 0,
-        var(--white) calc(100% - 140px),
-        transparent 100%
-      );
       padding-top: 66px;
       padding-bottom: 17px;
     }
