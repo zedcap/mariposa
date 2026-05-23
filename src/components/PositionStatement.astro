@@ -144,17 +144,37 @@ const { positionPink, positionInk, subline } = Astro.props;
 </style>
 
 <script>
-  import { slideIn, reveal } from '../lib/motion';
+  import { gsap, slideIn, REDUCED } from '../lib/motion';
 
   const section = document.querySelector<HTMLElement>('[data-position]');
   if (section) {
     const halves = section.querySelectorAll<HTMLElement>('.slide-inner');
     const subline = section.querySelector<HTMLElement>('[data-position-subline]');
+    const rightHalf = section.querySelector<HTMLElement>('.slide-inner[data-direction="right"]');
 
     // Two halves slide in from opposite sides and settle.
     slideIn(halves, { start: 'top 78%' });
 
-    // Sub-line settles in last.
-    if (subline) reveal(subline, { y: 18, duration: 0.8, delay: 0.25, start: 'top 72%' });
+    // Sub-line: pure fade-in, no Y translation. Anchored to the same
+    // trigger as the right-side headline half so the two reveals start
+    // together and resolve together — the sub-line appears with "24
+    // Carat Swiss Gold." landing in place.
+    if (subline) {
+      if (REDUCED) {
+        gsap.set(subline, { opacity: 1 });
+      } else {
+        gsap.set(subline, { opacity: 0 });
+        gsap.to(subline, {
+          opacity: 1,
+          duration: 1,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: rightHalf ?? subline,
+            start: 'top 78%',
+            toggleActions: 'play none none none',
+          },
+        });
+      }
+    }
   }
 </script>
