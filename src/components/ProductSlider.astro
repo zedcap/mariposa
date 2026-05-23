@@ -153,13 +153,13 @@ const imageMode: Record<string, 'object' | 'scene'> = {
        toward the sub-line above. */
     background: #f2f0e9;
     padding-top: clamp(var(--space-7), 9vw, var(--space-9));
-    /* Bottom padding halved (Stephane review 2026-05-23): the
-       slider-controls → story-card gap was reading as a void. Halved
-       from clamp(--space-9, 12vw, --space-10) to clamp(--space-7, 6vw,
-       --space-9) here, paired with a matching halving of the story
-       section's top padding below; together the visible gap closes
-       ~50% without either side bearing the cut alone. */
-    padding-bottom: clamp(var(--space-7), 6vw, var(--space-9));
+    /* Bottom padding matched to .range__controls margin-top (Stephane
+       2026-05-23): the gap below the slider controls now mirrors the
+       gap above them — same clamp, symmetric breathing room. Earlier
+       half-step from clamp(--space-9, 12vw, --space-10) →
+       clamp(--space-7, 6vw, --space-9) collapsed further to the
+       controls' own top-gap token. */
+    padding-bottom: clamp(var(--space-4), 2vw, var(--space-6));
     overflow: hidden;
   }
 
