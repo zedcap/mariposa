@@ -40,7 +40,7 @@ One continuous vertical scroll. Three sections in fixed order. Each fills roughl
 
 - Full-bleed image slider, 3–5 frames. Auto-advances slowly (6–8s per frame) with manual controls; pause on hover.
 - Frames cross-fade through a sliver of gold (the design system's page-transition treatment), not a hard cut or horizontal push.
-- Persistent overlay, does not change between frames: lowercase `mariposa` wordmark and the position line **Cuban Soul · 24 Carat Swiss Gold**. The slider imagery changes beneath a fixed verbal anchor.
+- Persistent overlay, does not change between frames: lowercase `mariposa` wordmark and the position line **Volcanic Soul · 24-Carat Gold**. The slider imagery changes beneath a fixed verbal anchor.
 - Sub-line, italic serif: *For those who don't wait for special occasions, but create them.*
 - Minimal slide indicator (thin gold ticks or dots, bottom-aligned). No heavy arrows.
 - A quiet downward scroll cue. No CTA button in the hero — there is nothing to buy and no form to fill; the cue is "keep scrolling."

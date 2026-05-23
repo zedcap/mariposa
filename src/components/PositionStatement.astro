@@ -7,11 +7,11 @@
    nav-bar's bottom edge to the top of the headline equals one
    nav-height of breathing room (84px desktop, 66px mobile, matching
    Header.astro). The line is split into two halves that slide in from
-   opposite sides ("Cuban Soul." from the left, "24 Carat Swiss Gold."
+   opposite sides ("Volcanic Soul." from the left, "24-Carat Gold."
    from the right) and settle into one composed sentence. A small
    gold-leaf divider sits halfway between the headline and the sub-line.
 
-   Treatment per the conventions overlay: "Cuban Soul." pink, the rest
+   Treatment per the conventions overlay: "Volcanic Soul." pink, the rest
    ink, both halves display italic, wrapping naturally — not locked to
    one line. The sub-line follows, quieter. */
 import dividerGoldLeaf from '../assets/divider-gold-leaf.svg?raw';
@@ -159,8 +159,8 @@ const { positionPink, positionInk, subline } = Astro.props;
 
     // Sub-line: pure fade-in, no Y translation. Anchored to the same
     // trigger as the right-side headline half so the two reveals start
-    // together and resolve together — the sub-line appears with "24
-    // Carat Swiss Gold." landing in place.
+    // together and resolve together — the sub-line appears with
+    // "24-Carat Gold." landing in place.
     if (subline) {
       if (REDUCED) {
         gsap.set(subline, { opacity: 1 });

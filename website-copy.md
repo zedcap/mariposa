@@ -27,7 +27,7 @@ NEW.
 > Come back when the years are on your side.
 
 Notes for Yulia:
-- The wordmark and the position line (`Cuban Soul. 24 Carat Swiss Gold.`) sit above the question, per the scope. The age gate is the first impression; treat it as a brand surface, not a legal modal.
+- The wordmark and the position line (`Volcanic Soul. 24-Carat Gold.`) sit above the question, per the scope. The age gate is the first impression; treat it as a brand surface, not a legal modal.
 - The decline line is deliberately warm, not legalistic. If Stephane wants it plainer for a compliance read, a flagged alternate is at the foot of this file.
 
 ---
@@ -42,13 +42,13 @@ The brand statement that previously sat on the hero now lives in a dedicated tex
 
 ## 2a. Home — position statement (page-opening text block)
 
-ADAPTED — verbatim from the brand pager masthead. Sits on the white page background between the hero and the product slider; treatment mirrors the brand pager (position sentence in display italic, "Cuban Soul." in pink, the rest in ink, wrapping two lines; italic sub-line below).
+ADAPTED — verbatim from the brand pager masthead. Sits on the white page background between the hero and the product slider; treatment mirrors the brand pager (position sentence in display italic, "Volcanic Soul." in pink, the rest in ink, wrapping two lines; italic sub-line below).
 
 **Wordmark**
 > mariposa  *(lowercase)*
 
 **Position line**
-> Cuban Soul. 24 Carat Swiss Gold.
+> Volcanic Soul. 24-Carat Gold.
 
 **Sub-line** (italic serif)
 > For those who don't wait for special occasions, but create them.
