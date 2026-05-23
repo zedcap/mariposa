@@ -76,7 +76,19 @@ const { positionPink, positionInk, subline } = Astro.props;
 
 <style>
   .position {
-    background: var(--white);
+    /* White solid through the section, fading to transparent across the
+       final 180px so the body's paper texture bleeds in rather than
+       meeting white at a hard horizontal line. Pixel-defined band (not
+       a percentage stop) so the fade depth is stable as the section
+       height varies; 180px reads as "warming into the texture" without
+       banding. Mobile band narrows to 140px to match the tighter
+       vertical rhythm. */
+    background: linear-gradient(
+      to bottom,
+      var(--white) 0,
+      var(--white) calc(100% - 180px),
+      transparent 100%
+    );
     /* Top padding equals one nav-height (84px desktop / 66px mobile),
        matching the gap from the nav-bar's bottom edge to the headline.
        Bottom padding is intentionally tighter (~2/3 of top) per
@@ -88,6 +100,12 @@ const { positionPink, positionInk, subline } = Astro.props;
   }
   @media (max-width: 720px) {
     .position {
+      background: linear-gradient(
+        to bottom,
+        var(--white) 0,
+        var(--white) calc(100% - 140px),
+        transparent 100%
+      );
       padding-top: 66px;
       padding-bottom: 17px;
     }
