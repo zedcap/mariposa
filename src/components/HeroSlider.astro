@@ -13,16 +13,14 @@
    only the height is capped.
 
    The section carries its own choreography: a slow scale on the active
-   frame, a plain cross-fade between slides, and a quiet drifting scroll
-   cue.
+   frame and a plain cross-fade between slides.
 
    Hero imagery renders in ORIGINAL COLOUR — a deliberate override of
    the design system's "full-bleed photography = B&W / duotone" rule.
    Stephane's call (2026-05-22); recorded in mariposa-design-conventions.md.
 
    3 frames, slow auto-advance (7s), pause on hover, manual dots.
-   prefers-reduced-motion: no Ken Burns, instant cross-fade, scroll cue
-   static. */
+   prefers-reduced-motion: no Ken Burns, instant cross-fade. */
 import { Image } from 'astro:assets';
 
 /* Mariposa hero frames — the collage device: the same faceless woman
@@ -73,8 +71,8 @@ const { slides } = Astro.props;
     }
   </div>
 
-  {/* Minimal foot scrim — keeps the gold dots and scroll cue legible
-      against a light image. Top scrim removed: nav rests below the hero. */}
+  {/* Minimal foot scrim — keeps the gold dots legible against a light
+      image. Top scrim removed: nav rests below the hero. */}
   <div class="hero__veil" aria-hidden="true"></div>
 
   {/* Indicators — small round dots, bottom-centre. Active dot is gold,
@@ -93,11 +91,6 @@ const { slides } = Astro.props;
         />
       ))
     }
-  </div>
-
-  {/* Scroll cue — a quiet "keep going" mark; it drifts on a loop. */}
-  <div class="hero__cue" data-hero-cue aria-hidden="true">
-    <span class="hero__cue-line"></span>
   </div>
 </section>
 
@@ -151,9 +144,9 @@ const { slides } = Astro.props;
   }
 
   /* Foot scrim — a faint darkening at the foot only, so the gold
-     slide-indicator ticks and the scroll cue stay legible against a
-     light image. No top scrim: the nav rests below the hero, and the
-     imagery shows clean. Kept minimal so the original picture reads. */
+     slide-indicator ticks stay legible against a light image. No top
+     scrim: the nav rests below the hero, and the imagery shows clean.
+     Kept minimal so the original picture reads. */
   .hero__veil {
     position: absolute;
     inset: 0;
@@ -166,9 +159,7 @@ const { slides } = Astro.props;
   /* Indicators — small round gold dots, bottom-centre of the hero band.
      Centred with left:50% + translateX(-50%) so the dot row is genuinely
      centred regardless of dot count. Seated at the foot, within the foot
-     scrim's coverage so the gold reads on a light image, and below the
-     scroll cue's lowest reach (cue window bottom = 48px) so the two share
-     the centre axis without overlapping — the cue rises above the dots. */
+     scrim's coverage so the gold reads on a light image. */
   .hero__indicators {
     position: absolute;
     left: 50%;
@@ -197,37 +188,6 @@ const { slides } = Astro.props;
     background: var(--gold-leaf);
   }
 
-  /* Scroll cue — a thin vertical gold line, bottom-centre. The line
-     itself runs a slow downward drift on a loop (CSS keyframe; GSAP is
-     not needed for a pure loop). */
-  .hero__cue {
-    position: absolute;
-    left: 50%;
-    bottom: var(--space-7);
-    transform: translateX(-50%);
-    width: 1px;
-    height: 56px;
-    z-index: 4;
-    overflow: hidden;
-  }
-  .hero__cue-line {
-    display: block;
-    width: 1px;
-    height: 100%;
-    background: linear-gradient(
-      to bottom,
-      transparent 0%,
-      var(--gold-leaf) 45%,
-      var(--gold-leaf) 55%,
-      transparent 100%
-    );
-    animation: hero-cue-drift 2600ms var(--ease-drift) infinite;
-  }
-  @keyframes hero-cue-drift {
-    0% { transform: translateY(-100%); }
-    100% { transform: translateY(100%); }
-  }
-
   @media (max-width: 720px) {
     .hero {
       /* On a phone the band drops the crop entirely: it takes the hero
@@ -247,19 +207,14 @@ const { slides } = Astro.props;
     }
 
     /* The mobile band is much shorter than the desktop one (it scales
-       with the image ratio). Pull the dots and scroll cue in toward the
-       foot and shorten the cue so neither crowds the short band. */
+       with the image ratio). Pull the dots in toward the foot so they
+       don't crowd the short band. */
     .hero__indicators {
       bottom: var(--space-3);
-    }
-    .hero__cue {
-      bottom: var(--space-5);
-      height: 36px;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .hero__cue-line { animation: none; }
     .hero__slide { transition: opacity 0.01ms; }
   }
 </style>
