@@ -151,16 +151,18 @@ const { positionPink, positionInk, subline } = Astro.props;
     margin-left: calc(30% - 0.3ch);
   }
   @media (max-width: 480px) {
-    /* Narrower viewport, tighter (but still bigger than the old 10%)
-       stagger so the staircase still reads without the second half
-       running off the right edge. First half also pulled back from
-       its desktop offset so the cascade keeps the same shape at a
-       narrower stage. */
+    /* Mobile overflow fix (Stephane 2026-05-24): at 375px the floor
+       font-size (~54.4px) made "24-Carat Gold." ~320px wide, and the
+       18% second-half offset pushed it past the viewport right edge.
+       Pulled both halves hard left — first hugs the gutter, second
+       keeps a minimal indent so the cascade still reads as a
+       staircase, not a stack. The 0% / 2% pair preserves the relative
+       diagonal at a viewport too narrow for the desktop stagger. */
     .position__half--first {
-      margin-left: calc(9% - 0.3ch);
+      margin-left: calc(0% - 0.3ch);
     }
     .position__half--second {
-      margin-left: calc(18% - 0.3ch);
+      margin-left: calc(2% - 0.3ch);
     }
   }
   /* Half-level colour spans. `--em` = pink (left half: "Volcanic
