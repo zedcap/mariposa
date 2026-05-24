@@ -65,7 +65,7 @@ const { slides } = Astro.props;
         >
           <div class="hero__frame" data-hero-frame>
             <Image
-              class="hero__img"
+              class:list={['hero__img', `hero__img--f${i + 1}`]}
               src={heroImages[i] ?? heroImages[0]}
               alt={slide.caption}
               widths={[720, 1280, 1920, 2560]}
@@ -131,20 +131,31 @@ const { slides } = Astro.props;
 
   @media (max-width: 720px) {
     .hero {
-      /* On a phone the band keeps the source's native 16:9 ratio so the
-         full image is visible — no horizontal crop, no wordmark loss.
-         No fixed svh height, no min/max. */
+      /* On a phone the band is a 3:4 portrait — the figure (lady + hands
+         + cigar) fills the frame and the wordmark band is cropped off the
+         side. Stephane's call (2026-05-24): tall portrait crop reads on a
+         phone where the wide 16:9 band reads small. No fixed svh height,
+         no min/max — the aspect-ratio drives the height from the width. */
       height: auto;
       min-height: 0;
       max-height: none;
-      aspect-ratio: 16 / 9;
+      aspect-ratio: 3 / 4;
     }
 
-    /* Contain the image inside the 16:9 band so every frame shows
-       end-to-end at its native ratio. */
+    /* Fill the portrait band; lose left/right to keep the figure framed.
+       Per-frame object-position because the figure sits LEFT in frames
+       1/2/4/5 and RIGHT in frames 3/6 — a single value cannot hold all
+       six. Values picked to keep the full figure (head, torso, cigar
+       hand) inside the 3:4 window on a typical phone width. */
     .hero__img {
-      object-fit: contain;
+      object-fit: cover;
     }
+    .hero__img--f1 { object-position: 34% center; }
+    .hero__img--f2 { object-position: 33% center; }
+    .hero__img--f3 { object-position: 74% center; }
+    .hero__img--f4 { object-position: 34% center; }
+    .hero__img--f5 { object-position: 33% center; }
+    .hero__img--f6 { object-position: 74% center; }
   }
 
   @media (prefers-reduced-motion: reduce) {
