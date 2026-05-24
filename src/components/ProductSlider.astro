@@ -668,50 +668,72 @@ const discoverHref: Record<string, string> = {};
     .range__frame {
       min-height: 0;
     }
+    /* Mobile keeps the desktop side-by-side layout (Stephane
+       2026-05-24): cigar next to copy, image column intentionally
+       narrower so the copy carries the panel. 30/70 ratio: enough
+       width for the slim cigar PNGs to read as objects without
+       starving the lede of measure. Gap tightened from the desktop
+       clamp; text-align stays left. */
     .range__frame-inner {
-      grid-template-columns: 1fr;
-      gap: var(--space-6);
+      grid-template-columns: 30fr 70fr;
+      gap: var(--space-4);
       text-align: left;
     }
-    /* Reset the Caprice desktop flip on mobile — single column,
-       image first, copy below, identical to Volage. */
-    .range__frame--caprice .range__media,
-    .range__frame--caprice .range__copy {
-      grid-column: auto;
-      grid-row: auto;
+    /* Caprice keeps the desktop flip on mobile — image on the
+       narrower right column, copy on the wider left column. */
+    .range__frame--caprice .range__media {
+      grid-column: 2;
     }
-    /* Mobile — tighten the cigar so it reads as an object above the
-       copy block, not a wall. Frame uses a min-height to hold the
-       row, cigar itself is height-capped. Caprice base mobile
-       bumped ×1.15 (Stephane 2026-05-24): cigar 240→276; frame
-       min-height 260→299, width cap 160→184. */
+    .range__frame--caprice .range__copy {
+      grid-column: 1;
+      grid-row: 1;
+    }
+    /* Cigar — capped at 38vh so it stays readable at phone heights
+       without dominating the row. max-width: 100% of the column so
+       the PNG fills the narrow image column comfortably; no fixed
+       pixel width caps now that the column itself does the work.
+       Frame min-height removed — the cigar's own max-height defines
+       the row height, and the copy column is the dominant content. */
     .range__media-frame--object {
       aspect-ratio: auto;
-      min-height: 299px;
-      max-width: 184px;
-      margin: 0 auto;
-      padding: var(--space-4) 0;
+      min-height: 0;
+      max-width: 100%;
+      margin: 0;
+      padding: var(--space-3) 0;
     }
     .range__cigar--object {
-      max-height: 276px;
+      max-height: 38vh;
       max-width: 100%;
     }
-    /* Volage mobile — bumped ×1.15 alongside the desktop pass
-       (Stephane 2026-05-24). Cigar 312→359; frame min-height
-       340→391 to hold the taller object plus its padding; frame
-       max-width 208→239 so the proportionally wider cigar isn't
-       crushed by the column cap. Ghost untouched. */
+    /* Volage mobile — same shape as Caprice; slightly taller cap so
+       the proportionally larger Volage object reads as the bigger
+       of the two within its column. */
     .range__frame--volage .range__media-frame--object {
-      min-height: 391px;
-      max-width: 239px;
+      min-height: 0;
+      max-width: 100%;
     }
     .range__frame--volage .range__cigar--object {
-      max-height: 359px;
+      max-height: 42vh;
       max-width: 100%;
     }
     .range__media-frame--scene {
       aspect-ratio: 1 / 1;
-      max-width: 300px;
+      max-width: 100%;
+    }
+    /* Copy column type — wraps more aggressively at 320-720px in a
+       70%-of-viewport column. Trim the display name's lower clamp
+       stop so a two-word name (Caprice, Volage) doesn't overflow at
+       narrow widths; lede measure removed so the paragraph fills
+       the available column rather than enforcing a ch cap that's
+       wider than the column itself. */
+    .range__name {
+      font-size: clamp(1.4rem, 6vw, 2rem);
+    }
+    .range__lede {
+      max-width: none;
+    }
+    .range__quickspecs {
+      max-width: none;
     }
     .range__ghost {
       font-size: 30rem;
