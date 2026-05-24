@@ -1,0 +1,625 @@
+---
+/* Contact — comparison mocks.
+   ------------------------------------------------------------------
+   2026-05-24. Stephane finds the live StickyContact too square and
+   the type maybe too big. This page stacks the current treatment +
+   three alternatives so the difference is visible side by side.
+
+   Each option renders inside a 360 x 640 portrait "phone frame" —
+   one frame showing the CLOSED state (button only, bottom-right),
+   one frame showing the OPEN state (button + expanded popup). The
+   frames are decorative — nothing clicks, nothing toggles. They
+   freeze each design at its two readable states so Stephane can
+   compare without chasing a mouse.
+
+   Direct-URL only. NOT linked from the nav. The live concierge
+   element (`StickyContact.astro`) is UNCHANGED — BaseLayout still
+   includes it, so it appears bottom-right on this page too. It is
+   the canonical reference for "Option 1 — Current".
+
+   Sources of truth.
+     · Live styles replicated from `components/StickyContact.astro`.
+     · Email + Instagram values from `content/site/global.json`. */
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import { getEntry } from 'astro:content';
+
+const global = (await getEntry('site', 'global'))!.data as {
+  contact: { email: string; instagramHandle: string; instagramUrl: string };
+};
+const { contact } = global;
+
+const title = 'Contact — comparison mocks · Mariposa';
+
+const options = [
+  {
+    n: '01',
+    name: 'Current',
+    note: 'Live today. Dark pill, square pearl popup, ink + gold-hairline rules.',
+  },
+  {
+    n: '02',
+    name: 'Softer',
+    note: 'Smaller, lighter pill. Generous 24px popup radius. Type drops one step.',
+  },
+  {
+    n: '03',
+    name: 'Editorial restraint',
+    note: 'No button. The word "Contact" alone, bottom-right. Click opens a drawer rising from the foot.',
+  },
+  {
+    n: '04',
+    name: 'Minimal icon',
+    note: 'Small circular ink button, envelope mark only. Popup shows raw values, no labels.',
+  },
+];
+---
+
+<BaseLayout title={title} description="Comparison mocks for the sticky contact button — current and three alternatives.">
+  <Header overHero={false} />
+
+  <section class="mocks">
+    <div class="container">
+      <header class="mocks__intro">
+        <p class="eyebrow eyebrow--rule">Contact · comparison mocks</p>
+        <h1 class="mocks__title">Four sticky-contact treatments, side by side.</h1>
+        <p class="mocks__lede">
+          The current concierge pill plus three alternatives. Each option is shown twice — closed
+          state on the left, open state on the right — inside a faux 360 by 640 viewport so the
+          corner position reads accurately.
+        </p>
+        <ol class="mocks__index">
+          {options.map((o) => (
+            <li><span class="mocks__index-n">{o.n}</span> {o.name} <span class="mocks__index-note">— {o.note}</span></li>
+          ))}
+        </ol>
+      </header>
+
+      {/* ─── Option 1 — Current ──────────────────────────────────── */}
+      <article class="mocks__option">
+        <header class="mocks__banner">
+          <span class="mocks__banner-n">01</span>
+          <h2 class="mocks__banner-name">Current — live today</h2>
+          <p class="mocks__banner-note">Dark pill, square pearl popup, ink + gold-hairline rules. The baseline.</p>
+        </header>
+        <div class="mocks__pair">
+          <figure class="mocks__viewport">
+            <figcaption class="mocks__caption">Closed</figcaption>
+            <div class="mocks__stage">
+              <div class="mock-v1 mock-v1--closed">
+                <button class="mock-v1__toggle" type="button" tabindex="-1" aria-hidden="true">contact</button>
+              </div>
+            </div>
+          </figure>
+          <figure class="mocks__viewport">
+            <figcaption class="mocks__caption">Open</figcaption>
+            <div class="mocks__stage">
+              <div class="mock-v1 mock-v1--open">
+                <div class="mock-v1__panel">
+                  <p class="mock-v1__eyebrow">Get in touch</p>
+                  <div class="mock-v1__channel">
+                    <span class="mock-v1__label">Email</span>
+                    <span class="mock-v1__value">{contact.email}</span>
+                  </div>
+                  <div class="mock-v1__channel">
+                    <span class="mock-v1__label">Instagram</span>
+                    <span class="mock-v1__value">{contact.instagramHandle}</span>
+                  </div>
+                </div>
+                <button class="mock-v1__toggle" type="button" tabindex="-1" aria-hidden="true">close</button>
+              </div>
+            </div>
+          </figure>
+        </div>
+      </article>
+
+      {/* ─── Option 2 — Softer ───────────────────────────────────── */}
+      <article class="mocks__option">
+        <header class="mocks__banner">
+          <span class="mocks__banner-n">02</span>
+          <h2 class="mocks__banner-name">Softer — rounded, lighter, smaller type</h2>
+          <p class="mocks__banner-note">Lighter pill, 24px popup radius, softer shadow. Eyebrow + body each drop one step.</p>
+        </header>
+        <div class="mocks__pair">
+          <figure class="mocks__viewport">
+            <figcaption class="mocks__caption">Closed</figcaption>
+            <div class="mocks__stage">
+              <div class="mock-v2">
+                <button class="mock-v2__toggle" type="button" tabindex="-1" aria-hidden="true">contact</button>
+              </div>
+            </div>
+          </figure>
+          <figure class="mocks__viewport">
+            <figcaption class="mocks__caption">Open</figcaption>
+            <div class="mocks__stage">
+              <div class="mock-v2">
+                <div class="mock-v2__panel">
+                  <p class="mock-v2__eyebrow">Get in touch</p>
+                  <div class="mock-v2__channel">
+                    <span class="mock-v2__label">Email</span>
+                    <span class="mock-v2__value">{contact.email}</span>
+                  </div>
+                  <div class="mock-v2__channel">
+                    <span class="mock-v2__label">Instagram</span>
+                    <span class="mock-v2__value">{contact.instagramHandle}</span>
+                  </div>
+                </div>
+                <button class="mock-v2__toggle" type="button" tabindex="-1" aria-hidden="true">close</button>
+              </div>
+            </div>
+          </figure>
+        </div>
+      </article>
+
+      {/* ─── Option 3 — Editorial restraint ───────────────────── */}
+      <article class="mocks__option">
+        <header class="mocks__banner">
+          <span class="mocks__banner-n">03</span>
+          <h2 class="mocks__banner-name">Editorial restraint — text link, foot-drawer</h2>
+          <p class="mocks__banner-note">No enclosure. The word "Contact" small, bottom-right. Click opens a narrow vertical card rising from the foot of the viewport.</p>
+        </header>
+        <div class="mocks__pair">
+          <figure class="mocks__viewport">
+            <figcaption class="mocks__caption">Closed</figcaption>
+            <div class="mocks__stage">
+              <div class="mock-v3">
+                <span class="mock-v3__link">Contact</span>
+              </div>
+            </div>
+          </figure>
+          <figure class="mocks__viewport">
+            <figcaption class="mocks__caption">Open</figcaption>
+            <div class="mocks__stage">
+              <div class="mock-v3">
+                <div class="mock-v3__drawer">
+                  <p class="mock-v3__eyebrow">Contact</p>
+                  <div class="mock-v3__row">
+                    <span class="mock-v3__label">Email</span>
+                    <span class="mock-v3__value">{contact.email}</span>
+                  </div>
+                  <div class="mock-v3__row">
+                    <span class="mock-v3__label">Instagram</span>
+                    <span class="mock-v3__value">{contact.instagramHandle}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </figure>
+        </div>
+      </article>
+
+      {/* ─── Option 4 — Minimal icon ─────────────────────────── */}
+      <article class="mocks__option">
+        <header class="mocks__banner">
+          <span class="mocks__banner-n">04</span>
+          <h2 class="mocks__banner-name">Minimal icon — circular mark, value-only popup</h2>
+          <p class="mocks__banner-note">Small circular ink button with an envelope glyph. Popup carries the email value and a small Instagram chip — no labels.</p>
+        </header>
+        <div class="mocks__pair">
+          <figure class="mocks__viewport">
+            <figcaption class="mocks__caption">Closed</figcaption>
+            <div class="mocks__stage">
+              <div class="mock-v4">
+                <button class="mock-v4__toggle" type="button" tabindex="-1" aria-hidden="true" aria-label="Contact">
+                  <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+                    <path d="M3 6.5 12 13l9-6.5M3 6h18v12H3z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </figure>
+          <figure class="mocks__viewport">
+            <figcaption class="mocks__caption">Open</figcaption>
+            <div class="mocks__stage">
+              <div class="mock-v4">
+                <div class="mock-v4__panel">
+                  <span class="mock-v4__email">{contact.email}</span>
+                  <span class="mock-v4__chip">{contact.instagramHandle}</span>
+                </div>
+                <button class="mock-v4__toggle" type="button" tabindex="-1" aria-hidden="true" aria-label="Close">
+                  <svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true">
+                    <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </figure>
+        </div>
+      </article>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* ─── Page chrome ─────────────────────────────────────────── */
+  .mocks {
+    padding-block: var(--space-9) var(--space-10);
+    background: var(--white);
+  }
+
+  .mocks__intro {
+    max-width: 720px;
+    margin-bottom: var(--space-9);
+  }
+
+  .mocks__title {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: var(--fs-h2);
+    line-height: var(--lh-tight);
+    letter-spacing: var(--ls-display);
+    color: var(--ink);
+    margin: var(--space-4) 0 var(--space-5);
+  }
+
+  .mocks__lede {
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--ink-soft);
+    margin: 0 0 var(--space-6);
+  }
+
+  .mocks__index {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: var(--space-2);
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    color: var(--ash);
+  }
+  .mocks__index-n {
+    display: inline-block;
+    min-width: 28px;
+    color: var(--gold-deep);
+    font-variant-numeric: tabular-nums;
+  }
+  .mocks__index-note { color: var(--smoke); }
+
+  /* ─── Option scaffolding ─────────────────────────────────── */
+  .mocks__option {
+    margin-top: var(--space-9);
+    padding-top: var(--space-7);
+    border-top: 1px solid var(--hairline);
+  }
+
+  .mocks__banner {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: var(--space-5);
+    row-gap: var(--space-2);
+    align-items: baseline;
+    margin-bottom: var(--space-7);
+  }
+  .mocks__banner-n {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    letter-spacing: var(--ls-eyebrow);
+    color: var(--gold-deep);
+    font-weight: 600;
+    grid-row: 1 / span 2;
+    align-self: center;
+  }
+  .mocks__banner-name {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: var(--fs-h4);
+    line-height: var(--lh-snug);
+    letter-spacing: var(--ls-display);
+    color: var(--ink);
+    margin: 0;
+  }
+  .mocks__banner-note {
+    grid-column: 2;
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--ash);
+    margin: 0;
+    max-width: 64ch;
+  }
+
+  .mocks__pair {
+    display: grid;
+    grid-template-columns: repeat(2, 360px);
+    gap: var(--space-7);
+    justify-content: start;
+  }
+  @media (max-width: 820px) {
+    .mocks__pair {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .mocks__viewport {
+    margin: 0;
+  }
+  .mocks__caption {
+    font-family: var(--font-body);
+    font-size: var(--fs-caption);
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
+    color: var(--smoke);
+    margin-bottom: var(--space-3);
+  }
+
+  /* Faux phone viewport — 360 x 640 portrait, hairline frame, faint
+     paper-grain field stands in for "a real page" beneath the mock. */
+  .mocks__stage {
+    position: relative;
+    width: 360px;
+    height: 640px;
+    background: var(--white);
+    border: 1px solid var(--hairline);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: var(--shadow-rise);
+    /* faint, paper-coloured stripe pattern so the corner element has
+       something to sit on — never reads as content. */
+    background-image:
+      linear-gradient(180deg, var(--pearl) 0%, var(--white) 38%, var(--pearl) 100%);
+  }
+  .mocks__stage::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: var(--grain-image);
+    background-size: 200px 200px;
+    opacity: 0.04;
+    pointer-events: none;
+  }
+
+  /* ============================================================
+     Option 1 — Current. Replicates StickyContact.astro 1:1.
+     ============================================================ */
+  .mock-v1 {
+    position: absolute;
+    right: 16px;
+    bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--space-3);
+  }
+  .mock-v1__toggle {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    font-weight: 600;
+    letter-spacing: var(--ls-small);
+    text-transform: lowercase;
+    color: var(--white);
+    background: var(--ink);
+    border: 1px solid var(--ink);
+    border-radius: var(--radius-pill);
+    padding: 12px 22px;
+    box-shadow: var(--shadow-rise);
+    cursor: default;
+  }
+  .mock-v1__panel {
+    background: var(--pearl);
+    border: 1px solid var(--border-gold);
+    border-radius: var(--radius-xs);
+    padding: var(--space-5) var(--space-6);
+    box-shadow: var(--shadow-lift);
+    min-width: 248px;
+  }
+  .mock-v1__eyebrow {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: var(--fs-eyebrow);
+    letter-spacing: var(--ls-section);
+    text-transform: uppercase;
+    color: var(--accent-strong);
+    margin: 0 0 var(--space-4);
+  }
+  .mock-v1__channel {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    padding-block: var(--space-3);
+    border-top: 1px solid var(--hairline);
+  }
+  .mock-v1__channel:last-child { padding-bottom: 0; }
+  .mock-v1__label {
+    font-family: var(--font-body);
+    font-size: var(--fs-caption);
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
+    color: var(--ash);
+  }
+  .mock-v1__value {
+    font-family: var(--font-display);
+    font-size: var(--fs-body);
+    color: var(--ink);
+  }
+
+  /* ============================================================
+     Option 2 — Softer. Lighter pill, rounder popup, smaller type.
+     ============================================================ */
+  .mock-v2 {
+    position: absolute;
+    right: 16px;
+    bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+  }
+  .mock-v2__toggle {
+    font-family: var(--font-body);
+    font-size: var(--fs-caption);
+    font-weight: 500;
+    letter-spacing: var(--ls-small);
+    text-transform: lowercase;
+    color: var(--ink);
+    background: var(--white);
+    border: 1px solid var(--border-gold);
+    border-radius: var(--radius-pill);
+    padding: 8px 16px;
+    box-shadow: 0 1px 0 rgba(31,27,23,0.03), 0 12px 28px -18px rgba(31,27,23,0.14);
+    cursor: default;
+  }
+  .mock-v2__panel {
+    background: var(--white);
+    border: 1px solid var(--border-gold);
+    border-radius: 24px;
+    padding: 20px 22px;
+    box-shadow: 0 1px 0 rgba(31,27,23,0.03), 0 28px 48px -24px rgba(31,27,23,0.14);
+    min-width: 232px;
+  }
+  .mock-v2__eyebrow {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 10px;             /* one step under --fs-eyebrow */
+    letter-spacing: var(--ls-section);
+    text-transform: uppercase;
+    color: var(--accent-strong);
+    margin: 0 0 14px;
+  }
+  .mock-v2__channel {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    padding-block: 10px;
+    border-top: 1px solid var(--hairline);
+  }
+  .mock-v2__channel:last-child { padding-bottom: 0; }
+  .mock-v2__label {
+    font-family: var(--font-body);
+    font-size: 11px;             /* one step under --fs-caption */
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
+    color: var(--ash);
+  }
+  .mock-v2__value {
+    font-family: var(--font-display);
+    font-size: var(--fs-small);  /* one step under --fs-body */
+    color: var(--ink);
+  }
+
+  /* ============================================================
+     Option 3 — Editorial restraint. Text link + rising drawer.
+     ============================================================ */
+  .mock-v3 {
+    position: absolute;
+    inset: 0;
+  }
+  .mock-v3__link {
+    position: absolute;
+    right: 20px;
+    bottom: 18px;
+    font-family: var(--font-body);
+    font-size: var(--fs-caption);
+    font-weight: 500;
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
+    color: var(--ink);
+    border-bottom: 1px solid var(--gold);
+    padding-bottom: 2px;
+  }
+  .mock-v3__drawer {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--white);
+    border-top: 1px solid var(--border-gold);
+    box-shadow: 0 -18px 40px -24px rgba(31,27,23,0.16);
+    padding: 22px 24px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .mock-v3__drawer::before {
+    content: "";
+    position: absolute;
+    top: -1px;
+    left: 24px;
+    right: 24px;
+    height: 1px;
+    background: var(--gold);
+    opacity: 0.5;
+  }
+  .mock-v3__eyebrow {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: var(--fs-eyebrow);
+    letter-spacing: var(--ls-section);
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    margin: 0 0 4px;
+  }
+  .mock-v3__row {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding-top: 10px;
+    border-top: 1px solid var(--hairline);
+  }
+  .mock-v3__label {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
+    color: var(--ash);
+  }
+  .mock-v3__value {
+    font-family: var(--font-display);
+    font-size: var(--fs-body);
+    color: var(--ink);
+  }
+
+  /* ============================================================
+     Option 4 — Minimal icon. Circular mark + value-only popup.
+     ============================================================ */
+  .mock-v4 {
+    position: absolute;
+    right: 16px;
+    bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+  }
+  .mock-v4__toggle {
+    width: 36px;
+    height: 36px;
+    border-radius: 9999px;
+    background: var(--ink);
+    color: var(--white);
+    border: 1px solid var(--ink);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-rise);
+    cursor: default;
+  }
+  .mock-v4__panel {
+    background: var(--white);
+    border: 1px solid var(--border-gold);
+    border-radius: var(--radius-xs);
+    padding: 12px 14px;
+    box-shadow: 0 1px 0 rgba(31,27,23,0.03), 0 18px 36px -20px rgba(31,27,23,0.16);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+  }
+  .mock-v4__email {
+    font-family: var(--font-display);
+    font-size: var(--fs-small);
+    color: var(--ink);
+  }
+  .mock-v4__chip {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    letter-spacing: var(--ls-small);
+    color: var(--gold-deep);
+    border: 1px solid var(--border-gold);
+    border-radius: 9999px;
+    padding: 3px 10px;
+  }
+</style>

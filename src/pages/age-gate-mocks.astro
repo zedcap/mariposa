@@ -1,0 +1,636 @@
+---
+/* Age gate — comparison mocks.
+   ------------------------------------------------------------------
+   2026-05-24. Four full-viewport-scale renderings of the 21+ age
+   gate, stacked vertically on a single comparison page for Stephane
+   to pick a direction.
+
+   Each option is rendered inside a contained landscape preview
+   frame (max 1200×800) so all four sit on one page rather than
+   each one filling the viewport. The frame is the picture-in-
+   picture device only; the actual gate, once chosen, would render
+   full-screen via AgeGate.astro.
+
+   Direct-URL only. NOT linked from the nav. The live AgeGate.astro
+   component is UNTOUCHED. Same pattern as `/about-mocks`,
+   `/story-mocks`, `/product-mocks`, `/volage-header-mocks`.
+
+   The four options:
+     1 — Current. Replicates AgeGate.astro exactly.
+     2 — Editorial pause. White ground, italic Spectral question,
+         minimal pair of buttons.
+     3 — Photographic ground. Full-bleed hero photo, dark gradient,
+         white type and outlined button.
+     4 — Brand statement. Dark ink ground, gold accents, italic
+         pearl question, gold-outlined / pearl text buttons. */
+
+import { Image } from 'astro:assets';
+import { getEntry } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import heroBg from '../assets/hero-mp-1.jpg';
+
+/* Shared copy — pulled from the same source the live gate uses, so
+   every mock reads with the live wording rather than placeholders. */
+const global = (await getEntry('site', 'global'))!.data as {
+  wordmark: string;
+  positionLine: string;
+  ageGate: {
+    intro: string;
+    question: string;
+    confirm: string;
+    decline: string;
+    declineHeading: string;
+    declineBody: string;
+  };
+};
+const { positionLine, ageGate } = global;
+---
+
+<BaseLayout title="Mariposa • Age gate — comparison mocks">
+
+  <section class="intro">
+    <div class="container">
+      <p class="intro__eyebrow">Internal &mdash; comparison surface</p>
+      <h1 class="intro__title">Age gate &mdash; comparison mocks</h1>
+      <p class="intro__lede">
+        The current age gate plus three alternative directions, each
+        shown inside a contained landscape preview frame so all four
+        sit on one page. The live <code>AgeGate.astro</code> component
+        is unchanged.
+      </p>
+    </div>
+  </section>
+
+  {/* ════════════════════════════════════════════════════════════
+      OPTION 1 — Current
+      Replicates AgeGate.astro exactly, scaled into the frame.
+      ════════════════════════════════════════════════════════════ */}
+
+  <section class="label">
+    <div class="container">
+      <p class="label__eyebrow">Option 1 &mdash; Current</p>
+      <p class="label__desc">
+        The live <code>AgeGate.astro</code>. White ground, gold-deep
+        wordmark, position line, hairline gold rule, intro line,
+        Spectral display question, ink-filled "Yes" pill and
+        gold-outlined "No" ghost pill. The reference point.
+      </p>
+    </div>
+  </section>
+
+  <div class="frame-wrap">
+    <div class="frame frame--paper" aria-label="Option 1 preview">
+
+      <div class="o1__inner">
+        <span class="o1__mark">mariposa</span>
+        <p class="o1__position">{positionLine}</p>
+        <hr class="o1__rule" />
+        <p class="o1__intro">{ageGate.intro}</p>
+        <p class="o1__question">{ageGate.question}</p>
+        <div class="o1__choices">
+          <button class="pill pill--solid" type="button">{ageGate.confirm}</button>
+          <button class="pill pill--ghost" type="button">{ageGate.decline}</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  {/* ════════════════════════════════════════════════════════════
+      OPTION 2 — Editorial pause
+      White ground, lowercase wordmark small at top, italic Spectral
+      question at display scale, ink-filled Yes / text-link No.
+      ════════════════════════════════════════════════════════════ */}
+
+  <section class="label">
+    <div class="container">
+      <p class="label__eyebrow">Option 2 &mdash; Editorial pause</p>
+      <p class="label__desc">
+        White ground, single centred column. The wordmark sits small
+        at the top, the question carries the page in italic Spectral
+        at display scale, two minimal buttons sit beneath &mdash; an
+        ink-filled "Yes" and a "No" rendered as a quiet text link
+        with no border. Generous breathing room. Most stripped-down
+        of the four.
+      </p>
+    </div>
+  </section>
+
+  <div class="frame-wrap">
+    <div class="frame frame--paper" aria-label="Option 2 preview">
+
+      <div class="o2__inner">
+        <span class="o2__mark">mariposa</span>
+        <p class="o2__question">{ageGate.question}</p>
+        <div class="o2__choices">
+          <button class="o2-btn o2-btn--solid" type="button">Yes</button>
+          <button class="o2-btn o2-btn--text" type="button">No</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  {/* ════════════════════════════════════════════════════════════
+      OPTION 3 — Photographic ground
+      Full-bleed hero photo, dark gradient overlay, white type and
+      a white-outlined Yes button + text No.
+      ════════════════════════════════════════════════════════════ */}
+
+  <section class="label">
+    <div class="container">
+      <p class="label__eyebrow">Option 3 &mdash; Photographic ground</p>
+      <p class="label__desc">
+        Full-bleed photographic background (<code>hero-mp-1.jpg</code>
+        standing in for atmosphere). Soft dark gradient so the
+        question reads white. Wordmark in white at the top, italic
+        Spectral question centred at display scale, a white-outlined
+        "Yes" and a quiet text "No". Closest to the Macallan /
+        Hennessy age-gate convention.
+      </p>
+    </div>
+  </section>
+
+  <div class="frame-wrap">
+    <div class="frame frame--photo" aria-label="Option 3 preview">
+
+      <Image src={heroBg} alt="Atmospheric placeholder background for the photographic age-gate variant." class="o3__bg" widths={[800, 1200, 1800]} sizes="1200px" />
+      <div class="o3__scrim" aria-hidden="true"></div>
+
+      <div class="o3__inner">
+        <span class="o3__mark">mariposa</span>
+        <p class="o3__question">{ageGate.question}</p>
+        <div class="o3__choices">
+          <button class="o3-btn o3-btn--outline" type="button">Yes</button>
+          <button class="o3-btn o3-btn--text" type="button">No</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  {/* ════════════════════════════════════════════════════════════
+      OPTION 4 — Brand statement
+      Dark ink ground, gold-leaf wordmark, italic pearl question,
+      gold-outlined Yes + pearl text No.
+      ════════════════════════════════════════════════════════════ */}
+
+  <section class="label">
+    <div class="container">
+      <p class="label__eyebrow">Option 4 &mdash; Brand statement</p>
+      <p class="label__desc">
+        Ink ground with gold accents. Wordmark in gold-leaf at the
+        top. Italic Spectral question in pearl at display scale. Two
+        buttons &mdash; a gold-leaf outlined "Yes" and a pearl text
+        "No". Confident, masculine, cigar-category-conventional.
+      </p>
+    </div>
+  </section>
+
+  <div class="frame-wrap">
+    <div class="frame frame--ink" aria-label="Option 4 preview">
+
+      <div class="o4__inner">
+        <span class="o4__mark">mariposa</span>
+        <p class="o4__question">{ageGate.question}</p>
+        <div class="o4__choices">
+          <button class="o4-btn o4-btn--outline" type="button">Yes</button>
+          <button class="o4-btn o4-btn--text" type="button">No</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</BaseLayout>
+
+<style>
+  /* ─── Intro (matches /about-mocks pattern) ───────────────── */
+  .intro {
+    padding-block: var(--space-9) var(--space-7);
+    background: var(--white);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .intro__eyebrow {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: var(--ls-section);
+    color: var(--gold-deep);
+    margin-bottom: var(--space-4);
+  }
+  .intro__title {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(2rem, 4.4vw, 3.25rem);
+    line-height: var(--lh-snug);
+    color: var(--ink);
+    margin-bottom: var(--space-5);
+  }
+  .intro__lede {
+    font-family: var(--font-body);
+    font-size: var(--fs-lede);
+    line-height: var(--lh-body, 1.6);
+    color: var(--ink-soft);
+    max-width: 64ch;
+  }
+  .intro__lede code,
+  .label__desc code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.92em;
+  }
+  .intro__lede code { color: var(--ink); }
+
+  /* ─── Option label band (matches /about-mocks pattern) ──── */
+  .label {
+    background: var(--ink);
+    color: var(--white);
+    padding-block: var(--space-6);
+  }
+  .label__eyebrow {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: var(--ls-section);
+    color: var(--gold-leaf);
+    margin-bottom: var(--space-3);
+  }
+  .label__desc {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    line-height: var(--lh-loose);
+    color: var(--pearl);
+    max-width: 78ch;
+  }
+  .label__desc code {
+    color: var(--gold-soft);
+  }
+
+  /* ─── Preview frame ──────────────────────────────────────
+     Contained landscape stage. Aspect-ratio locked so the
+     four previews share identical canvases regardless of the
+     viewport width. Width is capped at 1200px (page max),
+     height follows from a 3:2 ratio so each frame reads as a
+     full-screen interstitial in miniature without any one of
+     them dominating the comparison page. */
+  .frame-wrap {
+    background: var(--pearl);
+    padding-block: clamp(var(--space-7), 6vw, var(--space-9));
+    padding-inline: var(--page-pad-m);
+    display: flex;
+    justify-content: center;
+  }
+  .frame {
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+    box-shadow: var(--shadow-lift);
+  }
+  .frame--paper { background: var(--white); }
+  .frame--ink   { background: var(--ink); }
+  .frame--photo { background: var(--ink); }
+
+  /* ═══════════════════════════════════════════════════════════
+     OPTION 1 — Current. Mirrors AgeGate.astro spec.
+     ═══════════════════════════════════════════════════════════ */
+  .o1__inner {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: var(--page-pad-m);
+    text-align: center;
+  }
+  .o1__inner > * { max-width: 520px; }
+  .o1__mark {
+    font-family: var(--font-display);
+    font-weight: 400;
+    text-transform: lowercase;
+    letter-spacing: var(--ls-wordmark);
+    font-size: clamp(2rem, 4.4vw, 3rem);
+    color: var(--gold-deep);
+    line-height: 1;
+  }
+  .o1__position {
+    font-family: var(--font-body);
+    font-size: var(--fs-caption);
+    letter-spacing: var(--ls-section);
+    text-transform: uppercase;
+    color: var(--ash);
+    margin-top: var(--space-4);
+    margin-bottom: 0;
+  }
+  .o1__rule {
+    width: 64px;
+    height: 1px;
+    border: none;
+    background: var(--gold-leaf);
+    margin-block: var(--space-7);
+  }
+  .o1__intro {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    letter-spacing: var(--ls-small);
+    color: var(--ash);
+    margin: 0 0 var(--space-2) 0;
+  }
+  .o1__question {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    line-height: var(--lh-snug);
+    color: var(--ink);
+    margin: 0;
+  }
+  .o1__choices {
+    display: flex;
+    gap: var(--space-4);
+    margin-top: var(--space-7);
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  /* Shared pill (Option 1 only — matches the live gate). */
+  .pill {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    font-weight: 600;
+    letter-spacing: var(--ls-small);
+    border-radius: var(--radius-pill);
+    padding: 14px 32px;
+    cursor: pointer;
+    transition:
+      transform var(--dur-default) var(--ease-paper),
+      box-shadow var(--dur-default) var(--ease-paper),
+      background-color var(--dur-default) var(--ease-paper);
+  }
+  .pill--solid {
+    color: var(--white);
+    background: var(--ink);
+    border: 1px solid var(--ink);
+    box-shadow: var(--shadow-rise);
+  }
+  .pill--solid:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lift);
+  }
+  .pill--ghost {
+    color: var(--ink);
+    background: transparent;
+    border: 1px solid var(--border-gold);
+  }
+  .pill--ghost:hover {
+    background: var(--pearl);
+  }
+  .pill:active {
+    transform: translateY(1px);
+    box-shadow: var(--shadow-press);
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     OPTION 2 — Editorial pause
+     ═══════════════════════════════════════════════════════════ */
+  .o2__inner {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding: clamp(var(--space-7), 6vw, var(--space-9));
+    text-align: center;
+  }
+  .o2__mark {
+    align-self: start;
+    justify-self: center;
+    font-family: var(--font-display);
+    font-weight: 400;
+    text-transform: lowercase;
+    letter-spacing: var(--ls-wordmark);
+    font-size: var(--fs-h6);
+    color: var(--gold-deep);
+    line-height: 1;
+  }
+  .o2__question {
+    align-self: center;
+    justify-self: center;
+    max-width: 22ch;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: var(--lh-snug);
+    color: var(--ink);
+    margin: 0;
+  }
+  .o2__choices {
+    align-self: end;
+    justify-self: center;
+    display: flex;
+    gap: var(--space-7);
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .o2-btn {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    font-weight: 600;
+    letter-spacing: var(--ls-small);
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    padding: 0;
+  }
+  .o2-btn--solid {
+    color: var(--white);
+    background: var(--ink);
+    border: 1px solid var(--ink);
+    padding: 14px 40px;
+    border-radius: var(--radius-pill);
+  }
+  .o2-btn--text {
+    color: var(--ash);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-thickness: 1px;
+    padding: 14px 0;
+  }
+  .o2-btn--text:hover { color: var(--ink); }
+
+  /* ═══════════════════════════════════════════════════════════
+     OPTION 3 — Photographic ground
+     ═══════════════════════════════════════════════════════════ */
+  .o3__bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+  .o3__scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--ink) 35%, transparent) 0%,
+      color-mix(in srgb, var(--ink) 55%, transparent) 100%
+    );
+    pointer-events: none;
+  }
+  .o3__inner {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding: clamp(var(--space-7), 6vw, var(--space-9));
+    text-align: center;
+    z-index: 2;
+  }
+  .o3__mark {
+    align-self: start;
+    justify-self: center;
+    font-family: var(--font-display);
+    font-weight: 400;
+    text-transform: lowercase;
+    letter-spacing: var(--ls-wordmark);
+    font-size: var(--fs-h6);
+    color: var(--white);
+    line-height: 1;
+  }
+  .o3__question {
+    align-self: center;
+    justify-self: center;
+    max-width: 22ch;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: var(--lh-snug);
+    color: var(--white);
+    margin: 0;
+    text-shadow: 0 1px 8px rgba(0,0,0,0.35);
+  }
+  .o3__choices {
+    align-self: end;
+    justify-self: center;
+    display: flex;
+    gap: var(--space-7);
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .o3-btn {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    font-weight: 600;
+    letter-spacing: var(--ls-small);
+    cursor: pointer;
+    background: transparent;
+    padding: 0;
+  }
+  .o3-btn--outline {
+    color: var(--white);
+    border: 1px solid var(--white);
+    padding: 14px 40px;
+    border-radius: var(--radius-pill);
+  }
+  .o3-btn--outline:hover {
+    background: rgba(255,255,255,0.1);
+  }
+  .o3-btn--text {
+    color: var(--pearl);
+    border: none;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-thickness: 1px;
+    padding: 14px 0;
+  }
+  .o3-btn--text:hover { color: var(--white); }
+
+  /* ═══════════════════════════════════════════════════════════
+     OPTION 4 — Brand statement
+     ═══════════════════════════════════════════════════════════ */
+  .o4__inner {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding: clamp(var(--space-7), 6vw, var(--space-9));
+    text-align: center;
+  }
+  .o4__mark {
+    align-self: start;
+    justify-self: center;
+    font-family: var(--font-display);
+    font-weight: 400;
+    text-transform: lowercase;
+    letter-spacing: var(--ls-wordmark);
+    font-size: var(--fs-h6);
+    color: var(--gold-leaf);
+    line-height: 1;
+  }
+  .o4__question {
+    align-self: center;
+    justify-self: center;
+    max-width: 22ch;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: var(--lh-snug);
+    color: var(--pearl);
+    margin: 0;
+  }
+  .o4__choices {
+    align-self: end;
+    justify-self: center;
+    display: flex;
+    gap: var(--space-7);
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .o4-btn {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    font-weight: 600;
+    letter-spacing: var(--ls-small);
+    cursor: pointer;
+    background: transparent;
+    padding: 0;
+  }
+  .o4-btn--outline {
+    color: var(--gold-leaf);
+    border: 1px solid var(--gold-leaf);
+    padding: 14px 40px;
+    border-radius: var(--radius-pill);
+  }
+  .o4-btn--outline:hover {
+    background: color-mix(in srgb, var(--gold-leaf) 12%, transparent);
+  }
+  .o4-btn--text {
+    color: var(--pearl);
+    border: none;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-thickness: 1px;
+    padding: 14px 0;
+  }
+  .o4-btn--text:hover { color: var(--white); }
+
+  /* ─── Mobile ─────────────────────────────────────────────── */
+  @media (max-width: 720px) {
+    /* Stretch the frames to a taller aspect-ratio at narrow widths
+       so the question + buttons stop crowding each other. */
+    .frame {
+      aspect-ratio: 3 / 4;
+    }
+  }
+</style>
+</content>
+</invoke>
