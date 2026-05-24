@@ -452,6 +452,16 @@ const discoverHref: Record<string, string> = {
     max-height: clamp(416px, 41.6vw, 546px);
     max-width: 52%;
   }
+  /* Volage 2 — double the gap above the discover link (Stephane
+     2026-05-24). Base .range__link uses margin-top: var(--space-4) (16px)
+     to read as one paragraph step from the lede. On the Volage 2
+     comparison frame Stephane wants this doubled to 32px so the link
+     sits as its own beat under the spec block. --space-4 × 2 = 32px =
+     --space-6 exactly; using the named token over calc() for token
+     discipline. Volage and Caprice continue to use the --space-4 base. */
+  .range__frame--volage-2 .range__link {
+    margin-top: var(--space-6);
+  }
 
   /* ── Quick-spec block (inline dl, slider-only) ──────────────────
      A compact two-column spec list rendered under the lede in any
@@ -513,12 +523,19 @@ const discoverHref: Record<string, string> = {
     grid-column: 1;
     grid-row: 1;
   }
-  /* Ghost letter on Caprice — no per-slug override. Falls back to the
-     base .range__ghost rule (left: 4%) so the ghost sits on the same
-     side as Volage (page-left). Earlier right: 4% override (which
-     mirrored the flip) reversed 2026-05-24 at Stephane's direction:
-     the ghost should sit to the LEFT of the cigar on Caprice, same as
-     Volage, not mirrored with the layout flip. */
+  /* Ghost letter on Caprice — anchored to the inner edge of the image
+     column on the flipped layout (Stephane 2026-05-24, geometric fix).
+     Base .range__ghost uses left: 4%, which on Caprice's flipped frame
+     (image right, copy left) lands the ghost on the page-left edge,
+     behind the COPY column — the wrong side of the cigar. Pin to ~48%
+     so the ghost sits just to the left of where the cigar renders in
+     column 2 of the 0.92fr / 1fr grid (accounting for the column gap),
+     mirroring how Volage's ghost hugs its cigar. right: auto so the
+     pin holds even if a future rule sets a right value. */
+  .range__frame--caprice .range__ghost {
+    left: 48%;
+    right: auto;
+  }
 
   .range__link {
     display: inline-flex;
@@ -526,7 +543,8 @@ const discoverHref: Record<string, string> = {
     gap: var(--space-3);
     /* Match the inter-paragraph rhythm of .range__lede (Stephane review
        2026-05-23): the lede→link gap reads as one more paragraph step,
-       not a section break. Same token as .range__lede margin-top. */
+       not a section break. Same token as .range__lede margin-top.
+       Volage 2 doubles this — see modifier below. */
     margin-top: var(--space-4);
     font-family: var(--font-body);
     /* Stephane review 2026-05-23 (b): "it's just a link" — step down
