@@ -97,6 +97,19 @@ const { footer } = global;
          copyright should keep the section's standard vertical unit
          even when stacked. */
     }
+    /* Brand line one step up on mobile (Stephane 2026-05-24): the
+       single-line clamp above was binding to its 10px floor on the
+       narrowest viewports, reading too small. To step up cleanly we
+       drop the single-line constraint on mobile and let the sentence
+       wrap; the floor lifts to 13px (--fs-caption), slope to 3.6vw,
+       ceiling to --fs-h6 (18px). Wraps to two lines at 320px-360px,
+       single line above ~480px. Desktop unchanged: this rule only
+       applies under 720px; the desktop clamp and white-space:nowrap
+       above are untouched. */
+    .site-footer__brandline {
+      font-size: clamp(13px, 3.6vw, var(--fs-h6));
+      white-space: normal;
+    }
     .site-footer__copyright {
       text-align: left;
       /* Step down two sizes (Stephane 2026-05-24): --fs-caption (13px)

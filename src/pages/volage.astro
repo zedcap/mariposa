@@ -43,9 +43,12 @@ const product = (await getEntry('products', 'volage'))!.data;
 /* Specs-bleed background photo. Served from /public so CSS url() can
    resolve it under any Astro `base`. Injected as a CSS custom property
    on the section element (CSS url() is not rewritten for the base, so
-   the path must be baked in here). The future Caprice page will mirror
-   this with /cigars-table-2.jpg once /caprice exists; not copied yet. */
-const specsBgImage = `url("${withBase('/cigars-table.jpg')}")`;
+   the path must be baked in here). Swapped 2026-05-24 from cigars-table.jpg
+   to specs-bg-header-1.jpg (source: creative-assets/headers/header_1_bw.jpg)
+   per Stephane. The 80% --ink-brown wash on top is unchanged; only the
+   underlying photo changes. The orphan cigars-table.jpg stays on disk.
+   The future Caprice page will mirror this with its own header crop. */
+const specsBgImage = `url("${withBase('/specs-bg-header-1.jpg')}")`;
 ---
 
 <BaseLayout title={`Mariposa • ${product.name}`}>
@@ -386,7 +389,11 @@ const specsBgImage = `url("${withBase('/cigars-table.jpg')}")`;
     font-family: var(--font-body);
     font-style: normal;
     font-weight: 400;
-    font-size: var(--fs-body);
+    /* Stepped down one (Stephane 2026-05-24): --fs-body (17px) →
+       --fs-small (14px). Applies to paragraphs 2-4 of the narrative;
+       .cigar__intro (italic Spectral lede, paragraph 1) is untouched.
+       Both mobile and desktop pick this up — no media-query split. */
+    font-size: var(--fs-small);
     line-height: var(--lh-body);
     color: var(--ink);
     margin: 0;
@@ -601,19 +608,37 @@ const specsBgImage = `url("${withBase('/cigars-table.jpg')}")`;
         transparent 100%
       );
     }
+    /* Side-by-side preserved at mobile widths (Stephane 2026-05-24):
+       desktop's 62/38 grid was previously collapsed to a single column
+       with the image stacked above via `order: -1`. Stephane wants the
+       cigar to sit next to the type even at narrow viewports, accepting
+       a smaller cigar. Grid shifts to 70/30 below 720px so the type
+       column has the room it needs and the cigar reads as the quieter
+       visual element. Inter-column gap tightens too — the desktop clamp
+       compresses naturally at small viewports, but pinned tighter here
+       so the 30% cigar column doesn't crowd the type. The image
+       `max-height` is also constrained so portrait viewports don't push
+       the cigar to a runaway height inside its narrow column. */
     .hero__inner {
-      grid-template-columns: 1fr;
-      gap: var(--space-7);
-    }
-    /* On mobile, restore image-above-type reading order — source
-       order inside .hero__copy already reads tagline-above-signature;
-       the outer grid handles media-vs-copy stacking. */
-    .hero__media {
-      order: -1;
+      grid-template-columns: 70fr 30fr;
+      gap: var(--space-5);
+      align-items: center;
     }
     .hero__cigar {
-      max-width: 65vw;
-      max-height: 60vh;
+      /* Fill the 30% column edge-to-edge — at ~320px viewport that's a
+         ~84px-wide cigar after container padding; smaller, but Stephane
+         accepted that. max-height caps it on portrait phones where the
+         hero is short. */
+      max-width: 100%;
+      max-height: 38vh;
+    }
+    /* Tagline tightens slightly so the 70% column reads at narrow
+       widths without forcing a third wrap. The clamp floor was 2.4rem
+       (~38px); the 22ch measure plus that floor pushes the tagline
+       wider than the column can hold on the smallest viewport. */
+    .hero__tagline {
+      font-size: clamp(1.85rem, 7vw, 2.6rem);
+      max-width: 18ch;
     }
     .cigar__strip {
       grid-template-columns: 1fr;

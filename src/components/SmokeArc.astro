@@ -307,6 +307,18 @@ const fullMarks = marks.length >= tasting.length + 1
     color: var(--ink);
     margin: 0;
   }
+  /* Desktop-only step-down (Stephane 2026-05-24): one size smaller on
+     desktop, mobile inherits the base above. clamp middle and ceiling
+     drop one step (1.8vw → 1.5vw, 1.25rem → 1.1rem); floor unchanged
+     at 1.05rem because the desktop range never binds to the floor (the
+     721px breakpoint times 1.5vw = ~10.8rem-equivalent; well above
+     1.05rem). Override wrapping is cleaner than restoring on mobile —
+     base survives unchanged and only desktop carries the override. */
+  @media (min-width: 721px) {
+    .smoke__note {
+      font-size: clamp(1.05rem, 1.5vw, 1.1rem);
+    }
+  }
 
   /* Inline mobile marker — hidden on desktop. */
   .smoke__inline-mark {
