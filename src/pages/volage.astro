@@ -95,34 +95,51 @@ const product = (await getEntry('products', 'volage'))!.data;
           </p>
         ))}
       </div>
+    </div>
 
-      {/* Spec list — split into two blocks of six (Stephane review
-          2026-05-24). Block 1 = the headline-grade specs (Vitola,
-          Strength, Format, Origin, Smoke time, Release). Block 2 =
-          the leaf/build/time specs (Wrapper, Binder, Filler,
-          Construction, Fermentation, Ageing). Each block gets its
-          own full-width gold rule on top via the .cigar__strip
-          border-top; per-row bottom rules are kept for readability.
-          JSON order is row-by-row interleaved (left then right per
-          row) to match CSS Grid's default auto-flow:row fill. */}
-      <p class="cigar__strip-title" data-reveal-strip>Profile</p>
-      <dl class="cigar__strip" data-reveal-strip>
-        {product.specs.slice(0, 6).map((row) => (
-          <div class="cigar__strip-row">
-            <dt class="cigar__strip-label">{row.label}</dt>
-            <dd class="cigar__strip-value">{row.value}</dd>
-          </div>
-        ))}
-      </dl>
-      <p class="cigar__strip-title cigar__strip-title--second" data-reveal-strip>Blend</p>
-      <dl class="cigar__strip cigar__strip--second" data-reveal-strip>
-        {product.specs.slice(6).map((row) => (
-          <div class="cigar__strip-row">
-            <dt class="cigar__strip-label">{row.label}</dt>
-            <dd class="cigar__strip-value">{row.value}</dd>
-          </div>
-        ))}
-      </dl>
+    {/* PROFILE + BLEND specs on a full-bleed dark-brown ground
+        (Stephane 2026-05-24). The spec blocks break out of the
+        page container into a 100vw band so the dark ground reads
+        as a deliberate room around the table. Container resumes
+        inside, so the strips themselves still sit at 880px centred
+        — same measure as the narrative above, only the background
+        widens. Text colours invert for legibility: titles step up
+        to --gold-leaf, labels to --gold-soft, values to --pearl;
+        hairlines move to a translucent gold that reads on dark.
+        Brown chosen: #2A1E14 — warmer/redder than --ink (#1F1B17),
+        unambiguously brown while still dark enough to host
+        inverted text at WCAG AA. Declared as --ink-brown locally,
+        not promoted to tokens.css until a second surface earns it. */}
+    <div class="cigar__specs-bleed">
+      <div class="cigar__inner container">
+        {/* Spec list — split into two blocks of six (Stephane review
+            2026-05-24). Block 1 = the headline-grade specs (Vitola,
+            Strength, Format, Origin, Smoke time, Release). Block 2 =
+            the leaf/build/time specs (Wrapper, Binder, Filler,
+            Construction, Fermentation, Ageing). Each block gets its
+            own full-width gold rule on top via the .cigar__strip
+            border-top; per-row bottom rules are kept for readability.
+            JSON order is row-by-row interleaved (left then right per
+            row) to match CSS Grid's default auto-flow:row fill. */}
+        <p class="cigar__strip-title" data-reveal-strip>Profile</p>
+        <dl class="cigar__strip" data-reveal-strip>
+          {product.specs.slice(0, 6).map((row) => (
+            <div class="cigar__strip-row">
+              <dt class="cigar__strip-label">{row.label}</dt>
+              <dd class="cigar__strip-value">{row.value}</dd>
+            </div>
+          ))}
+        </dl>
+        <p class="cigar__strip-title cigar__strip-title--second" data-reveal-strip>Blend</p>
+        <dl class="cigar__strip cigar__strip--second" data-reveal-strip>
+          {product.specs.slice(6).map((row) => (
+            <div class="cigar__strip-row">
+              <dt class="cigar__strip-label">{row.label}</dt>
+              <dd class="cigar__strip-value">{row.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
     </div>
   </section>
 
@@ -170,7 +187,17 @@ const product = (await getEntry('products', 'volage'))!.data;
      flex `order` flips the visual sequence to:
        eyebrow → rule → tagline → signature (Volage). */
   .hero {
-    background: var(--pearl);
+    /* Pearl ground that fades to transparent over the bottom ~180px
+       so the white .cigar section below shows through gradually,
+       erasing the hard horizontal line at the boundary. Same recipe
+       as the home page's .position fade. Mobile tightens the band
+       to ~120px in the mobile-collapse block. */
+    background: linear-gradient(
+      to bottom,
+      var(--pearl) 0%,
+      var(--pearl) calc(100% - 180px),
+      transparent 100%
+    );
     /* Commit the viewport on entry, per Option A spec (88–95vh).
        Override the shared section rhythm to land on the min-height
        move rather than padding alone. */
@@ -270,6 +297,19 @@ const product = (await getEntry('products', 'volage'))!.data;
   }
 
   /* ── 2. The cigar ──────────────────────────────────────────── */
+  .cigar {
+    /* Local dark-brown token for the specs bleed band. Warmer/redder
+       than --ink (#1F1B17), which reads near-black. #2A1E14 holds
+       its brown character while staying dark enough for inverted
+       text at AA. Kept local — not promoted to tokens.css until a
+       second surface needs it. */
+    --ink-brown: #2A1E14;
+    /* Zero the section's bottom padding — the dark bleed band carries
+       its own generous block padding, so the inherited section rhythm
+       would only create a white sliver between the brown band and
+       the smoke arc below. Top padding stays via section rhythm. */
+    padding-bottom: 0;
+  }
   .cigar__inner {
     max-width: 880px;
     margin-inline: auto;
@@ -277,31 +317,45 @@ const product = (await getEntry('products', 'volage'))!.data;
   .cigar__eyebrow {
     margin-bottom: var(--space-7);
   }
+
+  /* Full-bleed dark-brown band wrapping PROFILE + BLEND specs.
+     Breaks out of the parent container using the project's standard
+     full-bleed recipe (100vw + margin-inline trick). Generous block
+     padding so the dark ground reads as a deliberate room, not a
+     stripe. The inner .container resumes the page measure so the
+     spec strips stay at 880px centred — alignment with the narrative
+     above is preserved. */
+  .cigar__specs-bleed {
+    margin-top: clamp(var(--space-7), 7vw, var(--space-9));
+    width: 100vw;
+    margin-inline: calc(50% - 50vw);
+    background: var(--ink-brown);
+    padding-block: clamp(var(--space-9), 10vw, var(--space-10));
+  }
   .cigar__narrative {
     max-width: 720px;
     margin-inline: auto;
   }
   .cigar__para {
-    font-family: var(--font-display);
-    font-style: italic;
-    font-weight: 400;
-    /* Matched to .smoke__note (2026-05-23) so the cigar narrative
-       reads at the same register as the tasting notes. */
-    font-size: clamp(1.05rem, 1.8vw, 1.25rem);
-    line-height: var(--lh-loose);
-    color: var(--ink);
-    margin: 0;
-  }
-  /* Intro — Hanken body register, punchier than the italic Spectral
-     run that follows (Stephane 2026-05-24). Sits at body size with
-     body line-height so it reads declaratively; the italic
-     paragraphs underneath carry the slower, editorial cadence. */
-  .cigar__intro {
     font-family: var(--font-body);
     font-style: normal;
     font-weight: 400;
     font-size: var(--fs-body);
     line-height: var(--lh-body);
+    color: var(--ink);
+    margin: 0;
+  }
+  /* Intro — italic Spectral lede (Stephane 2026-05-24, swapped). Matches
+     the home page lede register and the prior narrative treatment; the
+     Hanken body paragraphs underneath carry the declarative cadence.
+     Size matches .smoke__note so the narrative opens at the same
+     editorial register as the tasting notes. */
+  .cigar__intro {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+    line-height: var(--lh-loose);
     color: var(--ink);
     margin: 0;
   }
@@ -335,9 +389,11 @@ const product = (await getEntry('products', 'volage'))!.data;
     color: var(--accent-strong);
   }
   /* Second title — same grammar, smaller top gap so the two blocks
-     sit closer together than the first block does to the narrative. */
+     sit closer together than the first block does to the narrative.
+     Gap grown 50% (Stephane 2026-05-24) via calc(... * 1.5) on each
+     clamp arg; preserves the same fluid shape, just scaled. */
   .cigar__strip-title--second {
-    margin-top: clamp(var(--space-5), 3vw, var(--space-6));
+    margin-top: clamp(calc(var(--space-5) * 1.5), 4.5vw, calc(var(--space-6) * 1.5));
   }
   .cigar__strip {
     margin: 0;
@@ -384,6 +440,30 @@ const product = (await getEntry('products', 'volage'))!.data;
        Construction). Whitespace within a run still collapses; only
        \n breaks render as line breaks. (Stephane 2026-05-24.) */
     white-space: pre-line;
+  }
+
+  /* Text-colour inversions inside the dark-brown bleed band.
+     Same typographic grammar as on the white ground; only the
+     hue values change so each role still reads on the dark.
+       title → --gold-leaf (hotter gold, holds against brown)
+       label → --gold-soft (quiet caps line, ~AA on #2A1E14)
+       value → --pearl (near-white body text, AAA on dark)
+       hairlines → translucent gold-soft so the table still
+                   reads as a tabulated set without glowing. */
+  .cigar__specs-bleed .cigar__strip-title {
+    color: var(--gold-leaf);
+  }
+  .cigar__specs-bleed .cigar__strip {
+    border-top-color: color-mix(in srgb, var(--gold-soft) 45%, transparent);
+  }
+  .cigar__specs-bleed .cigar__strip-row {
+    border-bottom-color: color-mix(in srgb, var(--gold-soft) 22%, transparent);
+  }
+  .cigar__specs-bleed .cigar__strip-label {
+    color: var(--gold-soft);
+  }
+  .cigar__specs-bleed .cigar__strip-value {
+    color: var(--pearl);
   }
 
   /* ── 4. Presentation ──────────────────────────────────────────
@@ -466,6 +546,14 @@ const product = (await getEntry('products', 'volage'))!.data;
     .hero {
       min-height: 0;
       padding-block: clamp(var(--space-7), 12vw, var(--space-9));
+      /* Tighten the pearl-to-transparent fade on mobile — shorter
+         viewport, shorter band. */
+      background: linear-gradient(
+        to bottom,
+        var(--pearl) 0%,
+        var(--pearl) calc(100% - 120px),
+        transparent 100%
+      );
     }
     .hero__inner {
       grid-template-columns: 1fr;

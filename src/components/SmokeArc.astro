@@ -95,34 +95,90 @@ const fullMarks = marks.length >= tasting.length + 1
   .smoke {
     padding-block: clamp(var(--space-8), 9vw, var(--space-10));
   }
+
+  /* Inner column locked to the same measure as the cigar section's
+     .cigar__inner (880px centred) so the eyebrow, notes column and
+     timeline-bound layout sit on the same horizontal placement as
+     the narrative and the spec strips above. (Stephane 2026-05-24:
+     "the tasting notes should align — same left and right margins —
+     with the cigar narrative paragraph and the specifications".) */
+  .smoke__inner {
+    max-width: 880px;
+    margin-inline: auto;
+  }
   .smoke__eyebrow {
     margin-bottom: var(--space-7);
   }
 
-  /* Two columns at desktop: sticky timeline left, thirds stack right. */
+  /* Notes occupy the full 880px measure; the timeline rail floats
+     outside that measure into the page gutter, so the notes line up
+     flush-left with the spec strips above and the eyebrow line. The
+     thirds column itself keeps its own 56ch reading measure below.
+     Previously: 2-col grid (120-160px rail + 1fr notes) which inset
+     the notes ~140-180px from the container edge — visibly out of
+     alignment with the narrative and specs above. */
   .smoke__layout {
-    display: grid;
-    grid-template-columns: minmax(120px, 160px) 1fr;
-    gap: clamp(var(--space-7), 6vw, var(--space-9));
+    position: relative;
   }
 
   /* ── Timeline ────────────────────────────────────────────── */
-  /* Rail spans the full height of the thirds column (2026-05-23):
-     the grid row auto-sizes to the taller child (the thirds stack),
-     and `align-self: stretch` (default) lets this column match.
-     The rail's first and last ticks then sit exactly at the top of
-     the first third and the bottom of the final third, with the
-     intermediate ticks landing on the thirds' transitions.
-     Previously: `height: 60vh; min-height: 360px` with `position:
-     sticky` — gave a fixed-height rail decoupled from the notes. */
+  /* Rail floats to the left of the notes column, in the page gutter
+     (2026-05-24). Absolute-positioned to the left edge of
+     .smoke__layout so the notes column itself can occupy the full
+     880px measure, flush-aligning with the cigar narrative and spec
+     strips above. The rail still spans the full height of the
+     layout block (top:0; bottom:0), so the first and last ticks sit
+     at the top of the first third and the bottom of the last —
+     unchanged from the prior grid-stretched behaviour. The rail
+     translates left by its own width + a small offset so the dots
+     and minute-labels live outside the notes measure rather than
+     pinching its left margin.
+     Previously: grid column at minmax(120px, 160px) + gap, which
+     inset the notes ~140-180px from the container left. */
   .smoke__timeline {
-    /* no fixed height — fills the grid row */
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 100%;
+    width: clamp(80px, 10vw, 120px);
+    margin-right: var(--space-5);
+    pointer-events: none;
+  }
+  /* Below ~1080px the viewport no longer has comfortable gutter room
+     for the rail to sit fully outside the notes column. Hide the
+     desktop rail in that range and let the inline minute-mark
+     (previously mobile-only, see media query below) carry the
+     timeline indicator above each third. Alignment with the
+     narrative and specs is the priority; the per-third reveal
+     behaviour is unchanged. */
+  @media (max-width: 1080px) {
+    .smoke__timeline {
+      display: none;
+    }
+    .smoke__inline-mark {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      font-family: var(--font-body);
+      font-size: var(--fs-eyebrow);
+      font-weight: 500;
+      letter-spacing: var(--ls-section);
+      text-transform: uppercase;
+      color: var(--gold-deep);
+      margin: 0 0 var(--space-4) 0;
+    }
+    .smoke__inline-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--gold);
+      border: 1px solid var(--gold-deep);
+    }
   }
   .smoke__rail {
     position: relative;
     height: 100%;
     min-height: 100%;
-    margin-left: var(--space-3);
   }
   .smoke__line {
     position: absolute;
@@ -240,35 +296,12 @@ const fullMarks = marks.length >= tasting.length + 1
   }
 
   /* ── Mobile ──────────────────────────────────────────────── */
+  /* The rail-hide + inline-mark show now happens at <=1080px (see
+     above) so the mobile block here only handles thirds spacing
+     and the very-narrow minute-label hide. */
   @media (max-width: 720px) {
-    .smoke__layout {
-      grid-template-columns: 1fr;
-      gap: 0;
-    }
-    .smoke__timeline {
-      display: none;
-    }
     .smoke__thirds {
       gap: var(--space-6);
-    }
-    .smoke__inline-mark {
-      display: flex;
-      align-items: center;
-      gap: var(--space-3);
-      font-family: var(--font-body);
-      font-size: var(--fs-eyebrow);
-      font-weight: 500;
-      letter-spacing: var(--ls-section);
-      text-transform: uppercase;
-      color: var(--gold-deep);
-      margin: 0 0 var(--space-4) 0;
-    }
-    .smoke__inline-dot {
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      background: var(--gold);
-      border: 1px solid var(--gold-deep);
     }
     /* Hide the minute label on mobile (2026-05-24) — the dot alone
        carries the timeline indicator above each third; the minute
