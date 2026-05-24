@@ -131,20 +131,22 @@ const { slides } = Astro.props;
 
   @media (max-width: 720px) {
     .hero {
-      /* On a phone the band drops the crop entirely: it takes the hero
-         images' native landscape ratio (3200×1800 = 16/9) and scales
-         down proportionally as the viewport narrows. The full image
-         shows, uncropped, no letterboxing — the header just gets
-         smaller. No fixed svh height, no min/max. */
+      /* On a phone the band takes a 4:3 portrait-friendly ratio (taller
+         than the 16:9 source), so the image fills the frame and crops
+         horizontally. Anchored right so the mariposa wordmark on the
+         right of each frame stays in view; the left side of the source
+         is what gets sacrificed. No fixed svh height, no min/max. */
       height: auto;
       min-height: 0;
       max-height: none;
-      aspect-ratio: 16 / 9;
+      aspect-ratio: 4 / 3;
     }
 
-    /* No crop on mobile, so the frame fills with the whole image. */
+    /* Fill the taller mobile band and crop from the left, keeping the
+       right-anchored wordmark visible. */
     .hero__img {
-      object-fit: contain;
+      object-fit: cover;
+      object-position: right center;
     }
   }
 
