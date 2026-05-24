@@ -370,6 +370,18 @@ const specsBgImage = `url("${withBase('/specs-bg-volage-gold.jpg')}")`;
        Was clamp(var(--space-7), 7vw, var(--space-9)) via section rule. */
     padding-top: clamp(calc(var(--space-7) / 4), 1.75vw, calc(var(--space-9) / 4));
   }
+  /* Desktop-only second halving (2026-05-24) — mobile keeps the values
+     above. Tightens the hero → cigar transition further at ≥721px so
+     "THE CIGAR" sits closer to the hero foot. Hero gradient and internal
+     cigar spacing are untouched. */
+  @media (min-width: 721px) {
+    .hero {
+      padding-bottom: clamp(8px, 1.25vw, 16px);
+    }
+    .cigar {
+      padding-top: clamp(6px, 0.9vw, 12px);
+    }
+  }
   .cigar__inner {
     max-width: 880px;
     margin-inline: auto;
