@@ -58,12 +58,14 @@ const product = (await getEntry('products', 'volage'))!.data;
 /* Specs-bleed background photo. Served from /public so CSS url() can
    resolve it under any Astro `base`. Injected as a CSS custom property
    on the section element (CSS url() is not rewritten for the base, so
-   the path must be baked in here). Swapped 2026-05-24 from cigars-table.jpg
-   to specs-bg-header-1.jpg (source: creative-assets/headers/header_1_bw.jpg)
-   per Stephane. The 80% --ink-brown wash on top is unchanged; only the
-   underlying photo changes. The orphan cigars-table.jpg stays on disk.
-   The future Caprice page will mirror this with its own header crop. */
-const specsBgImage = `url("${withBase('/specs-bg-header-1.jpg')}")`;
+   the path must be baked in here). Swapped 2026-05-24 (second pass) from
+   specs-bg-header-1.jpg to specs-bg-volage-gold.jpg
+   (source: creative-assets/cigars/volage_gold.jpg) per Stephane — brand-
+   coded to Volage. The 80% --ink-brown wash on top is unchanged; only
+   the underlying photo changes. Earlier swap that day moved off
+   cigars-table.jpg → specs-bg-header-1.jpg; both prior files stay on
+   disk (Caprice still references specs-bg-header-1.jpg). */
+const specsBgImage = `url("${withBase('/specs-bg-volage-gold.jpg')}")`;
 ---
 
 <BaseLayout title={`Mariposa • ${product.name}`}>
