@@ -38,11 +38,10 @@ import { withBase } from '../lib/path';
 
 const product = (await getEntry('products', 'caprice'))!.data;
 
-/* Same dark-brown specs-bleed photo as the Volage page. Kept on the
-   single shared asset so both SKU pages read with the same material
-   under the brown wash. If a Caprice-specific crop earns its keep
-   later, swap the slug here only. */
-const specsBgImage = `url("${withBase('/specs-bg-header-1.jpg')}")`;
+/* Caprice-specific specs-bleed photo (wired 2026-05-24). Mirrors the
+   Volage page's pattern of a per-SKU background asset under the 90%
+   brown wash. The overlay and sizing rules below are unchanged. */
+const specsBgImage = `url("${withBase('/specs-bg-caprice-gold.jpg')}")`;
 
 ---
 
