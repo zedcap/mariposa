@@ -1,0 +1,1424 @@
+---
+/* About page — comparison mocks.
+   ------------------------------------------------------------------
+   2026-05-24. Comparison surface for Stephane: the four About-page
+   proposals from Pax's `about-page-research.md` Part 3 (Options A /
+   B / C / D), each built at proper full scale and stacked vertically
+   so they can be reviewed side by side before commit.
+
+   Direct-URL only. NOT linked from the nav. The live `/about` page
+   stays UNTOUCHED. Same pattern as `/story-mocks`,
+   `/product-mocks`, `/volage-header-mocks`.
+
+   Source of truth: `about-page-research.md`, Part 3.
+
+   Content: verbatim brand-pager extracts from
+   `mariposa - brand (2026-05-20).html`. No invented prose.
+
+   Per option, one line:
+     · A — The Founder's Letter (Pax's recommendation). Six
+           sections: flower legend → signature → founder →
+           origins prose → promise pull-quote → range footer.
+           Founder-quiet hybrid, brand-pager copy as the spine.
+     · B — The Manifesto. Six sections, Le Labo-adjacent: small
+           manifesto headline → seven We-believe lines → the
+           proof (origins prose) → signature → maker (founder
+           compressed) → range footer.
+     · C — The single date. Seven sections, Macallan/Aman
+           register: Jember 1859 full-bleed → land → hand → time
+           → signature → founder → range footer.
+     · D — The page. Six sections, Aesop-restraint: no
+           photography on the body. Header → Mariposa (story
+           prose) → Origins prose → signature paragraph →
+           closing kicker → range footer (two small cigar PNGs
+           are the only images on the page). */
+
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import cigarVolage  from '../assets/cigar-volage.png';
+import cigarCaprice from '../assets/cigar-caprice.png';
+
+/* ─── Canonical copy from the brand pager (verbatim) ───────────
+   No paraphrase. If a string here drifts from the brand pager,
+   the brand pager wins. */
+
+const flowerLede =
+  'The white butterfly ginger became Cuba’s national flower in 1936.';
+const flowerBody =
+  'During Cuba’s wars of independence, women slipped secret messages for the guerrilleros into the petals of the Mariposa flower.';
+
+const signatureLede =
+  'Mariposa cigars carry a secret message of their own.';
+const signaturePara =
+  'Instead of a traditional printed band, a 24-carat gold leaf is laid onto the wrapper by hand by Javanese women. It is a discreet reminder that the finer things shouldn’t be saved for a special occasion. They are meant to be enjoyed today.';
+
+const founderStory = [
+  'Mariposa’s story begins with a journey. Driven by a lifelong taste for cigars, founder Stephane Zermatten followed his curiosity to the tobacco fields of East Java.',
+  'What he discovered inspired him to craft a blend for his own humidor and closest friends. Yet, as word spread and a wider circle grew curious, he knew it couldn’t remain a private reserve. The brand was born to bring this unique cigar to a growing community in Bali and beyond.',
+  'Today, Mariposa captures the rich, multi-cultural soul of cigars, giving friends around the world the perfect excuse to light up, slow down, and share a good conversation. Whatever the hour.',
+];
+
+const founderCaption = 'Stephane Zermatten · Jember, East Java';
+
+const originsProse = [
+  'Mariposa is hand-rolled in Jember, East Java. A region whose rich cigar-making heritage dates back to 1859. It is also home to Pak Abdul Kahar Muzakir, a cigar aficionado and industry veteran who has dedicated his life to a singular pursuit: capturing the essence of Cuban tradition by cultivating Havana seeds in Indonesian soil.',
+  'The wrapper, binder, and filler are all born from Havana-seed tobacco that has spent nearly two decades acclimatising to Jember’s volcanic earth. The result is a perfect marriage of flavour profiles, blending the signature spice and oiliness of Cuban genetics with Java’s signature earthy sweetness.',
+  'Mariposa cigars are entirely hand-rolled by a dedicated team of female rollers, mirroring Cuba’s revered torcedoras, many of whom come from families that have worked tobacco for generations. Using long-filler, three-part construction, and entubado bunching for a flawlessly even draw, each cigar is finished with a classic Cuban triple cap. Every single stick is draw-tested and inspected by hand before it leaves the workshop, guaranteeing a flawless smoking experience.',
+  'Patience is central to the craft. Honouring the tradition of Cuba’s escogida, each leaf type is sorted and fermented separately for 24 months, then rested for another twelve. That is close to three years from leaf to finished cigar, a slow maturation that yields rich flavours and an undeniably smooth smoke.',
+];
+
+const kicker =
+  'A Havana-seed smoke, gold-leaf adorned, for the people who don’t wait for special occasions, but create them.';
+
+const brandSub =
+  'For those who don’t wait for special occasions, but create them.';
+
+/* Option B — We believe seed list (Axel-pass dependency, surfaced
+   in the banner above the option). */
+const beliefs = [
+  'We believe a cigar is worth as much patience as the leaf takes.',
+  'We believe Havana seed is portable.',
+  'We believe twenty years of acclimatisation is not too long to wait for the right flavour.',
+  'We believe a cigar should be rolled by hand, by women whose mothers rolled tobacco before them.',
+  'We believe a band can be made of gold.',
+  'We believe the finer things should not be saved.',
+  'We believe a good cigar is an excuse to slow down and start a conversation.',
+];
+
+/* Option C — Jember anchor line (Axel-pass dependency). */
+const jemberAnchorEyebrow = 'Jember · East Java · 1859';
+const jemberAnchorLine    = 'Where Indonesia learned to roll cigars.';
+---
+
+<BaseLayout title="Mariposa — About page comparison mocks">
+  <section class="intro">
+    <div class="container">
+      <p class="intro__eyebrow">Internal &mdash; comparison surface</p>
+      <h1 class="intro__title">About page &mdash; comparison mocks</h1>
+      <p class="intro__lede">
+        Four full-page proposals for the About page. Same brand-pager
+        content in all four, presented across different page
+        architectures. Source: Pax&rsquo;s
+        <em>about-page-research.md</em>, Part 3. The live
+        <code>/about</code> page is unchanged.
+      </p>
+    </div>
+  </section>
+
+  {/* ════════════════════════════════════════════════════════════
+      OPTION A — THE FOUNDER'S LETTER  (Pax's recommendation)
+      Six sections: flower → signature → founder → origins prose
+      → promise pull-quote → range footer cross-link.
+      ════════════════════════════════════════════════════════════ */}
+
+  <section class="label">
+    <div class="container">
+      <p class="label__eyebrow">
+        Option A &mdash; The Founder&rsquo;s Letter
+        <span class="label__pick">Pax&rsquo;s recommendation</span>
+      </p>
+      <p class="label__desc">
+        Founder-quiet hybrid in six sections. The brand-pager copy is
+        the spine: flower legend opens the page, the gold-leaf
+        signature gets its own moment second, the founder is named
+        and credited in a documentary register (third), the
+        Origins paragraphs supply the credibility payload as
+        prose with three inline images (fourth), a single
+        display-italic pull-quote settles the read (fifth), and
+        two compact product cross-links close (sixth).
+        Background flow: pearl &rarr; white &rarr; cream &rarr;
+        pearl &rarr; white &rarr; pearl. ~4&ndash;4.5 viewports.
+      </p>
+    </div>
+  </section>
+
+  <article class="opt opt-a" aria-label="Option A — The Founder's Letter">
+
+    {/* A.1 — Flower legend, type-led, pearl ground. */}
+    <section class="a-flower" aria-label="The mariposa flower">
+      <div class="a-flower__inner">
+        <p class="a-flower__eyebrow">Mariposa</p>
+        <p class="a-flower__lede">{flowerLede}</p>
+        <p class="a-flower__body">{flowerBody}</p>
+        <span class="a-flower__rule" aria-hidden="true"></span>
+      </div>
+    </section>
+
+    {/* A.2 — Signature, white ground, two-column image-led. */}
+    <section class="a-signature" aria-label="A quiet signature">
+      <div class="a-signature__inner container">
+        <div class="a-signature__copy">
+          <p class="a-signature__lede">{signatureLede}</p>
+          <p class="a-signature__para">{signaturePara}</p>
+        </div>
+        <div class="a-signature__media">
+          <figure class="placeholder placeholder--4x3" aria-label="Gold-leaf macro placeholder">
+            <span class="placeholder__corner placeholder__corner--tl" aria-hidden="true"></span>
+            <span class="placeholder__corner placeholder__corner--tr" aria-hidden="true"></span>
+            <span class="placeholder__corner placeholder__corner--bl" aria-hidden="true"></span>
+            <span class="placeholder__corner placeholder__corner--br" aria-hidden="true"></span>
+            <figcaption class="placeholder__caption">
+              PLACEHOLDER: macro of 24-carat gold leaf on the Mariposa
+              wrapper, application in progress or freshly applied
+              (shared with /volage Section 2 commission).
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    {/* A.3 — Founder, cream ground, type-dominant two-column. */}
+    <section class="a-founder" aria-label="The founder">
+      <div class="a-founder__inner container">
+        <div class="a-founder__copy">
+          <p class="a-founder__eyebrow">The founder</p>
+          {founderStory.map((para) => <p class="a-founder__para">{para}</p>)}
+        </div>
+        <div class="a-founder__media">
+          <figure class="placeholder placeholder--3x4" aria-label="Founder portrait placeholder">
+            <span class="placeholder__corner placeholder__corner--tl" aria-hidden="true"></span>
+            <span class="placeholder__corner placeholder__corner--tr" aria-hidden="true"></span>
+            <span class="placeholder__corner placeholder__corner--bl" aria-hidden="true"></span>
+            <span class="placeholder__corner placeholder__corner--br" aria-hidden="true"></span>
+            <figcaption class="placeholder__caption">
+              PLACEHOLDER: founder documentary shot &mdash; Stephane
+              in the field at Jember, or with Pak Abdul Kahar
+              Muzakir, or with the rollers. Portrait orientation,
+              ~3:4, B&amp;W preferred.
+            </figcaption>
+          </figure>
+          <p class="a-founder__caption">{founderCaption}</p>
+        </div>
+      </div>
+    </section>
+
+    {/* A.4 — Origins prose, pearl ground, dense paragraphs with
+        three inline images interrupting. (Option (b) per Pax —
+        replace the three-beat OriginArc on this page with the
+        brand-pager paragraph treatment.) */}
+    <section class="a-origins" aria-label="Origins">
+      <div class="a-origins__inner container">
+        <p class="a-origins__eyebrow">Origins</p>
+
+        <p class="a-origins__para">{originsProse[0]}</p>
+
+        <figure class="placeholder placeholder--wide" aria-label="Argopuro landscape placeholder">
+          <span class="placeholder__corner placeholder__corner--tl" aria-hidden="true"></span>
+          <span class="placeholder__corner placeholder__corner--tr" aria-hidden="true"></span>
+          <span class="placeholder__corner placeholder__corner--bl" aria-hidden="true"></span>
+          <span class="placeholder__corner placeholder__corner--br" aria-hidden="true"></span>
+          <figcaption class="placeholder__caption">
+            PLACEHOLDER: Argopuro range, East Java &mdash; tobacco
+            field or volcanic landscape (shared with /volage
+            origin commission).
+          </figcaption>
+        </figure>
+
+        <p class="a-origins__para">{originsProse[1]}</p>
+
+        <figure class="placeholder placeholder--wide" aria-label="Jember rolling room placeholder">
+          <span class="placeholder__corner placeholder__corner--tl" aria-hidden="true"></span>
+          <span class="placeholder__corner placeholder__corner--tr" aria-hidden="true"></span>
+          <span class="placeholder__corner placeholder__corner--bl" aria-hidden="true"></span>
+          <span class="placeholder__corner placeholder__corner--br" aria-hidden="true"></span>
+          <figcaption class="placeholder__caption">
+            PLACEHOLDER: Jember rolling room &mdash; torcedoras at
+            work, hands and leaf. The shot of the page if only
+            one is feasible.
+          </figcaption>
+        </figure>
+
+        <p class="a-origins__para">{originsProse[2]}</p>
+
+        <figure class="placeholder placeholder--wide" aria-label="Ageing room placeholder">
+          <span class="placeholder__corner placeholder__corner--tl" aria-hidden="true"></span>
+          <span class="placeholder__corner placeholder__corner--tr" aria-hidden="true"></span>
+          <span class="placeholder__corner placeholder__corner--bl" aria-hidden="true"></span>
+          <span class="placeholder__corner placeholder__corner--br" aria-hidden="true"></span>
+          <figcaption class="placeholder__caption">
+            PLACEHOLDER: ageing room &mdash; rows of bundled cigars
+            in maturation.
+          </figcaption>
+        </figure>
+
+        <p class="a-origins__para">{originsProse[3]}</p>
+      </div>
+    </section>
+
+    {/* A.5 — The promise, white ground, single-line pull-quote. */}
+    <section class="a-promise" aria-label="The promise">
+      <div class="a-promise__inner">
+        <span class="a-promise__rule" aria-hidden="true"></span>
+        <p class="a-promise__line">{kicker}</p>
+      </div>
+    </section>
+
+    {/* A.6 — Range footer cross-link (shared across all four
+        options below). */}
+    <section class="range" aria-label="The pages where it lives">
+      <div class="range__inner container">
+        <p class="range__eyebrow">The pages where it lives</p>
+        <div class="range__cards">
+          <a class="range__card" href="/volage">
+            <div class="range__media">
+              <Image
+                class="range__cigar"
+                src={cigarVolage}
+                alt="The Mariposa Volage cigar"
+                widths={[200, 320, 480]}
+                sizes="(max-width: 720px) 60vw, 22vw"
+                loading="lazy"
+              />
+            </div>
+            <p class="range__name">Volage</p>
+            <p class="range__tagline">A cigar that doesn&rsquo;t wait for an occasion.</p>
+            <span class="range__link">Discover</span>
+          </a>
+          <a class="range__card" href="/caprice">
+            <div class="range__media">
+              <Image
+                class="range__cigar"
+                src={cigarCaprice}
+                alt="The Mariposa Caprice cigar"
+                widths={[200, 320, 480]}
+                sizes="(max-width: 720px) 60vw, 22vw"
+                loading="lazy"
+              />
+            </div>
+            <p class="range__name">Caprice</p>
+            <p class="range__tagline">A short smoke, no less considered.</p>
+            <span class="range__link">Discover</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </article>
+
+  {/* ════════════════════════════════════════════════════════════
+      OPTION B — THE MANIFESTO  (voice-led, Le Labo-adjacent)
+      ════════════════════════════════════════════════════════════ */}
+
+  <section class="label">
+    <div class="container">
+      <p class="label__eyebrow">Option B &mdash; The Manifesto</p>
+      <p class="label__desc">
+        Voice-led declarative editorial in six sections. Pearl
+        manifesto headline &rarr; centred &ldquo;We believe&rdquo;
+        list of seven lines (Axel pass on copy required) &rarr; dense
+        prose &ldquo;proof&rdquo; section pulling the brand-pager
+        Origins paragraphs as evidence &rarr; signature (same as A.2)
+        &rarr; compressed founder (one short paragraph + caption)
+        &rarr; range footer cross-link. Most editorially adventurous
+        of the four; risk lives on the manifesto register holding
+        without Axel calibration. ~3.5&ndash;4 viewports.
+      </p>
+    </div>
+  </section>
+
+  <article class="opt opt-b" aria-label="Option B — The Manifesto">
+
+    {/* B.1 — Manifesto headline, pearl ground, full-bleed type. */}
+    <section class="b-head" aria-label="A small manifesto">
+      <div class="b-head__inner">
+        <p class="b-head__eyebrow">Mariposa</p>
+        <p class="b-head__line">We don&rsquo;t wait for special occasions. We create them.</p>
+      </div>
+    </section>
+
+    {/* B.2 — We believe list, white ground, centred prose column. */}
+    <section class="b-believe" aria-label="We believe">
+      <div class="b-believe__inner">
+        <p class="b-believe__eyebrow">A small manifesto</p>
+        <ol class="b-believe__list">
+          {beliefs.map((line) => <li class="b-believe__line">{line}</li>)}
+        </ol>
+        <p class="b-believe__note">
+          (Seed list. Axel pass required before commit.)
+        </p>
+      </div>
+    </section>
+
+    {/* B.3 — The proof, white ground, dense prose block with one
+        optional inline image. */}
+    <section class="b-proof" aria-label="The proof">
+      <div class="b-proof__inner container">
+        <p class="b-proof__eyebrow">The proof</p>
+        <p class="b-proof__para">{originsProse[0]}</p>
+        <p class="b-proof__para">{originsProse[1]}</p>
+
+        <figure class="placeholder placeholder--wide" aria-label="Jember rolling room placeholder">
+          <span class="placeholder__corner placeholder__corner--tl" aria-hidden="true"></span>
+          <span class="placeholder__corner placeholder__corner--tr" aria-hidden="true"></span>
+          <span class="placeholder__corner placeholder__corner--bl" aria-hidden="true"></span>
+          <span class="placeholder__corner placeholder__corner--br" aria-hidden="true"></span>
+          <figcaption class="placeholder__caption">
+            PLACEHOLDER (optional): Jember rolling room &mdash;
+            torcedoras at work, breaks the prose well.
+          </figcaption>
+        </figure>
+
+        <p class="b-proof__para">{originsProse[2]}</p>
+        <p class="b-proof__para">{originsProse[3]}</p>
+      </div>
+    </section>
+
+    {/* B.4 — Signature, pearl ground, image-led (same shape as A.2
+        but on pearl rather than white per Pax's flow). */}
+    <section class="a-signature a-signature--pearl" aria-label="The signature">
+      <div class="a-signature__inner container">
+        <div class="a-signature__copy">
+          <p class="a-signature__lede">{signatureLede}</p>
+          <p class="a-signature__para">{signaturePara}</p>
+        </div>
+        <div class="a-signature__media">
+          <figure class="placeholder placeholder--4x3" aria-label="Gold-leaf macro placeholder">
+            <span class="placeholder__corner placeholder__corner--tl" aria-hidden="true"></span>
+            <span class="placeholder__corner placeholder__corner--tr" aria-hidden="true"></span>
+            <span class="placeholder__corner placeholder__corner--bl" aria-hidden="true"></span>
+            <span class="placeholder__corner placeholder__corner--br" aria-hidden="true"></span>
+            <figcaption class="placeholder__caption">
+              PLACEHOLDER: macro of 24-carat gold leaf on the
+              Mariposa wrapper.
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    {/* B.5 — The maker, cream ground, compressed founder. */}
+    <section class="a-founder a-founder--compressed" aria-label="The maker">
+      <div class="a-founder__inner container">
+        <div class="a-founder__copy">
+          <p class="a-founder__eyebrow">The maker</p>
+          <p class="a-founder__para">{founderStory[0]} {founderStory[1].split('. ')[0]}.</p>
+        </div>
+        <div class="a-founder__media">
+          <figure class="placeholder placeholder--3x4" aria-label="Founder portrait placeholder">
+            <span class="placeholder__corner placeholder__corner--tl" aria-hidden="true"></span>
+            <span class="placeholder__corner placeholder__corner--tr" aria-hidden="true"></span>
+            <span class="placeholder__corner placeholder__corner--bl" aria-hidden="true"></span>
+            <span class="placeholder__corner placeholder__corner--br" aria-hidden="true"></span>
+            <figcaption class="placeholder__caption">
+              PLACEHOLDER: founder documentary shot (shared with
+              Option A).
+            </figcaption>
+          </figure>
+          <p class="a-founder__caption">{founderCaption}</p>
+        </div>
+      </div>
+    </section>
+
+    {/* B.6 — Range footer (shared). */}
+    <section class="range" aria-label="The pages where it lives">
+      <div class="range__inner container">
+        <p class="range__eyebrow">The pages where it lives</p>
+        <div class="range__cards">
+          <a class="range__card" href="/volage">
+            <div class="range__media">
+              <Image class="range__cigar" src={cigarVolage} alt="The Mariposa Volage cigar" widths={[200, 320, 480]} sizes="(max-width: 720px) 60vw, 22vw" loading="lazy" />
+            </div>
+            <p class="range__name">Volage</p>
+            <p class="range__tagline">A cigar that doesn&rsquo;t wait for an occasion.</p>
+            <span class="range__link">Discover</span>
+          </a>
+          <a class="range__card" href="/caprice">
+            <div class="range__media">
+              <Image class="range__cigar" src={cigarCaprice} alt="The Mariposa Caprice cigar" widths={[200, 320, 480]} sizes="(max-width: 720px) 60vw, 22vw" loading="lazy" />
+            </div>
+            <p class="range__name">Caprice</p>
+            <p class="range__tagline">A short smoke, no less considered.</p>
+            <span class="range__link">Discover</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </article>
+
+  {/* ════════════════════════════════════════════════════════════
+      OPTION C — THE SINGLE DATE  (place-first, Macallan/Aman)
+      Seven sections.
+      ════════════════════════════════════════════════════════════ */}
+
+  <section class="label">
+    <div class="container">
+      <p class="label__eyebrow">Option C &mdash; The single date</p>
+      <p class="label__desc">
+        Place-first scaled-down chronology anchored on 1859 in seven
+        sections. Full-bleed Jember header at 90vh (heaviest
+        photography burden of the four) &rarr; The land
+        (volcanic-earth paragraph) &rarr; The hand (rolling
+        paragraph) &rarr; The time (escogida / fermentation
+        paragraph) &rarr; signature &rarr; compressed founder &rarr;
+        range footer. Most atmospheric of the four. ~5 viewports.
+      </p>
+    </div>
+  </section>
+
+  <article class="opt opt-c" aria-label="Option C — The single date">
+
+    {/* C.1 — Full-bleed Jember header, 90vh. */}
+    <section class="c-head" aria-label="Jember, East Java, 1859">
+      <figure class="c-head__frame placeholder placeholder--bleed" aria-label="Full-bleed Jember landscape placeholder">
+        <span class="placeholder__corner placeholder__corner--tl" aria-hidden="true"></span>
+        <span class="placeholder__corner placeholder__corner--tr" aria-hidden="true"></span>
+        <span class="placeholder__corner placeholder__corner--bl" aria-hidden="true"></span>
+        <span class="placeholder__corner placeholder__corner--br" aria-hidden="true"></span>
+        <figcaption class="placeholder__caption c-head__placeholder-caption">
+          PLACEHOLDER: full-bleed Jember landscape or BIN factory
+          exterior, 90vh. New commission &mdash; the shot must carry
+          the whole header without atmosphere fatigue.
+        </figcaption>
+        <div class="c-head__caption">
+          <p class="c-head__eyebrow">{jemberAnchorEyebrow}</p>
+          <p class="c-head__line">{jemberAnchorLine}</p>
+          <p class="c-head__note">(Axel pass on this line.)</p>
+        </div>
+      </figure>
+    </section>
+
+    {/* C.2 — The land, pearl, two-column. */}
+    <section class="c-band c-band--pearl" aria-label="The land">
+      <div class="c-band__inner container">
+        <div class="c-band__copy">
+          <p class="c-band__eyebrow">The land</p>
+          <p class="c-band__para">{originsProse[0]}</p>
+          <p class="c-band__para">{originsProse[1]}</p>
+        </div>
+        <div class="c-band__media">
+          <figure class="placeholder placeholder--3x4" aria-label="Argopuro landscape placeholder">
+            <span class="placeholder__corner placeholder__corner--tl" aria-hidden="true"></span>
+            <span class="placeholder__corner placeholder__corner--tr" aria-hidden="true"></span>
+            <span class="placeholder__corner placeholder__corner--bl" aria-hidden="true"></span>
+            <span class="placeholder__corner placeholder__corner--br" aria-hidden="true"></span>
+            <figcaption class="placeholder__caption">
+              PLACEHOLDER: Argopuro range or tobacco field.
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    {/* C.3 — The hand, white, two-column (image left this time
+        for visual rhythm). */}
+    <section class="c-band c-band--white c-band--rev" aria-label="The hand">
+      <div class="c-band__inner container">
+        <div class="c-band__media">
+          <figure class="placeholder placeholder--3x4" aria-label="Jember rolling room placeholder">
+            <span class="placeholder__corner placeholder__corner--tl" aria-hidden="true"></span>
+            <span class="placeholder__corner placeholder__corner--tr" aria-hidden="true"></span>
+            <span class="placeholder__corner placeholder__corner--bl" aria-hidden="true"></span>
+            <span class="placeholder__corner placeholder__corner--br" aria-hidden="true"></span>
+            <figcaption class="placeholder__caption">
+              PLACEHOLDER: Jember rolling room, torcedoras at work
+              &mdash; hands and leaf.
+            </figcaption>
+          </figure>
+        </div>
+        <div class="c-band__copy">
+          <p class="c-band__eyebrow">The hand</p>
+          <p class="c-band__para">{originsProse[2]}</p>
+        </div>
+      </div>
+    </section>
+
+    {/* C.4 — The time, pearl, two-column. */}
+    <section class="c-band c-band--pearl" aria-label="The time">
+      <div class="c-band__inner container">
+        <div class="c-band__copy">
+          <p class="c-band__eyebrow">The time</p>
+          <p class="c-band__para">{originsProse[3]}</p>
+        </div>
+        <div class="c-band__media">
+          <figure class="placeholder placeholder--3x4" aria-label="Ageing room placeholder">
+            <span class="placeholder__corner placeholder__corner--tl" aria-hidden="true"></span>
+            <span class="placeholder__corner placeholder__corner--tr" aria-hidden="true"></span>
+            <span class="placeholder__corner placeholder__corner--bl" aria-hidden="true"></span>
+            <span class="placeholder__corner placeholder__corner--br" aria-hidden="true"></span>
+            <figcaption class="placeholder__caption">
+              PLACEHOLDER: ageing room &mdash; rows of bundled
+              cigars in maturation.
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    {/* C.5 — The signature, white, image-led (same as A.2). */}
+    <section class="a-signature" aria-label="The signature">
+      <div class="a-signature__inner container">
+        <div class="a-signature__copy">
+          <p class="a-signature__lede">{signatureLede}</p>
+          <p class="a-signature__para">{signaturePara}</p>
+        </div>
+        <div class="a-signature__media">
+          <figure class="placeholder placeholder--4x3" aria-label="Gold-leaf macro placeholder">
+            <span class="placeholder__corner placeholder__corner--tl" aria-hidden="true"></span>
+            <span class="placeholder__corner placeholder__corner--tr" aria-hidden="true"></span>
+            <span class="placeholder__corner placeholder__corner--bl" aria-hidden="true"></span>
+            <span class="placeholder__corner placeholder__corner--br" aria-hidden="true"></span>
+            <figcaption class="placeholder__caption">
+              PLACEHOLDER: macro of 24-carat gold leaf on the
+              Mariposa wrapper.
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    {/* C.6 — The founder, cream, compressed (same as B.5). */}
+    <section class="a-founder a-founder--compressed" aria-label="The founder">
+      <div class="a-founder__inner container">
+        <div class="a-founder__copy">
+          <p class="a-founder__eyebrow">The founder</p>
+          <p class="a-founder__para">{founderStory[0]} {founderStory[1].split('. ')[0]}.</p>
+        </div>
+        <div class="a-founder__media">
+          <figure class="placeholder placeholder--3x4" aria-label="Founder portrait placeholder">
+            <span class="placeholder__corner placeholder__corner--tl" aria-hidden="true"></span>
+            <span class="placeholder__corner placeholder__corner--tr" aria-hidden="true"></span>
+            <span class="placeholder__corner placeholder__corner--bl" aria-hidden="true"></span>
+            <span class="placeholder__corner placeholder__corner--br" aria-hidden="true"></span>
+            <figcaption class="placeholder__caption">
+              PLACEHOLDER: founder documentary shot (shared with
+              Options A and B).
+            </figcaption>
+          </figure>
+          <p class="a-founder__caption">{founderCaption}</p>
+        </div>
+      </div>
+    </section>
+
+    {/* C.7 — Range footer (shared). */}
+    <section class="range" aria-label="The pages where it lives">
+      <div class="range__inner container">
+        <p class="range__eyebrow">The pages where it lives</p>
+        <div class="range__cards">
+          <a class="range__card" href="/volage">
+            <div class="range__media">
+              <Image class="range__cigar" src={cigarVolage} alt="The Mariposa Volage cigar" widths={[200, 320, 480]} sizes="(max-width: 720px) 60vw, 22vw" loading="lazy" />
+            </div>
+            <p class="range__name">Volage</p>
+            <p class="range__tagline">A cigar that doesn&rsquo;t wait for an occasion.</p>
+            <span class="range__link">Discover</span>
+          </a>
+          <a class="range__card" href="/caprice">
+            <div class="range__media">
+              <Image class="range__cigar" src={cigarCaprice} alt="The Mariposa Caprice cigar" widths={[200, 320, 480]} sizes="(max-width: 720px) 60vw, 22vw" loading="lazy" />
+            </div>
+            <p class="range__name">Caprice</p>
+            <p class="range__tagline">A short smoke, no less considered.</p>
+            <span class="range__link">Discover</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </article>
+
+  {/* ════════════════════════════════════════════════════════════
+      OPTION D — THE PAGE  (type-led, Aesop-adjacent restraint)
+      No photographs on the body. Two small footer-card cigar
+      PNGs are the only images on the page.
+      ════════════════════════════════════════════════════════════ */}
+
+  <section class="label">
+    <div class="container">
+      <p class="label__eyebrow">Option D &mdash; The page</p>
+      <p class="label__desc">
+        Radical restraint, type-only. Six sections, no photography
+        on the body. White ground throughout. Centred prose column
+        on a 60&ndash;64ch measure, Spectral italic for ledes,
+        Hanken for the body, with extreme breathing room. Header
+        on the brand sub &rarr; Mariposa (founder story) &rarr;
+        Origins (four paragraphs) &rarr; The signature paragraph
+        &rarr; closing kicker &rarr; range footer (the only two
+        images on the whole page). ~3 viewports.
+      </p>
+    </div>
+  </section>
+
+  <article class="opt opt-d" aria-label="Option D — The page">
+
+    {/* D.1 — Header, white centred column. */}
+    <section class="d-band" aria-label="Mariposa">
+      <div class="d-band__inner">
+        <p class="d-band__eyebrow">Mariposa</p>
+        <p class="d-band__lede">{brandSub}</p>
+        <span class="d-band__rule" aria-hidden="true"></span>
+      </div>
+    </section>
+
+    {/* D.2 — Mariposa (story prose). */}
+    <section class="d-band" aria-label="Mariposa story">
+      <div class="d-band__inner">
+        <p class="d-band__eyebrow">Mariposa</p>
+        <p class="d-band__lede d-band__lede--prose">{founderStory[0]}</p>
+        <p class="d-band__para">{founderStory[1]}</p>
+        <p class="d-band__para">{founderStory[2]}</p>
+      </div>
+    </section>
+
+    {/* D.3 — Origins (four paragraphs, no images). */}
+    <section class="d-band" aria-label="Origins">
+      <div class="d-band__inner">
+        <p class="d-band__eyebrow">Origins</p>
+        {originsProse.map((para) => <p class="d-band__para">{para}</p>)}
+      </div>
+    </section>
+
+    {/* D.4 — The signature paragraph. */}
+    <section class="d-band" aria-label="The signature">
+      <div class="d-band__inner">
+        <p class="d-band__eyebrow">The signature</p>
+        <p class="d-band__lede d-band__lede--prose">{signatureLede}</p>
+        <p class="d-band__para">{signaturePara}</p>
+      </div>
+    </section>
+
+    {/* D.5 — Closing kicker. */}
+    <section class="d-band d-band--kicker" aria-label="Closing kicker">
+      <div class="d-band__inner">
+        <span class="d-band__rule" aria-hidden="true"></span>
+        <p class="d-band__kicker">{kicker}</p>
+      </div>
+    </section>
+
+    {/* D.6 — Range footer (shared). */}
+    <section class="range" aria-label="The pages where it lives">
+      <div class="range__inner container">
+        <p class="range__eyebrow">The pages where it lives</p>
+        <div class="range__cards">
+          <a class="range__card" href="/volage">
+            <div class="range__media">
+              <Image class="range__cigar" src={cigarVolage} alt="The Mariposa Volage cigar" widths={[200, 320, 480]} sizes="(max-width: 720px) 60vw, 22vw" loading="lazy" />
+            </div>
+            <p class="range__name">Volage</p>
+            <p class="range__tagline">A cigar that doesn&rsquo;t wait for an occasion.</p>
+            <span class="range__link">Discover</span>
+          </a>
+          <a class="range__card" href="/caprice">
+            <div class="range__media">
+              <Image class="range__cigar" src={cigarCaprice} alt="The Mariposa Caprice cigar" widths={[200, 320, 480]} sizes="(max-width: 720px) 60vw, 22vw" loading="lazy" />
+            </div>
+            <p class="range__name">Caprice</p>
+            <p class="range__tagline">A short smoke, no less considered.</p>
+            <span class="range__link">Discover</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </article>
+</BaseLayout>
+
+<style>
+  /* ─── Intro ──────────────────────────────────────────────── */
+  .intro {
+    padding-block: var(--space-9) var(--space-7);
+    background: var(--white);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .intro__eyebrow {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: var(--ls-section);
+    color: var(--gold-deep);
+    margin-bottom: var(--space-4);
+  }
+  .intro__title {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(2rem, 4.4vw, 3.25rem);
+    line-height: var(--lh-snug);
+    color: var(--ink);
+    margin-bottom: var(--space-5);
+  }
+  .intro__lede {
+    font-family: var(--font-body);
+    font-size: var(--fs-lede);
+    line-height: var(--lh-body);
+    color: var(--ink-soft);
+    max-width: 60ch;
+  }
+  .intro__lede code,
+  .label__desc code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.92em;
+  }
+  .intro__lede code { color: var(--ink); }
+
+  /* ─── Option labels (banner above each option) ───────────── */
+  .label {
+    background: var(--ink);
+    color: var(--white);
+    padding-block: var(--space-6);
+  }
+  .label__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: var(--ls-section);
+    color: var(--gold-leaf);
+    margin-bottom: var(--space-3);
+  }
+  .label__pick {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 400;
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
+    color: var(--pink);
+    border: 1px solid var(--pink);
+    padding: 2px 8px;
+  }
+  .label__desc {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--pearl);
+    max-width: 78ch;
+  }
+  .label__desc code { color: var(--gold-soft); }
+
+  /* ─── Option wrapper ─────────────────────────────────────── */
+  .opt { display: block; }
+
+  /* ═══════════════════════════════════════════════════════════
+     OPTION A
+     ═══════════════════════════════════════════════════════════ */
+
+  /* A.1 — Flower legend. */
+  .a-flower {
+    background: var(--pearl);
+    min-height: 75vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-block: clamp(var(--space-8), 10vw, var(--space-10));
+    padding-inline: var(--page-pad-d);
+  }
+  .a-flower__inner {
+    max-width: 720px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .a-flower__eyebrow {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    letter-spacing: var(--ls-section);
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    margin: 0 0 var(--space-6) 0;
+  }
+  .a-flower__lede {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(2.4rem, 4.8vw, 3.6rem);
+    line-height: var(--lh-snug);
+    color: var(--ink);
+    margin: 0 0 var(--space-6) 0;
+    max-width: 28ch;
+  }
+  .a-flower__body {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.05rem, 1.6vw, 1.2rem);
+    line-height: var(--lh-loose);
+    color: var(--ink-soft);
+    margin: 0 0 var(--space-7) 0;
+    max-width: 52ch;
+  }
+  .a-flower__rule {
+    display: block;
+    width: 80px;
+    height: 1px;
+    background: var(--gold-leaf);
+  }
+
+  /* A.2 — Signature (also reused by B.4 and C.5). */
+  .a-signature {
+    background: var(--white);
+    padding-block: clamp(var(--space-8), 9vw, var(--space-10));
+  }
+  .a-signature--pearl { background: var(--pearl); }
+  .a-signature__inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(var(--space-7), 7vw, var(--space-10));
+    align-items: center;
+  }
+  .a-signature__copy { max-width: 40ch; }
+  .a-signature__lede {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.6rem, 3.4vw, 2.2rem);
+    line-height: var(--lh-snug);
+    color: var(--ink);
+    margin: 0;
+    padding-bottom: var(--space-5);
+    border-bottom: 1px solid var(--gold-deep);
+  }
+  .a-signature__para {
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    line-height: var(--lh-loose);
+    color: var(--ink-soft);
+    margin: var(--space-6) 0 0 0;
+  }
+
+  /* A.3 — Founder (also reused, compressed, by B.5 and C.6). */
+  .a-founder {
+    background: #F2F0E9; /* cream */
+    padding-block: clamp(var(--space-8), 9vw, var(--space-10));
+  }
+  .a-founder__inner {
+    display: grid;
+    grid-template-columns: 58fr 38fr;
+    gap: clamp(var(--space-7), 7vw, var(--space-10));
+    align-items: center;
+  }
+  .a-founder__copy {
+    display: flex;
+    flex-direction: column;
+    max-width: 56ch;
+  }
+  .a-founder__eyebrow {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    letter-spacing: var(--ls-section);
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    margin: 0 0 var(--space-6) 0;
+  }
+  .a-founder__para {
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    line-height: var(--lh-loose);
+    color: var(--ink);
+    margin: 0 0 var(--space-5) 0;
+  }
+  .a-founder__para:last-child { margin-bottom: 0; }
+  .a-founder__media {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  .a-founder__caption {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    font-weight: 500;
+    letter-spacing: var(--ls-small);
+    color: var(--gold-deep);
+    margin: 0;
+  }
+  .a-founder--compressed .a-founder__inner {
+    grid-template-columns: 62fr 34fr;
+  }
+
+  /* A.4 — Origins prose. */
+  .a-origins {
+    background: var(--pearl);
+    padding-block: clamp(var(--space-9), 11vw, var(--space-10));
+  }
+  .a-origins__inner {
+    max-width: 64ch;
+    margin-inline: auto;
+  }
+  .a-origins__eyebrow {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    letter-spacing: var(--ls-section);
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    margin: 0 0 var(--space-7) 0;
+    text-align: center;
+  }
+  .a-origins__para {
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    line-height: var(--lh-loose);
+    color: var(--ink);
+    margin: 0 0 var(--space-7) 0;
+  }
+  .a-origins .placeholder {
+    margin-block: var(--space-7) var(--space-7);
+  }
+
+  /* A.5 — The promise pull-quote. */
+  .a-promise {
+    background: var(--white);
+    padding-block: clamp(var(--space-9), 11vw, var(--space-10));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .a-promise__inner {
+    max-width: 36ch;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .a-promise__rule {
+    display: block;
+    width: 80px;
+    height: 1px;
+    background: var(--gold-leaf);
+    margin-bottom: var(--space-7);
+  }
+  .a-promise__line {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(2.2rem, 4.8vw, 3.6rem);
+    line-height: var(--lh-snug);
+    color: var(--ink);
+    margin: 0;
+    max-width: 28ch;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     OPTION B
+     ═══════════════════════════════════════════════════════════ */
+
+  /* B.1 — Manifesto head. */
+  .b-head {
+    background: var(--pearl);
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-block: clamp(var(--space-8), 10vw, var(--space-10));
+    padding-inline: var(--page-pad-d);
+  }
+  .b-head__inner {
+    max-width: 30ch;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .b-head__eyebrow {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    letter-spacing: var(--ls-section);
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    margin: 0 0 var(--space-7) 0;
+  }
+  .b-head__line {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(2.6rem, 6vw, 4.8rem);
+    line-height: 1.05;
+    color: var(--ink);
+    margin: 0;
+  }
+
+  /* B.2 — We believe list. */
+  .b-believe {
+    background: var(--white);
+    padding-block: clamp(var(--space-9), 12vw, var(--space-10));
+    padding-inline: var(--page-pad-d);
+  }
+  .b-believe__inner {
+    max-width: 720px;
+    margin-inline: auto;
+    text-align: center;
+  }
+  .b-believe__eyebrow {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    letter-spacing: var(--ls-section);
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    margin: 0 0 var(--space-8) 0;
+  }
+  .b-believe__list {
+    list-style: none;
+    margin: 0 0 var(--space-7) 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+  .b-believe__line {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.3rem, 2.2vw, 1.7rem);
+    line-height: var(--lh-snug);
+    color: var(--ink);
+    max-width: 52ch;
+    margin-inline: auto;
+  }
+  .b-believe__note {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    color: var(--smoke);
+    font-style: italic;
+    margin: 0;
+  }
+
+  /* B.3 — The proof, dense prose. */
+  .b-proof {
+    background: var(--white);
+    padding-block: clamp(var(--space-9), 11vw, var(--space-10));
+    border-top: 1px solid var(--hairline);
+  }
+  .b-proof__inner {
+    max-width: 64ch;
+    margin-inline: auto;
+  }
+  .b-proof__eyebrow {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    letter-spacing: var(--ls-section);
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    margin: 0 0 var(--space-7) 0;
+    text-align: center;
+  }
+  .b-proof__para {
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    line-height: var(--lh-loose);
+    color: var(--ink);
+    margin: 0 0 var(--space-6) 0;
+  }
+  .b-proof .placeholder {
+    margin-block: var(--space-7);
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     OPTION C
+     ═══════════════════════════════════════════════════════════ */
+
+  /* C.1 — Full-bleed header. */
+  .c-head {
+    width: 100vw;
+    margin-inline: calc(50% - 50vw);
+    padding: 0;
+  }
+  .c-head__frame {
+    position: relative;
+    width: 100%;
+    height: 90vh;
+    margin: 0;
+    background: var(--pearl);
+    display: block;
+    padding: 0;
+  }
+  .c-head__placeholder-caption {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 40ch;
+    color: var(--gold-deep);
+    text-align: center;
+  }
+  .c-head__caption {
+    position: absolute;
+    bottom: clamp(var(--space-6), 5vw, var(--space-8));
+    left: clamp(var(--space-6), 5vw, var(--space-8));
+    max-width: 42ch;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  .c-head__eyebrow {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    letter-spacing: var(--ls-section);
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    margin: 0;
+  }
+  .c-head__line {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: var(--lh-snug);
+    color: var(--ink);
+    margin: 0;
+    max-width: 24ch;
+  }
+  .c-head__note {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    font-style: italic;
+    color: var(--smoke);
+    margin: 0;
+  }
+
+  /* C.2 / C.3 / C.4 — Band rows, two-column. */
+  .c-band {
+    padding-block: clamp(var(--space-8), 9vw, var(--space-10));
+  }
+  .c-band--pearl { background: var(--pearl); }
+  .c-band--white { background: var(--white); }
+  .c-band__inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(var(--space-7), 7vw, var(--space-10));
+    align-items: center;
+  }
+  .c-band--rev .c-band__inner > .c-band__media { order: 1; }
+  .c-band--rev .c-band__inner > .c-band__copy  { order: 2; }
+  .c-band__copy { max-width: 56ch; }
+  .c-band__eyebrow {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    letter-spacing: var(--ls-section);
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    margin: 0 0 var(--space-6) 0;
+  }
+  .c-band__para {
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    line-height: var(--lh-loose);
+    color: var(--ink);
+    margin: 0 0 var(--space-5) 0;
+  }
+  .c-band__para:last-child { margin-bottom: 0; }
+
+  /* ═══════════════════════════════════════════════════════════
+     OPTION D
+     ═══════════════════════════════════════════════════════════ */
+
+  /* D — One repeating band primitive on white. */
+  .d-band {
+    background: var(--white);
+    padding-block: clamp(var(--space-9), 11vw, var(--space-10));
+    padding-inline: var(--page-pad-d);
+  }
+  .d-band__inner {
+    max-width: 60ch;
+    margin-inline: auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .d-band__eyebrow {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    letter-spacing: var(--ls-section);
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    margin: 0 0 var(--space-7) 0;
+  }
+  .d-band__lede {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.8rem, 3.6vw, 2.6rem);
+    line-height: var(--lh-snug);
+    color: var(--ink);
+    margin: 0 0 var(--space-6) 0;
+    max-width: 32ch;
+  }
+  .d-band__lede--prose {
+    text-align: left;
+    align-self: flex-start;
+    font-size: clamp(1.3rem, 2vw, 1.6rem);
+    max-width: 60ch;
+  }
+  .d-band__para {
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    line-height: var(--lh-loose);
+    color: var(--ink);
+    margin: 0 0 var(--space-6) 0;
+    text-align: left;
+    align-self: flex-start;
+    max-width: 60ch;
+  }
+  .d-band__para:last-child { margin-bottom: 0; }
+  .d-band__rule {
+    display: block;
+    width: 80px;
+    height: 1px;
+    background: var(--gold-leaf);
+    margin: 0 0 var(--space-7) 0;
+  }
+  .d-band__kicker {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: var(--lh-snug);
+    color: var(--ink);
+    margin: 0;
+    max-width: 28ch;
+  }
+  .d-band--kicker {
+    padding-block: clamp(var(--space-9), 13vw, var(--space-10));
+  }
+
+  /* ─── Range footer (shared across all four options) ───────── */
+  .range {
+    background: var(--pearl);
+    padding-block: clamp(var(--space-9), 11vw, var(--space-10));
+    border-top: 1px solid var(--hairline);
+  }
+  .range__eyebrow {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    letter-spacing: var(--ls-section);
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    margin: 0 0 var(--space-7) 0;
+    text-align: center;
+  }
+  .range__cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(var(--space-7), 8vw, var(--space-10));
+    align-items: end;
+    max-width: 920px;
+    margin-inline: auto;
+  }
+  .range__card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .range__media {
+    height: clamp(220px, 28vw, 320px);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    margin-bottom: var(--space-5);
+  }
+  .range__cigar {
+    width: auto;
+    max-width: 60%;
+    max-height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 18px 30px rgba(31, 27, 23, 0.16));
+  }
+  .range__name {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(1.6rem, 2.4vw, 2rem);
+    color: var(--ink);
+    margin: 0 0 var(--space-3) 0;
+  }
+  .range__tagline {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: var(--fs-body);
+    color: var(--ink-soft);
+    margin: 0 0 var(--space-5) 0;
+    max-width: 28ch;
+  }
+  .range__link {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 500;
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    border-bottom: 1px solid var(--gold-deep);
+    padding-bottom: 2px;
+  }
+
+  /* ─── Placeholder grammar (shared) ──────────────────────── */
+  .placeholder {
+    position: relative;
+    margin: 0;
+    background: var(--white);
+    border: 1px dashed var(--gold-deep);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(var(--space-5), 4vw, var(--space-7));
+  }
+  .placeholder--4x3   { aspect-ratio: 4 / 3; }
+  .placeholder--3x4   { aspect-ratio: 3 / 4; }
+  .placeholder--wide  { aspect-ratio: 16 / 9; width: 100%; }
+  .placeholder--bleed { aspect-ratio: auto; height: 100%; background: var(--pearl); }
+  .placeholder__caption {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    line-height: var(--lh-snug);
+    letter-spacing: 0.02em;
+    color: var(--gold-deep);
+    text-align: center;
+    max-width: 36ch;
+  }
+  .placeholder__corner {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border: 1px solid var(--gold-deep);
+    z-index: 2;
+  }
+  .placeholder__corner--tl { top: -1px;    left: -1px;  border-right: 0; border-bottom: 0; }
+  .placeholder__corner--tr { top: -1px;    right: -1px; border-left: 0;  border-bottom: 0; }
+  .placeholder__corner--bl { bottom: -1px; left: -1px;  border-right: 0; border-top: 0; }
+  .placeholder__corner--br { bottom: -1px; right: -1px; border-left: 0;  border-top: 0; }
+
+  /* ─── Mobile ─────────────────────────────────────────────── */
+  @media (max-width: 720px) {
+    .a-signature__inner,
+    .a-founder__inner,
+    .c-band__inner {
+      grid-template-columns: 1fr;
+      gap: var(--space-7);
+    }
+    .a-signature__copy,
+    .a-founder__copy,
+    .c-band__copy {
+      max-width: none;
+    }
+    .c-band--rev .c-band__inner > .c-band__media,
+    .c-band--rev .c-band__inner > .c-band__copy {
+      order: initial;
+    }
+    .c-head__frame { height: 70vh; }
+    .c-head__caption {
+      bottom: var(--space-5);
+      left: var(--space-5);
+      right: var(--space-5);
+      max-width: none;
+    }
+    .range__cards {
+      grid-template-columns: 1fr;
+      gap: var(--space-8);
+    }
+  }
+</style>
