@@ -1,0 +1,16 @@
+{
+  "name": "Volage",
+  "slug": "volage-2",
+  "order": 3,
+  "vitola": "Canonazo",
+  "tagline": "A cigar that doesn't wait for an occasion.",
+  "homeLede": [
+    "An elegant, slow-burning journey for the senses. It opens with a remarkably creamy profile, seamlessly transitioning into layers of earth, wood, and dark coffee. A soft sweetness lingers on the palate just as a sophisticated spice emerges."
+  ],
+  "quickSpecs": [
+    { "label": "Format", "value": "150 mm · 52 ring gauge" },
+    { "label": "Strength", "value": "Full body" },
+    { "label": "Origin", "value": "East Java, Indonesia" },
+    { "label": "Smoke time", "value": "~45 minutes" }
+  ]
+}

@@ -47,8 +47,14 @@ import cigarCapricePng from '../assets/cigar-caprice.png';
 import cigarCapriceTerrasse from '../assets/cigar-caprice-terrasse.jpg';
 import { withBase } from '../lib/path';
 
+// Image-comparison mocks only need the SKUs that have asset entries
+// in the per-option maps below. Slider-only frames (e.g. volage-2,
+// added 2026-05-24 as a copy-variant for the live ProductSlider) are
+// excluded so this internal page keeps rendering Volage + Caprice only.
+const MOCK_SLUGS = new Set(['volage', 'caprice']);
 const products = (await getCollection('products'))
   .map((entry) => entry.data)
+  .filter((p) => MOCK_SLUGS.has(p.slug))
   .sort((a, b) => a.order - b.order);
 
 // Per-option asset maps — keyed by slug.

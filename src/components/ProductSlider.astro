@@ -32,15 +32,19 @@ interface ProductFrame {
   vitola: string;
   tagline: string;
   homeLede: string[];
+  quickSpecs?: { label: string; value: string }[];
 }
 interface Props {
   products: ProductFrame[];
 }
 const { products } = Astro.props;
 
+// Slug → cigar image. Volage 2 reuses the Volage PNG (comparison-only
+// frame; same asset, same +30% size treatment as Volage).
 const cigarImages: Record<string, ImageMetadata> = {
   volage: cigarVolage,
   caprice: cigarCaprice,
+  'volage-2': cigarVolage,
 };
 
 // Per-slug image mode. 'object' = cigar-on-void PNG floating in
@@ -53,6 +57,14 @@ const cigarImages: Record<string, ImageMetadata> = {
 const imageMode: Record<string, 'object' | 'scene'> = {
   volage: 'object',
   caprice: 'object',
+  'volage-2': 'object',
+};
+
+// Slug → Discover link target. Defaults to `/<slug>` for SKUs with their
+// own product page; the volage-2 comparison frame routes to /volage
+// because no separate page exists (or is needed).
+const discoverHref: Record<string, string> = {
+  'volage-2': '/volage',
 };
 ---
 
@@ -105,7 +117,17 @@ const imageMode: Record<string, 'object' | 'scene'> = {
                 {product.homeLede.map((para) => (
                   <p class="range__lede">{para}</p>
                 ))}
-                <a class="range__link" href={withBase(`/${product.slug}`)}>
+                {product.quickSpecs && product.quickSpecs.length > 0 && (
+                  <dl class="range__quickspecs">
+                    {product.quickSpecs.map((row) => (
+                      <div class="range__quickspec-row">
+                        <dt class="range__quickspec-label">{row.label}</dt>
+                        <dd class="range__quickspec-value">{row.value}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                )}
+                <a class="range__link" href={withBase(discoverHref[product.slug] ?? `/${product.slug}`)}>
                   <span class="range__link-text">Discover {product.name}</span>
                   <span class="range__link-arrow" aria-hidden="true">&rarr;</span>
                 </a>
@@ -409,6 +431,70 @@ const imageMode: Record<string, 'object' | 'scene'> = {
   }
 
   /* ── Per-slug overrides ─────────────────────────────────────── */
+  /* Volage — cigar bumped +30% vs the base (Stephane 2026-05-24).
+     Only the cigar object scales; the ghost letter, copy column,
+     frame layout and motion choreography are untouched. Each clamp
+     stop on .range__cigar--object is multiplied by 1.3 and the
+     max-width belt widens 40% → 52%. The media frame's min-height
+     steps up so the taller cigar has vertical room without the
+     copy column pushing the row. Caprice continues to use the
+     base .range__cigar--object sizing. */
+  /* Volage 2 reuses the same Volage PNG and the same +30% bump — it is
+     a comparison frame for the slider only (no separate product page).
+     Selectors generalised to match both --volage and --volage-2 so the
+     sizing rules stay in one place. */
+  .range__frame--volage .range__media-frame--object,
+  .range__frame--volage-2 .range__media-frame--object {
+    min-height: clamp(468px, 49.4vw, 598px);
+  }
+  .range__frame--volage .range__cigar--object,
+  .range__frame--volage-2 .range__cigar--object {
+    max-height: clamp(416px, 41.6vw, 546px);
+    max-width: 52%;
+  }
+
+  /* ── Quick-spec block (inline dl, slider-only) ──────────────────
+     A compact two-column spec list rendered under the lede in any
+     slider frame whose data carries `quickSpecs`. Distinct from the
+     /volage page spec strip: smaller, denser, no hairlines, no
+     full-width rule. Label is the eyebrow register (uppercase,
+     tracked, gold-deep); value is Hanken regular in --ink. Row gap
+     stays inside the lede→link rhythm so the block reads as one more
+     paragraph step, not a section break. */
+  .range__quickspecs {
+    margin: var(--space-5) 0 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    column-gap: clamp(var(--space-5), 3vw, var(--space-6));
+    row-gap: var(--space-2);
+    max-width: 46ch;
+  }
+  .range__quickspec-row {
+    display: contents;
+  }
+  .range__quickspec-label {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 400;
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    /* Optical baseline alignment with the value row: the eyebrow is
+       smaller, so a 2px nudge keeps the cap-height on the same line
+       as the value's x-height. */
+    padding-top: 2px;
+    margin: 0;
+  }
+  .range__quickspec-value {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    font-weight: 400;
+    line-height: var(--lh-body);
+    color: var(--ink);
+    margin: 0;
+  }
+
   /* Caprice — editorial spread flip (Stephane review 2026-05-23):
      image on the right, copy on the left. Volage stays as the base
      (image left, copy right). Mechanism: reassign grid-column on the
@@ -427,10 +513,12 @@ const imageMode: Record<string, 'object' | 'scene'> = {
     grid-column: 1;
     grid-row: 1;
   }
-  .range__frame--caprice .range__ghost {
-    left: auto;
-    right: 4%;
-  }
+  /* Ghost letter on Caprice — no per-slug override. Falls back to the
+     base .range__ghost rule (left: 4%) so the ghost sits on the same
+     side as Volage (page-left). Earlier right: 4% override (which
+     mirrored the flip) reversed 2026-05-24 at Stephane's direction:
+     the ghost should sit to the LEFT of the cigar on Caprice, same as
+     Volage, not mirrored with the layout flip. */
 
   .range__link {
     display: inline-flex;
@@ -599,6 +687,19 @@ const imageMode: Record<string, 'object' | 'scene'> = {
       max-height: 240px;
       max-width: 100%;
     }
+    /* Volage mobile — same +30% bump as desktop. Cigar 240→312px;
+       frame min-height stepped up to hold the taller object plus
+       its top/bottom padding; frame max-width widened from 160px
+       to 208px (×1.3) so the proportionally wider cigar isn't
+       crushed by the column cap. Ghost untouched. */
+    .range__frame--volage .range__media-frame--object {
+      min-height: 340px;
+      max-width: 208px;
+    }
+    .range__frame--volage .range__cigar--object {
+      max-height: 312px;
+      max-width: 100%;
+    }
     .range__media-frame--scene {
       aspect-ratio: 1 / 1;
       max-width: 300px;
@@ -630,7 +731,7 @@ const imageMode: Record<string, 'object' | 'scene'> = {
     // frame plays on scroll-in; subsequent frames play when activated.
     const frameState = frames.map((frame) => {
       const copyEls = frame.querySelectorAll<HTMLElement>(
-        '.range__vitola, .range__name, .range__tagline, .range__lede, .range__link',
+        '.range__vitola, .range__name, .range__tagline, .range__lede, .range__quickspecs, .range__link',
       );
       const media = frame.querySelector<HTMLElement>('[data-range-media]');
       const ghost = frame.querySelector<HTMLElement>('[data-range-ghost]');

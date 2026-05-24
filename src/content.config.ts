@@ -19,9 +19,16 @@ const products = defineCollection({
     edition: z.string().optional(),    // e.g. "1st Edition"
     tag: z.string().optional(),        // e.g. "Q4 2026"
     vitola: z.string(),
-    format: z.string(),                // e.g. "150 mm · 52 ring gauge"
+    format: z.string().optional(),     // e.g. "150 mm · 52 ring gauge" — required only for SKUs with a product page
     tagline: z.string(),
     homeLede: z.array(z.string()),     // home product-section frame; one entry per paragraph
+    /* quickSpecs — optional inline two-column dl rendered under the
+       home-slider lede. A presentation device for slider frames that
+       want to surface a compact spec block alongside the copy (e.g.
+       Volage 2). Each row is label/value; uppercase eyebrow label,
+       Hanken regular value. Distinct from `specs` (the full
+       product-page strip). */
+    quickSpecs: z.array(z.object({ label: z.string(), value: z.string() })).optional(),
     /* signature — the gold-leaf differentiator block (section 2 of
        the SKU page). Lede is the italic display line; paragraph is
        the supporting prose under it. */
@@ -45,14 +52,14 @@ const products = defineCollection({
     /* narrative — two short paragraphs read above the spec strip
        (section 4). Was previously the dominant prose block before the
        rebuild; now condensed. */
-    narrative: z.array(z.string()),
-    specs: z.array(z.object({ label: z.string(), value: z.string() })),
+    narrative: z.array(z.string()).optional(),
+    specs: z.array(z.object({ label: z.string(), value: z.string() })).optional(),
     /* condensedSpecKeys — labels (exact match) of the six rows the
        page surfaces in the strip; the other six fold behind the
        full-specs disclosure. Optional so a SKU that lists six total
        (or fewer) needs no split. */
     condensedSpecKeys: z.array(z.string()).optional(),
-    tasting: z.array(z.object({ stage: z.string(), note: z.string() })),
+    tasting: z.array(z.object({ stage: z.string(), note: z.string() })).optional(),
     /* packaging — up to three gallery slots for section 6. Each slot
        is either a placeholder caption or, later, an image-slug
        resolved client-side. Image type kept as string so JSON stays
