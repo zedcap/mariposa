@@ -17,23 +17,26 @@
     { "label": "Smoke time", "value": "~35 minutes" }
   ],
   "narrative": [
-    "Darker by intent. A Maduro wrapper, roasted to a deeper sweetness, wraps a Gordito built short and thick. Spice opens, toasted nuts warm it through, and caramel rises to meet the cream. The leaf is Havana-seed Criollo 98, hand-rolled in Jember from tobacco the volcanic soil of East Java has made its own.",
-    "The 24-carat gold leaf laid by hand on every Mariposa is the brand's signature. It stands as a quiet reminder that the finer things in life are meant to be enjoyed."
+    "A thick Maduro Gordito crafted for a stolen caprice. Cured to a deep sweetness, balancing warming spice with a velvety caramel cream.",
+    "Darker by intent. A Maduro wrapper, cured to a deeper sweetness, envelops a Gordito rolled short and thick. Spice opens, toasted nuts warm it through, and caramel rises to meet the cream.",
+    "Each Caprice is made from Havana-seed Criollo 98, hand-rolled in East Java from tobacco that the volcanic soil of East Java has made its own.",
+    "The 24-carat gold leaf, laid by hand on every Mariposa, is the brand's signature. It stands as a quiet reminder that life isn't just to be lived, but to be celebrated."
   ],
   "specs": [
     { "label": "Vitola", "value": "Gordito" },
-    { "label": "Format", "value": "105 mm · 58 ring gauge" },
-    { "label": "Wrapper", "value": "Criollo 98 · 2021 · Viso priming · Maduro grade" },
-    { "label": "Binder", "value": "Criollo 98 · 2021 · Viso priming" },
-    { "label": "Filler", "value": "Criollo 98 · 2021 · Long-filler · 65% Viso, 35% Ligero" },
-    { "label": "Construction", "value": "Three-part · entubado bunching · Cuban triple cap" },
-    { "label": "Origin", "value": "Jember, East Java, Indonesia" },
-    { "label": "Fermentation", "value": "24 months" },
-    { "label": "Ageing", "value": "12 months" },
-    { "label": "Smoke time", "value": "~35 minutes" },
     { "label": "Strength", "value": "Full body" },
-    { "label": "Release", "value": "Q4 2026" }
+    { "label": "Format", "value": "105 mm · 58 ring gauge" },
+    { "label": "Origin", "value": "East Java, Indonesia" },
+    { "label": "Smoke time", "value": "~35 minutes" },
+    { "label": "Release", "value": "Q4 2026" },
+    { "label": "Wrapper", "value": "Criollo 98 · 2021\nViso priming\nMaduro grade" },
+    { "label": "Binder", "value": "Criollo 98 · 2021\nViso priming" },
+    { "label": "Filler", "value": "Criollo 98 · 2021\nLong-filler\n65% Viso, 35% Ligero" },
+    { "label": "Construction", "value": "Three-part\nentubado bunching\nCuban triple cap" },
+    { "label": "Fermentation", "value": "24 months" },
+    { "label": "Ageing", "value": "12 months" }
   ],
+  "condensedSpecKeys": ["Vitola", "Format", "Wrapper", "Origin", "Strength", "Release"],
   "tasting": [
     { "stage": "First third", "note": "Spice opens the smoke, warmed through by a steady note of toasted nuts." },
     { "stage": "Second third", "note": "The spice softens as cream comes in, and a slow caramel sweetness builds underneath." },

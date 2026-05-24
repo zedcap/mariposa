@@ -1,0 +1,422 @@
+---
+/* Caprice product page — built 2026-05-24.
+   ------------------------------------------------------------------
+   Direct sibling of volage.astro. Same structure, same styling
+   tokens, same reveal cascade. Differences are purely content:
+
+     · Image swap                    → cigar-caprice.png
+     · Hero text                     → Caprice name + Gordito eyebrow +
+                                       "105 mm · 58 ring gauge" cased line
+     · Narrative                     → Caprice paragraphs from JSON
+     · Specs                         → 12-row split (PROFILE + BLEND),
+                                       Maduro wrapper / 65-35 filler
+     · SmokeArc marks                → shorter smoke time (~35 min):
+                                       0' / 10' / 20' / 35'
+
+   Background flow and motion are identical to the Volage page —
+   pearl hero → white cigar → white smoke arc → pearl footer; rise-
+   and-fade reveals via the shared helper; gold hairline draws in
+   left-to-right under the signature.
+
+   The Presentation section was stripped from Volage 2026-05-24 and
+   is not present here either. Page sequence:
+
+     1. Hero            — Option A header (signature → hairline →
+                          italic tagline → vitola → cased format).
+     2. The cigar       — narrative + PROFILE / BLEND specs on the
+                          dark-brown bleed band.
+     3. The smoke arc   — three thirds against the sticky timeline,
+                          0' / 10' / 20' / 35' markers. */
+
+import { getEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SmokeArc from '../components/SmokeArc.astro';
+import cigarCaprice from '../assets/cigar-caprice.png';
+import { withBase } from '../lib/path';
+
+const product = (await getEntry('products', 'caprice'))!.data;
+
+/* Same dark-brown specs-bleed photo as the Volage page. Kept on the
+   single shared asset so both SKU pages read with the same material
+   under the brown wash. If a Caprice-specific crop earns its keep
+   later, swap the slug here only. */
+const specsBgImage = `url("${withBase('/specs-bg-header-1.jpg')}")`;
+
+/* Smoke arc minute marks for Caprice. ~35-minute smoke = thirds at
+   roughly 0 / 12 / 23 / 35 — rounded to a clean 0 / 10 / 20 / 35
+   for the labels (the rail spacing remains uniform; the labels are
+   indicative, not measured). One mark per third boundary plus a
+   closing tick (length = tasting.length + 1 = 4). */
+const capriceMarks = ["0'", "10'", "20'", "35'"];
+---
+
+<BaseLayout title={`Mariposa • ${product.name}`}>
+  {/* ─── 1. Hero — signature-led header ──────────────────────────
+       Mirrors volage.astro exactly. Source order matches visual
+       order: signature → hairline → italic tagline → vitola eyebrow
+       → format eyebrow (cased). The format line uses
+       .hero__eyebrow--cased so "mm" reads literally. */}
+  <section class="hero" data-reveal-section>
+    <div class="hero__inner container">
+      <div class="hero__copy" data-reveal-copy>
+        <h1 class="hero__signature">{product.name}</h1>
+        <span class="hero__rule" aria-hidden="true"></span>
+        <p class="hero__tagline">{product.tagline}</p>
+        <p class="hero__eyebrow">{product.vitola}</p>
+        <p class="hero__eyebrow hero__eyebrow--cased">{product.format}</p>
+      </div>
+
+      <div class="hero__media" data-reveal-media>
+        <Image
+          class="hero__cigar"
+          src={cigarCaprice}
+          alt={`The Mariposa ${product.name} cigar, ${product.tagline.toLowerCase()}`}
+          widths={[260, 420, 640, 860]}
+          sizes="(max-width: 720px) 65vw, 30vw"
+          loading="eager"
+        />
+      </div>
+    </div>
+  </section>
+
+  {/* ─── 2. The cigar — narrative + full specs ───────────────── */}
+  <section class="cigar" aria-labelledby="cigar-heading" data-reveal-section>
+    <div class="cigar__inner container">
+      <p class="eyebrow cigar__eyebrow" id="cigar-heading">The cigar</p>
+
+      {/* Narrative — first paragraph in the italic Spectral lede
+          treatment (.cigar__intro), subsequent paragraphs in the
+          Hanken body treatment (.cigar__para). Same render rule as
+          Volage: first-is-intro is decided here, not in JSON. */}
+      <div class="cigar__narrative">
+        {product.narrative.map((para, i) => (
+          <p
+            class={i === 0 ? 'cigar__intro' : 'cigar__para'}
+            data-reveal-para
+          >
+            {para}
+          </p>
+        ))}
+      </div>
+    </div>
+
+    {/* PROFILE + BLEND specs on the dark-brown bleed band. Split is
+        identical to Volage: first six rows = PROFILE (headline-grade
+        specs), last six = BLEND (leaf/build/time specs). JSON order
+        is row-by-row interleaved (left then right per row) to match
+        CSS Grid's default auto-flow:row fill. */}
+    <div class="cigar__specs-bleed" style={`--specs-bg-image: ${specsBgImage};`}>
+      <div class="cigar__inner container">
+        <p class="cigar__strip-title" data-reveal-strip>Profile</p>
+        <dl class="cigar__strip" data-reveal-strip>
+          {product.specs.slice(0, 6).map((row) => (
+            <div class="cigar__strip-row">
+              <dt class="cigar__strip-label">{row.label}</dt>
+              <dd class="cigar__strip-value">{row.value}</dd>
+            </div>
+          ))}
+        </dl>
+        <p class="cigar__strip-title cigar__strip-title--second" data-reveal-strip>Blend</p>
+        <dl class="cigar__strip cigar__strip--second" data-reveal-strip>
+          {product.specs.slice(6).map((row) => (
+            <div class="cigar__strip-row">
+              <dt class="cigar__strip-label">{row.label}</dt>
+              <dd class="cigar__strip-value">{row.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  {/* ─── 3. The smoke arc ────────────────────────────────────── */}
+  <SmokeArc tasting={product.tasting} marks={capriceMarks} />
+</BaseLayout>
+
+<style>
+  /* ── Shared section rhythm ─────────────────────────────────── */
+  section[data-reveal-section] {
+    padding-block: clamp(var(--space-7), 7vw, var(--space-9));
+  }
+
+  /* ── 1. Hero — Option A, tagline-led ─────────────────────── */
+  .hero {
+    background: linear-gradient(
+      to bottom,
+      var(--pearl) 0%,
+      var(--pearl) calc(100% - 180px),
+      transparent 100%
+    );
+    min-height: 88vh;
+    display: flex;
+    align-items: center;
+    padding-top: clamp(var(--space-8), 10vw, var(--space-10));
+    padding-bottom: clamp(calc(var(--space-8) / 2), 5vw, calc(var(--space-10) / 2));
+  }
+  .hero__inner {
+    display: grid;
+    grid-template-columns: 62fr 38fr;
+    gap: clamp(var(--space-7), 7vw, var(--space-10));
+    align-items: center;
+    width: 100%;
+  }
+
+  .hero__copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .hero__eyebrow {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    letter-spacing: var(--ls-section);
+    text-transform: uppercase;
+    color: var(--accent-strong);
+    margin: 0;
+  }
+  .hero__tagline + .hero__eyebrow {
+    margin-top: var(--space-5);
+  }
+  .hero__eyebrow--cased {
+    text-transform: none;
+    margin-top: var(--space-2);
+  }
+  .hero__rule {
+    display: block;
+    width: 120px;
+    height: 1px;
+    background: var(--gold-leaf);
+    margin: var(--space-5) 0 var(--space-6) 0;
+    transform: scaleX(0);
+    transform-origin: left center;
+  }
+  .hero__signature {
+    font-family: var(--font-display);
+    font-style: normal;
+    font-weight: 300;
+    font-size: clamp(1.4rem, 2.4vw, 1.75rem);
+    line-height: var(--lh-snug);
+    letter-spacing: var(--ls-display);
+    color: var(--ink);
+    margin: 0;
+  }
+  .hero__tagline {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(2.4rem, 5vw, 4.2rem);
+    line-height: 1.05;
+    color: var(--ink);
+    margin: 0;
+    max-width: 22ch;
+  }
+
+  .hero__media {
+    display: grid;
+    place-items: center;
+  }
+  .hero__cigar {
+    width: auto;
+    max-width: 78%;
+    max-height: 72vh;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 24px 40px rgba(31, 27, 23, 0.18));
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero__rule {
+      transform: scaleX(1);
+    }
+  }
+
+  /* ── 2. The cigar ──────────────────────────────────────────── */
+  .cigar {
+    --ink-brown: #2A1E14;
+    padding-bottom: 0;
+    padding-top: clamp(calc(var(--space-7) / 2), 3.5vw, calc(var(--space-9) / 2));
+  }
+  .cigar__inner {
+    max-width: 880px;
+    margin-inline: auto;
+  }
+  .cigar__eyebrow {
+    font-size: clamp(0.95rem, 1.6vw, 1.15rem);
+    margin-bottom: var(--space-5);
+  }
+
+  .cigar__specs-bleed {
+    margin-top: clamp(var(--space-7), 7vw, var(--space-9));
+    width: 100vw;
+    margin-inline: calc(50% - 50vw);
+    background-color: var(--ink-brown);
+    background-image:
+      linear-gradient(rgba(42, 30, 20, 0.8), rgba(42, 30, 20, 0.8)),
+      var(--specs-bg-image);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding-top: clamp(calc(var(--space-9) / 2), 5vw, calc(var(--space-10) / 2));
+    padding-bottom: clamp(var(--space-9), 10vw, var(--space-10));
+  }
+  .cigar__narrative {
+    max-width: 720px;
+    margin-inline: auto;
+  }
+  .cigar__para {
+    font-family: var(--font-body);
+    font-style: normal;
+    font-weight: 400;
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--ink);
+    margin: 0;
+  }
+  .cigar__intro {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+    line-height: var(--lh-loose);
+    color: var(--ink);
+    margin: 0;
+  }
+  .cigar__intro + .cigar__para,
+  .cigar__para + .cigar__para {
+    margin-top: var(--space-5);
+  }
+
+  .cigar__strip-title {
+    margin: clamp(var(--space-7), 6vw, var(--space-8)) 0 var(--space-3) 0;
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    letter-spacing: var(--ls-section);
+    text-transform: uppercase;
+    color: var(--accent-strong);
+  }
+  .cigar__strip-title--second {
+    margin-top: clamp(calc(var(--space-5) * 1.5), 4.5vw, calc(var(--space-6) * 1.5));
+  }
+  .cigar__strip {
+    margin: 0;
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--border-gold);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: clamp(var(--space-6), 5vw, var(--space-9));
+    row-gap: 0;
+  }
+  .cigar__strip-row {
+    display: grid;
+    grid-template-columns: minmax(7rem, 9rem) 1fr;
+    gap: var(--space-5);
+    align-items: baseline;
+    padding-block: var(--space-4);
+    border-bottom: 1px solid var(--border-gold);
+  }
+  .cigar__strip:not(.cigar__strip--second) > .cigar__strip-row:nth-last-child(-n+2) {
+    border-bottom: 0;
+  }
+  .cigar__strip-label {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 500;
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    margin: 0;
+  }
+  .cigar__strip-value {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    color: var(--ink);
+    margin: 0;
+    line-height: var(--lh-snug);
+    white-space: pre-line;
+  }
+
+  .cigar__specs-bleed .cigar__strip-title {
+    color: var(--gold-leaf);
+  }
+  .cigar__specs-bleed .cigar__strip {
+    border-top-color: color-mix(in srgb, var(--gold-soft) 45%, transparent);
+  }
+  .cigar__specs-bleed .cigar__strip-row {
+    border-bottom-color: color-mix(in srgb, var(--gold-soft) 22%, transparent);
+  }
+  .cigar__specs-bleed .cigar__strip-label {
+    color: var(--gold-soft);
+  }
+  .cigar__specs-bleed .cigar__strip-value {
+    color: var(--pearl);
+  }
+
+  /* ── Mobile collapse ───────────────────────────────────────── */
+  @media (max-width: 720px) {
+    .hero {
+      min-height: 0;
+      padding-block: clamp(var(--space-7), 12vw, var(--space-9));
+      background: linear-gradient(
+        to bottom,
+        var(--pearl) 0%,
+        var(--pearl) calc(100% - 120px),
+        transparent 100%
+      );
+    }
+    .hero__inner {
+      grid-template-columns: 70fr 30fr;
+      gap: var(--space-5);
+      align-items: center;
+    }
+    .hero__cigar {
+      max-width: 100%;
+      max-height: 38vh;
+    }
+    .hero__tagline {
+      font-size: clamp(1.85rem, 7vw, 2.6rem);
+      max-width: 18ch;
+    }
+    .cigar__strip {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  /* Section reveals — identical cascade to volage.astro.
+     Hero: copy column rises, cigar fades + lifts alongside, gold
+     hairline draws in left-to-right on its own scrollTrigger.
+     Cigar section: narrative paragraphs cascade, spec strips lift in.
+     SmokeArc owns its own reveals. */
+  import { reveal, refreshOnLoad, gsap } from '../lib/motion';
+
+  const heroMedia = document.querySelector<HTMLElement>('.hero [data-reveal-media]');
+  const heroCopy  = document.querySelector<HTMLElement>('.hero [data-reveal-copy]');
+  const heroRule  = document.querySelector<HTMLElement>('.hero__rule');
+  if (heroCopy)  reveal(heroCopy,  { y: 28, duration: 0.95, start: 'top 88%' });
+  if (heroMedia) reveal(heroMedia, { y: 24, duration: 1.1, delay: 0.1, start: 'top 88%' });
+  if (heroRule) {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) {
+      gsap.set(heroRule, { scaleX: 1 });
+    } else {
+      gsap.to(heroRule, {
+        scaleX: 1,
+        duration: 0.6,
+        delay: 0.25,
+        ease: 'power2.out',
+        scrollTrigger: { trigger: heroCopy ?? heroRule, start: 'top 88%', toggleActions: 'play none none none' },
+      });
+    }
+  }
+
+  const cigarParas = document.querySelectorAll('.cigar [data-reveal-para]');
+  const cigarStrips = document.querySelectorAll<HTMLElement>('.cigar [data-reveal-strip]');
+  if (cigarParas.length) reveal(cigarParas, { y: 22, duration: 0.9, stagger: 0.14, start: 'top 82%' });
+  if (cigarStrips.length) reveal(cigarStrips, { y: 24, duration: 0.9, stagger: 0.1, start: 'top 82%' });
+
+  refreshOnLoad();
+</script>
