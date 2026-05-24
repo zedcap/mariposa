@@ -47,17 +47,18 @@ const { paragraphs } = Astro.props;
 <section class="story" aria-labelledby="story-heading" data-story>
   <h2 class="visually-hidden" id="story-heading">The Mariposa story</h2>
 
-  <Image
-    class="story__bg"
-    src={storyBg}
-    alt=""
-    aria-hidden="true"
-    widths={[960, 1440, 1920, 2560]}
-    sizes="100vw"
-    loading="lazy"
-  />
-
-  <div class="story__scrim" aria-hidden="true"></div>
+  <div class="story__bed" aria-hidden="true">
+    <Image
+      class="story__bg"
+      src={storyBg}
+      alt=""
+      aria-hidden="true"
+      widths={[960, 1440, 1920, 2560]}
+      sizes="100vw"
+      loading="lazy"
+    />
+    <div class="story__scrim"></div>
+  </div>
 
   <div class="story__inner" data-story-inner>
     <Image
@@ -91,20 +92,34 @@ const { paragraphs } = Astro.props;
     isolation: isolate;
   }
 
-  /* ── Photographic ground ────────────────────────────────────────
-     Astro <Image> emits a sized <img>; we pin it absolutely and let
-     object-fit / object-position handle the crop. object-position
-     50% 35% keeps the gold-leaf signature and cigar shaft in frame
-     across the 85vh band; the source is squareish, so trimming top
-     and bottom is the honest read. */
-  .story__bg {
+  /* ── Photographic bed ───────────────────────────────────────────
+     Bulletproof full-bleed wrapper. Absolutely positioned div pinned
+     to all four edges of .story, including the padded area on mobile
+     where .story has height:auto + padding-block. The image and
+     scrim sit inside this bed and fill it. Decoupling the absolute
+     positioning onto a plain <div> (not the Astro-emitted <img>,
+     which carries intrinsic width/height attributes and inherits the
+     global `img { height: auto }` rule) removes any cascade ambiguity
+     against the height resolution of an absolutely positioned image
+     inside an auto-height parent. */
+  .story__bed {
     position: absolute;
     inset: 0;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  /* ── Photographic ground ────────────────────────────────────────
+     Astro <Image> emits a sized <img>; we let it fill the bed via
+     width/height 100% + object-fit cover. object-position 50% 35%
+     keeps the gold-leaf signature and cigar shaft in frame across
+     the band; the source is squareish, so trimming top and bottom
+     is the honest read. */
+  .story__bg {
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: 50% 35%;
-    z-index: 0;
   }
 
   /* ── Gradient overlay ───────────────────────────────────────────
@@ -116,7 +131,6 @@ const { paragraphs } = Astro.props;
   .story__scrim {
     position: absolute;
     inset: 0;
-    z-index: 1;
     background: linear-gradient(
       180deg,
       rgba(31, 27, 23, 0.18) 0%,
