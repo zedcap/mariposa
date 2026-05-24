@@ -252,7 +252,9 @@ const specsBgImage = `url("${withBase('/specs-bg-header-1.jpg')}")`;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    padding-top: clamp(calc(var(--space-9) / 2), 5vw, calc(var(--space-10) / 2));
+    /* Top trimmed 35% (2026-05-24) to tighten PROFILE against the
+       bleed's upper edge. Mirror of the Volage rule. */
+    padding-top: clamp(31px, 3.25vw, 42px);
     padding-bottom: clamp(var(--space-9), 10vw, var(--space-10));
   }
   .cigar__narrative {
