@@ -777,6 +777,11 @@ const discoverHref: Record<string, string> = {};
   const next = document.querySelector<HTMLButtonElement>('[data-range-next]');
 
   if (section && track && frames.length > 1) {
+    /* Media reads at half-opacity on mobile (object-on-void treatment);
+       full opacity on desktop. Read once at init — no reflow listener
+       needed; mobile/desktop swap requires a reload in normal use. */
+    const MEDIA_OPACITY = window.matchMedia('(max-width: 720px)').matches ? 0.5 : 1;
+
     /* ── Per-frame entrance + parallax depth ───────────────────── */
     // Each frame's copy block is set ready to cascade in. The first
     // frame plays on scroll-in; subsequent frames play when activated.
@@ -798,7 +803,7 @@ const discoverHref: Record<string, string> = {};
       if (!s) return;
       if (REDUCED) {
         gsap.set(s.copyEls, { opacity: 1, y: 0 });
-        if (s.media) gsap.set(s.media, { opacity: 1 });
+        if (s.media) gsap.set(s.media, { opacity: MEDIA_OPACITY });
         if (s.ghost) gsap.set(s.ghost, { opacity: 0.05 });
         return;
       }
@@ -811,7 +816,7 @@ const discoverHref: Record<string, string> = {};
         gsap.fromTo(
           s.media,
           { opacity: 0, scale: 1.06 },
-          { opacity: 1, scale: 1, duration: 1, ease: 'power2.out', overwrite: true },
+          { opacity: MEDIA_OPACITY, scale: 1, duration: 1, ease: 'power2.out', overwrite: true },
         );
       }
       if (s.ghost) {
