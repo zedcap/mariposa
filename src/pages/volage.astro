@@ -259,19 +259,27 @@ const specsBgImage = `url("${withBase('/specs-bg-header-1.jpg')}")`;
      2026-05-24): the format/dimensions line ("150 mm · 52 ring
      gauge") reads as a quiet caption beneath the bold vitola
      line above, not as a second emphasised eyebrow. The vitola
-     line keeps weight 600 from .hero__eyebrow. */
+     line keeps weight 600 from .hero__eyebrow. Letter-spacing
+     tightened (Stephane 2026-05-24, pass 3): the cased line steps
+     down from --ls-section (0.32em, vitola tracking) to --ls-small
+     (0.04em) so the dimensions read as natural prose, not as a
+     loose caps line. The vitola eyebrow above keeps --ls-section. */
   .hero__eyebrow--cased {
     text-transform: none;
     margin-top: var(--space-2);
     font-weight: 400;
+    letter-spacing: var(--ls-small);
   }
-  /* Gold hairline — sits BELOW the signature and ABOVE the tagline
-     (Stephane 2026-05-24). Margins carry both gaps. */
+  /* Hairline beneath the signature — sits BELOW the signature and
+     ABOVE the tagline (Stephane 2026-05-24). Margins carry both
+     gaps. Colour flipped from --gold-leaf to --pink (Stephane
+     2026-05-24, pass 3) when the signature flipped from pink to
+     gold; the rule now carries the pink accent. */
   .hero__rule {
     display: block;
     width: 120px;
     height: 1px;
-    background: var(--gold-leaf);
+    background: var(--pink);
     margin: var(--space-5) 0 var(--space-6) 0;
     /* Drawn-in entry: starts at scaleX(0); the rule's tween in the
        script below scales it to 1 left-to-right shortly after the
@@ -280,17 +288,17 @@ const specsBgImage = `url("${withBase('/specs-bg-header-1.jpg')}")`;
     transform: scaleX(0);
     transform-origin: left center;
   }
-  /* Signature — Spectral italic display, sized and coloured to
-     mirror the home page's "Volcanic Soul." treatment on
-     .position__line / .position__em (Stephane 2026-05-24,
-     second pass). The signature is now the protagonist of the
-     header; the italic tagline below carries the line. Same
-     clamp shape as .position__line so the cigar name reads at
-     full editorial weight on desktop and steps down fluidly to
-     mobile. Floor (3.4rem ≈ 54.4px) holds on a 320px viewport
-     for both Volage (6 chars) and Caprice (7 chars) — confirmed
-     against the 70/30 mobile hero grid which leaves ~70vw for
-     the type column. Pink = var(--pink) (#d06f98). */
+  /* Signature — Spectral italic display, sized to mirror the
+     home page's "Volcanic Soul." treatment on .position__line /
+     .position__em (Stephane 2026-05-24, second pass). Colour
+     flipped from --pink to --gold-deep (Stephane 2026-05-24,
+     pass 3): the cigar name now carries gold while the pink
+     migrates to the hairline beneath. Same eyebrow gold as
+     elsewhere on the page (label rows, eyebrow accents). Floor
+     (3.4rem ≈ 54.4px) holds on a 320px viewport for both Volage
+     (6 chars) and Caprice (7 chars) — confirmed against the
+     70/30 mobile hero grid which leaves ~70vw for the type
+     column. */
   .hero__signature {
     font-family: var(--font-display);
     font-style: italic;
@@ -298,7 +306,7 @@ const specsBgImage = `url("${withBase('/specs-bg-header-1.jpg')}")`;
     font-size: clamp(3.4rem, 9vw, 6.5rem);
     line-height: var(--lh-snug);
     letter-spacing: var(--ls-display);
-    color: var(--pink);
+    color: var(--gold-deep);
     margin: 0;
   }
   .hero__tagline {

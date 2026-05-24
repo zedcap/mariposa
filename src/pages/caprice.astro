@@ -175,24 +175,33 @@ const specsBgImage = `url("${withBase('/specs-bg-header-1.jpg')}")`;
   }
   /* Format line weight dropped to 400 (Stephane 2026-05-24): the
      "105 mm · 58 ring gauge" line reads as a quiet caption beneath
-     the bold vitola line above. The vitola eyebrow keeps weight 600. */
+     the bold vitola line above. The vitola eyebrow keeps weight 600.
+     Letter-spacing tightened (Stephane 2026-05-24, pass 3) from
+     --ls-section to --ls-small so the dimensions read as natural
+     prose. Vitola line above keeps --ls-section. */
   .hero__eyebrow--cased {
     text-transform: none;
     margin-top: var(--space-2);
     font-weight: 400;
+    letter-spacing: var(--ls-small);
   }
+  /* Hairline beneath the signature (Stephane 2026-05-24, pass 3):
+     colour flipped from --gold-leaf to --pink when the signature
+     flipped from pink to gold. The rule now carries the pink accent. */
   .hero__rule {
     display: block;
     width: 120px;
     height: 1px;
-    background: var(--gold-leaf);
+    background: var(--pink);
     margin: var(--space-5) 0 var(--space-6) 0;
     transform: scaleX(0);
     transform-origin: left center;
   }
   /* Signature mirrors .position__line / .position__em on the home
-     page (Stephane 2026-05-24): italic Spectral display, pink,
-     clamp(3.4rem, 9vw, 6.5rem). Sibling treatment to volage.astro. */
+     page (Stephane 2026-05-24): italic Spectral display,
+     clamp(3.4rem, 9vw, 6.5rem). Sibling treatment to volage.astro.
+     Colour flipped from --pink to --gold-deep (Stephane 2026-05-24,
+     pass 3); pink migrated to the hairline beneath. */
   .hero__signature {
     font-family: var(--font-display);
     font-style: italic;
@@ -200,7 +209,7 @@ const specsBgImage = `url("${withBase('/specs-bg-header-1.jpg')}")`;
     font-size: clamp(3.4rem, 9vw, 6.5rem);
     line-height: var(--lh-snug);
     letter-spacing: var(--ls-display);
-    color: var(--pink);
+    color: var(--gold-deep);
     margin: 0;
   }
   .hero__tagline {
