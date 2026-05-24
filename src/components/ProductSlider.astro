@@ -171,7 +171,12 @@ const imageMode: Record<string, 'object' | 'scene'> = {
        gap below the controls now meaningfully larger than the gap
        above so the controls clearly belong to the image, not to the
        story below. */
-    padding-bottom: clamp(var(--space-8), 5vw, var(--space-9));
+    /* Gap below the slider increased ~1.5× (Stephane 2026-05-24): the
+       clamp shifts from 64-96px to 96-144px so the breath between the
+       controls and the section below opens up. Floor steps up one
+       token (--space-8 → --space-9); ceiling is 1.5× the prior --space-9
+       (96 → 144px). Top padding unchanged. */
+    padding-bottom: clamp(var(--space-9), 7.5vw, calc(var(--space-9) * 1.5));
     overflow: hidden;
   }
 

@@ -321,6 +321,15 @@ const product = (await getEntry('products', 'volage'))!.data;
     padding-block: var(--space-4);
     border-bottom: 1px solid var(--border-gold);
   }
+  /* Block 1's last two rows (Smoke time + Release) drop their bottom
+     hairline — the full-width gold rule above block 2 already serves
+     as the visual break, so the per-row line under block 1's last row
+     reads as a duplicate. (Stephane 2026-05-24.) Block 2's rows keep
+     their hairlines so the spec list still reads as a tabulated set,
+     including the final row which terminates against the page below. */
+  .cigar__strip:not(.cigar__strip--second) > .cigar__strip-row:nth-last-child(-n+2) {
+    border-bottom: 0;
+  }
   .cigar__strip-label {
     font-family: var(--font-body);
     font-size: var(--fs-eyebrow);
@@ -336,6 +345,10 @@ const product = (await getEntry('products', 'volage'))!.data;
     color: var(--ink);
     margin: 0;
     line-height: var(--lh-snug);
+    /* Honour newlines embedded in JSON spec values (Binder, Filler,
+       Construction). Whitespace within a run still collapses; only
+       \n breaks render as line breaks. (Stephane 2026-05-24.) */
+    white-space: pre-line;
   }
 
   /* ── 5. Packaging ──────────────────────────────────────────── */

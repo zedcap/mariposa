@@ -33,8 +33,9 @@
     }
   ],
   "narrative": [
-    "A Canonazo, hand-rolled in Java from Havana-seed Criollo 98 grown in the volcanic soil at the foot of the Argopuro range. Full-bodied, slow-burning, forty-five minutes of evolution.",
-    "The first draw is creamy and slow. Wood arrives, then coffee, then a sweetness that holds while the spice walks in. A cigar that does not wait for an occasion."
+    "An elegant, slow-burning journey for the senses. It opens with a remarkably creamy profile, seamlessly transitioning into layers of earth, wood, and dark coffee. A subtle sweetness lingers on the palate just as spice emerges.",
+    "Cultivated in the shadow of the Argopuro range, Volage leverages Java's volcanic terroir, offering a unique Indonesian expression of classic Havana-seed tobacco.",
+    "The 24-carat gold leaf, laid by hand on every Mariposa, is the brand's signature. It stands as a quiet reminder that life isn't just to be lived, but to be celebrated."
   ],
   "specs": [
     { "label": "Vitola", "value": "Canonazo" },
@@ -44,9 +45,9 @@
     { "label": "Smoke time", "value": "~45 minutes" },
     { "label": "Release", "value": "Limited release" },
     { "label": "Wrapper", "value": "Criollo 98 · 2021 · Seco priming · Colorado grade" },
-    { "label": "Binder", "value": "Criollo 98 · 2021 · Viso priming" },
-    { "label": "Filler", "value": "Criollo 98 · 2021 · Long-filler · 50% Viso, 50% Ligero" },
-    { "label": "Construction", "value": "Three-part · entubado bunching · Cuban triple cap" },
+    { "label": "Binder", "value": "Criollo 98 · 2021 ·\nViso priming" },
+    { "label": "Filler", "value": "Criollo 98 · 2021 · Long-filler ·\n50% Viso, 50% Ligero" },
+    { "label": "Construction", "value": "Three-part ·\nEntubado bunching ·\nCuban triple cap" },
     { "label": "Fermentation", "value": "24 months" },
     { "label": "Ageing", "value": "12 months" }
   ],

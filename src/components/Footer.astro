@@ -33,6 +33,12 @@ const { footer } = global;
 
   .site-footer__inner {
     padding-block: var(--footer-rhythm);
+    /* Top breathing room doubled (Stephane 2026-05-24): the gap above
+       the brand line — "For those who don't wait for special occasions,
+       but create them." — opens to 2× --footer-rhythm so the line sits
+       further off the section above. Bottom padding stays on the base
+       --footer-rhythm so the rhythm below the rule is unchanged. */
+    padding-top: calc(var(--footer-rhythm) * 2);
     position: relative;
   }
 
