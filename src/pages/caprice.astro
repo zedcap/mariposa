@@ -10,8 +10,8 @@
      · Narrative                     → Caprice paragraphs from JSON
      · Specs                         → 12-row split (PROFILE + BLEND),
                                        Maduro wrapper / 65-35 filler
-     · SmokeArc marks                → shorter smoke time (~35 min):
-                                       0' / 10' / 20' / 35'
+     · SmokeArc marks                → identical to Volage (ordinals
+                                       1st / 2nd / 3rd, one per third)
 
    Background flow and motion are identical to the Volage page —
    pearl hero → white cigar → white smoke arc → pearl footer; rise-
@@ -26,7 +26,7 @@
      2. The cigar       — narrative + PROFILE / BLEND specs on the
                           dark-brown bleed band.
      3. The smoke arc   — three thirds against the sticky timeline,
-                          0' / 10' / 20' / 35' markers. */
+                          1st / 2nd / 3rd ordinal markers. */
 
 import { getEntry } from 'astro:content';
 import { Image } from 'astro:assets';
@@ -43,12 +43,6 @@ const product = (await getEntry('products', 'caprice'))!.data;
    later, swap the slug here only. */
 const specsBgImage = `url("${withBase('/specs-bg-header-1.jpg')}")`;
 
-/* Smoke arc minute marks for Caprice. ~35-minute smoke = thirds at
-   roughly 0 / 12 / 23 / 35 — rounded to a clean 0 / 10 / 20 / 35
-   for the labels (the rail spacing remains uniform; the labels are
-   indicative, not measured). One mark per third boundary plus a
-   closing tick (length = tasting.length + 1 = 4). */
-const capriceMarks = ["0'", "10'", "20'", "35'"];
 ---
 
 <BaseLayout title={`Mariposa • ${product.name}`}>
@@ -131,7 +125,7 @@ const capriceMarks = ["0'", "10'", "20'", "35'"];
   </section>
 
   {/* ─── 3. The smoke arc ────────────────────────────────────── */}
-  <SmokeArc tasting={product.tasting} marks={capriceMarks} />
+  <SmokeArc tasting={product.tasting} marks={["1st", "2nd", "3rd"]} />
 </BaseLayout>
 
 <style>

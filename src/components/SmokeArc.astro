@@ -16,9 +16,10 @@
    Mobile: timeline collapses inline above each third — the brief's
    stated mobile fallback.
 
-   Each tasting third carries its own time marker (0', 15', 30',
-   45'). The smoke time is the Volage spec; Caprice will pass its
-   own time array.
+   Marks (2026-05-24, Stephane): one ordinal label per third (1st /
+   2nd / 3rd) instead of minute timecodes. Three marks for three
+   thirds, 1:1 with the IntersectionObserver active-third logic. No
+   closing tick — the line ends at the third mark.
 
    Pairings: NOT implemented this build. The brief flags them as a
    future addition pending Axel-drafted copy. */
@@ -31,21 +32,22 @@ interface Stage {
 interface Props {
   tasting: Stage[];     // expected length 3, but the component is
                         // agnostic; whatever it gets, it lays out.
-  /* Time markers paired one-to-one with `tasting`. Strings so the
+  /* Labels paired one-to-one with `tasting`. Strings so the
      component doesn't have to know about formatting. */
   marks?: string[];
 }
 
 const {
   tasting,
-  marks = ["0'", "15'", "30'", "45'"],
+  marks = ["1st", "2nd", "3rd"],
 } = Astro.props;
 
-/* The marker count is tasting.length + 1 (a final tick that closes
-   the line). Pad the marks array if the caller supplied fewer. */
-const fullMarks = marks.length >= tasting.length + 1
-  ? marks.slice(0, tasting.length + 1)
-  : [...marks, ...Array(tasting.length + 1 - marks.length).fill('')];
+/* One mark per third (length = tasting.length). Trim or pad to
+   match so the caller can't accidentally desynchronise the rail
+   from the thirds. */
+const fullMarks = marks.length >= tasting.length
+  ? marks.slice(0, tasting.length)
+  : [...marks, ...Array(tasting.length - marks.length).fill('')];
 ---
 
 <section class="smoke" aria-labelledby="smoke-heading" data-reveal-section>
@@ -62,7 +64,7 @@ const fullMarks = marks.length >= tasting.length + 1
             <span
               class="smoke__tick"
               data-tick-index={i}
-              style={`top: ${(i / (fullMarks.length - 1)) * 100}%`}
+              style={`top: ${((i + 0.5) / fullMarks.length) * 100}%`}
             >
               <span class="smoke__dot"></span>
               <span class="smoke__time">{m}</span>
@@ -360,10 +362,10 @@ const fullMarks = marks.length >= tasting.length + 1
     thirds.forEach((t) => t.classList.add('is-revealed'));
   }
 
-  // Tick activation — the tick at index N lights when third N is the
-  // most-centred third in the viewport. The same enter also reveals
-  // third N (and is sticky thereafter). The final tick (index N+1)
-  // lights when the user has scrolled past the last third.
+  // Tick activation — the tick at index N lights when third N is
+  // the most-centred third in the viewport. The same enter also
+  // reveals third N (and is sticky thereafter). Marks are 1:1 with
+  // thirds (2026-05-24), so there is no closing tick to handle.
   if (thirds.length && ticks.length) {
     const setActive = (i: number) => {
       ticks.forEach((t) => t.classList.remove('is-active'));
@@ -413,17 +415,5 @@ const fullMarks = marks.length >= tasting.length + 1
     // appear one by one as you scroll).
     setActive(0);
 
-    // After the last third has scrolled past, light the closing tick.
-    const lastThird = thirds[thirds.length - 1];
-    const tailIo = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          const past = entry.boundingClientRect.bottom < 0;
-          if (past) setActive(ticks.length - 1);
-        }
-      },
-      { threshold: 0 },
-    );
-    tailIo.observe(lastThird);
   }
 </script>
