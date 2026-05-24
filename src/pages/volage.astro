@@ -403,12 +403,13 @@ const specsBgImage = `url("${withBase('/specs-bg-volage-gold.jpg')}")`;
        inherit nothing extra and need no z-index. Wash hex must match
        --ink-brown (#2A1E14); CSS gradients don't accept var() inside
        rgba(), so the literal is repeated here. Photo shows through at
-       ~10%, enough texture to read as a table surface without
-       compromising legibility of the inverted text. Fallback solid
-       brown preserved for the no-image edge case. */
+       ~15% (2026-05-24: opacity eased from 0.90 → 0.85), enough texture
+       to read as a table surface without compromising legibility of the
+       inverted text. Fallback solid brown preserved for the no-image
+       edge case. */
     background-color: var(--ink-brown);
     background-image:
-      linear-gradient(rgba(42, 30, 20, 0.9), rgba(42, 30, 20, 0.9)),
+      linear-gradient(rgba(42, 30, 20, 0.85), rgba(42, 30, 20, 0.85)),
       var(--specs-bg-image);
     background-size: cover;
     background-position: center;
