@@ -529,8 +529,9 @@ const discoverHref: Record<string, string> = {};
     /* Match the inter-paragraph rhythm of .range__lede (Stephane review
        2026-05-23): the lede→link gap reads as one more paragraph step,
        not a section break. Same token as .range__lede margin-top.
-       Volage 2 doubles this — see modifier below. */
-    margin-top: var(--space-4);
+       Doubled (Stephane 2026-05-24): --space-4 → --space-6 so the
+       Discover link sits a clear step away from the lede block. */
+    margin-top: var(--space-6);
     font-family: var(--font-body);
     /* Stephane review 2026-05-23 (b): "it's just a link" — step down
        one token from --fs-small to --fs-eyebrow so the discover link
