@@ -41,23 +41,18 @@ const product = (await getEntry('products', 'volage'))!.data;
 ---
 
 <BaseLayout title={`Mariposa • ${product.name}`}>
-  {/* ─── 1. Hero — Option A, tagline-led ──────────────────────
-       Source order: <h1>Volage</h1> first for SEO and screen
-       readers; visual order is flipped via flex (.hero__copy uses
-       flex-direction: column with explicit `order` values) so the
-       tagline reads as the loudest element while the document
-       heading hierarchy stays semantically correct. */}
+  {/* ─── 1. Hero — Option A, signature-above-tagline ──────────
+       Source + visual order now match (Stephane 2026-05-24):
+         eyebrow (Canonazo only) → hairline → signature (Volage) →
+         tagline.
+       The earlier flex `order` flip is retired — <h1>Volage</h1>
+       sits above the tagline in both the DOM and on screen. The
+       eyebrow drops the edition + middle-dot; vitola alone. */}
   <section class="hero" data-reveal-section>
     <div class="hero__inner container">
       <div class="hero__copy" data-reveal-copy>
-        <p class="hero__eyebrow">
-          {product.edition}
-          <span class="hero__eyebrow-sep" aria-hidden="true">&middot;</span>
-          {product.vitola}
-        </p>
+        <p class="hero__eyebrow">{product.vitola}</p>
         <span class="hero__rule" aria-hidden="true"></span>
-        {/* The <h1> is "Volage" for SEO/a11y; CSS demotes it to
-            signature scale below the tagline. */}
         <h1 class="hero__signature">{product.name}</h1>
         <p class="hero__tagline">{product.tagline}</p>
       </div>
@@ -80,11 +75,24 @@ const product = (await getEntry('products', 'volage'))!.data;
     <div class="cigar__inner container">
       <p class="eyebrow cigar__eyebrow" id="cigar-heading">The cigar</p>
 
-      {/* Two short narrative paragraphs — italic display, same body
-          treatment used elsewhere on the page. */}
+      {/* Narrative — four paragraphs in two treatments (Stephane
+          2026-05-24). The first entry of `narrative` reads as a
+          punchier body-font intro (Hanken Grotesk, regular, body
+          register); paragraphs 2-4 carry the italic Spectral
+          treatment matching .cigar__para. Treatment is decided
+          here, not in JSON — keeps the schema flat and the
+          first-paragraph-is-intro rule explicit at the render
+          site. Paragraph rhythm is shared (--space-5 between any
+          two), so the intro reads as part of the same beat
+          rather than a separate block. */}
       <div class="cigar__narrative">
-        {product.narrative.map((para) => (
-          <p class="cigar__para" data-reveal-para>{para}</p>
+        {product.narrative.map((para, i) => (
+          <p
+            class={i === 0 ? 'cigar__intro' : 'cigar__para'}
+            data-reveal-para
+          >
+            {para}
+          </p>
         ))}
       </div>
 
@@ -179,19 +187,16 @@ const product = (await getEntry('products', 'volage'))!.data;
     width: 100%;
   }
 
-  /* Copy column — flex with explicit order so source <h1>Volage</h1>
-     can render visually beneath the tagline without losing its place
-     in the document outline. */
+  /* Copy column — source order matches visual order
+     (eyebrow → rule → signature → tagline). The earlier flex
+     `order` choreography was retired when the signature moved
+     above the tagline. */
   .hero__copy {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
   }
   .hero__eyebrow {
-    order: 1;
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-3);
     font-family: var(--font-body);
     font-size: var(--fs-eyebrow);
     font-weight: 500;
@@ -200,12 +205,7 @@ const product = (await getEntry('products', 'volage'))!.data;
     color: var(--gold-deep);
     margin: 0 0 var(--space-5) 0;
   }
-  .hero__eyebrow-sep {
-    color: var(--gold);
-    letter-spacing: 0;
-  }
   .hero__rule {
-    order: 2;
     display: block;
     width: 120px;
     height: 1px;
@@ -218,8 +218,20 @@ const product = (await getEntry('products', 'volage'))!.data;
     transform: scaleX(0);
     transform-origin: left center;
   }
+  /* Signature — one step up the scale (Stephane 2026-05-24):
+     1.2/2vw/1.5rem → 1.4/2.4vw/1.75rem. Stays smaller than the
+     tagline; tagline keeps its size-protagonist role. */
+  .hero__signature {
+    font-family: var(--font-display);
+    font-style: normal;
+    font-weight: 300;
+    font-size: clamp(1.4rem, 2.4vw, 1.75rem);
+    line-height: var(--lh-snug);
+    letter-spacing: var(--ls-display);
+    color: var(--ink);
+    margin: 0 0 var(--space-5) 0;
+  }
   .hero__tagline {
-    order: 3;
     font-family: var(--font-display);
     font-style: italic;
     font-weight: 400;
@@ -228,17 +240,6 @@ const product = (await getEntry('products', 'volage'))!.data;
     color: var(--ink);
     margin: 0;
     max-width: 22ch;
-  }
-  .hero__signature {
-    order: 4;
-    font-family: var(--font-display);
-    font-style: normal;
-    font-weight: 300;
-    font-size: clamp(1.2rem, 2vw, 1.5rem);
-    line-height: var(--lh-snug);
-    letter-spacing: var(--ls-display);
-    color: var(--ink);
-    margin: var(--space-6) 0 0 0;
   }
 
   /* Image column — existing isolated-cigar PNG (alpha channel),
@@ -291,6 +292,22 @@ const product = (await getEntry('products', 'volage'))!.data;
     color: var(--ink);
     margin: 0;
   }
+  /* Intro — Hanken body register, punchier than the italic Spectral
+     run that follows (Stephane 2026-05-24). Sits at body size with
+     body line-height so it reads declaratively; the italic
+     paragraphs underneath carry the slower, editorial cadence. */
+  .cigar__intro {
+    font-family: var(--font-body);
+    font-style: normal;
+    font-weight: 400;
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--ink);
+    margin: 0;
+  }
+  /* Shared paragraph rhythm — any narrative paragraph (intro or
+     italic) inherits the same gap from its predecessor. */
+  .cigar__intro + .cigar__para,
   .cigar__para + .cigar__para {
     margin-top: var(--space-5);
   }
