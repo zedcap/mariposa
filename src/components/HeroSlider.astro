@@ -22,18 +22,33 @@
    6 frames, slow auto-advance (7s) → 42s loop. No manual nav, no dots:
    the slider is a passive, auto-only band (Stephane's call, 2026-05-23).
    Pause on hover preserved. prefers-reduced-motion: no Ken Burns,
-   instant cross-fade. */
-import { Image } from 'astro:assets';
+   instant cross-fade.
+
+   ART DIRECTION (2026-05-24). The phone breakpoint now serves a
+   purpose-cropped portrait source (3:4, 1472×1963) rather than
+   re-cropping the landscape original in CSS. Astro's <Image> has no
+   built-in art direction, so each frame ships a <picture> with a
+   <source media="(max-width: 720px)" srcset=...> generated via
+   getImage(), and a desktop <img> fallback. */
+import { getImage } from 'astro:assets';
 
 /* Mariposa hero frames — the collage device: the same faceless woman
    with a cigar across six scene-and-ground variants, in colour.
-   Numeric order 1 → 6 as delivered. Landscape source, 3200×1800 (16:9). */
+   Numeric order 1 → 6 as delivered. Landscape source, 3200×1800 (16:9).
+   Mobile source is a pre-cropped 3:4 portrait, 1472×1963. */
 import heroImage1 from '../assets/hero-mp-1.jpg';
 import heroImage2 from '../assets/hero-mp-2.jpg';
 import heroImage3 from '../assets/hero-mp-3.jpg';
 import heroImage4 from '../assets/hero-mp-4.jpg';
 import heroImage5 from '../assets/hero-mp-5.jpg';
 import heroImage6 from '../assets/hero-mp-6.jpg';
+
+import heroImage1Mobile from '../assets/hero-mp-1-mobile.jpg';
+import heroImage2Mobile from '../assets/hero-mp-2-mobile.jpg';
+import heroImage3Mobile from '../assets/hero-mp-3-mobile.jpg';
+import heroImage4Mobile from '../assets/hero-mp-4-mobile.jpg';
+import heroImage5Mobile from '../assets/hero-mp-5-mobile.jpg';
+import heroImage6Mobile from '../assets/hero-mp-6-mobile.jpg';
 
 const heroImages = [
   heroImage1,
@@ -44,6 +59,15 @@ const heroImages = [
   heroImage6,
 ];
 
+const heroImagesMobile = [
+  heroImage1Mobile,
+  heroImage2Mobile,
+  heroImage3Mobile,
+  heroImage4Mobile,
+  heroImage5Mobile,
+  heroImage6Mobile,
+];
+
 interface Slide {
   key: string;
   caption: string;
@@ -52,30 +76,70 @@ interface Props {
   slides: Slide[];
 }
 const { slides } = Astro.props;
+
+/* Pre-resolve responsive sources at build time. getImage() returns a
+   `srcSet` we can hand to <source>/<img>; widths chosen per breakpoint
+   (mobile band tops out around a phone width, desktop band goes wide). */
+const desktopSources = await Promise.all(
+  heroImages.map((src) =>
+    getImage({
+      src,
+      widths: [720, 1280, 1920, 2560],
+      sizes: '100vw',
+      format: 'webp',
+    }),
+  ),
+);
+const mobileSources = await Promise.all(
+  heroImagesMobile.map((src) =>
+    getImage({
+      src,
+      widths: [480, 720, 1080, 1472],
+      sizes: '100vw',
+      format: 'webp',
+    }),
+  ),
+);
 ---
 
 <section class="hero" aria-label="Mariposa" data-hero>
   <div class="hero__track">
     {
-      slides.map((slide, i) => (
-        <div
-          class:list={['hero__slide', { 'is-active': i === 0 }]}
-          data-slide
-          aria-hidden={i === 0 ? 'false' : 'true'}
-        >
-          <div class="hero__frame" data-hero-frame>
-            <Image
-              class:list={['hero__img', `hero__img--f${i + 1}`]}
-              src={heroImages[i] ?? heroImages[0]}
-              alt={slide.caption}
-              widths={[720, 1280, 1920, 2560]}
-              sizes="100vw"
-              loading={i === 0 ? 'eager' : 'lazy'}
-              fetchpriority={i === 0 ? 'high' : 'auto'}
-            />
+      slides.map((slide, i) => {
+        const desktop = desktopSources[i] ?? desktopSources[0];
+        const mobile = mobileSources[i] ?? mobileSources[0];
+        const isFirst = i === 0;
+        return (
+          <div
+            class:list={['hero__slide', { 'is-active': isFirst }]}
+            data-slide
+            aria-hidden={isFirst ? 'false' : 'true'}
+          >
+            <div class="hero__frame" data-hero-frame>
+              <picture>
+                <source
+                  media="(max-width: 720px)"
+                  srcset={mobile.srcSet.attribute}
+                  sizes="100vw"
+                  type="image/webp"
+                />
+                <img
+                  class="hero__img"
+                  src={desktop.src}
+                  srcset={desktop.srcSet.attribute}
+                  sizes="100vw"
+                  alt={slide.caption}
+                  width={desktop.attributes.width}
+                  height={desktop.attributes.height}
+                  loading={isFirst ? 'eager' : 'lazy'}
+                  fetchpriority={isFirst ? 'high' : 'auto'}
+                  decoding="async"
+                />
+              </picture>
+            </div>
           </div>
-        </div>
-      ))
+        );
+      })
     }
   </div>
 </section>
@@ -119,6 +183,12 @@ const { slides } = Astro.props;
     overflow: hidden;
   }
 
+  .hero__frame picture {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
   .hero__img {
     width: 100%;
     height: 100%;
@@ -131,31 +201,15 @@ const { slides } = Astro.props;
 
   @media (max-width: 720px) {
     .hero {
-      /* On a phone the band is a 3:4 portrait — the figure (lady + hands
-         + cigar) fills the frame and the wordmark band is cropped off the
-         side. Stephane's call (2026-05-24): tall portrait crop reads on a
-         phone where the wide 16:9 band reads small. No fixed svh height,
-         no min/max — the aspect-ratio drives the height from the width. */
+      /* On a phone the band is a 3:4 portrait — purpose-cropped sources
+         land at 1472×1963 (essentially 3:4). The mobile <source> in the
+         <picture> serves those directly, so no CSS object-position
+         per-frame trickery is needed any more (removed 2026-05-24). */
       height: auto;
       min-height: 0;
       max-height: none;
       aspect-ratio: 3 / 4;
     }
-
-    /* Fill the portrait band; lose left/right to keep the figure framed.
-       Per-frame object-position because the figure sits LEFT in frames
-       1/2/4/5 and RIGHT in frames 3/6 — a single value cannot hold all
-       six. Values picked to keep the full figure (head, torso, cigar
-       hand) inside the 3:4 window on a typical phone width. */
-    .hero__img {
-      object-fit: cover;
-    }
-    .hero__img--f1 { object-position: 34% center; }
-    .hero__img--f2 { object-position: 33% center; }
-    .hero__img--f3 { object-position: 74% center; }
-    .hero__img--f4 { object-position: 34% center; }
-    .hero__img--f5 { object-position: 33% center; }
-    .hero__img--f6 { object-position: 74% center; }
   }
 
   @media (prefers-reduced-motion: reduce) {
