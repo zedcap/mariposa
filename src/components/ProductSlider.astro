@@ -295,15 +295,32 @@ const imageMode: Record<string, 'object' | 'scene'> = {
      the slim cigar PNGs have vertical breathing room; no card, no
      border, no hairline, no grain overlay. The cigar floats on the
      section's cream ground with a soft directional drop-shadow giving
-     the floating-object effect. (Stephane 2026-05-24.) */
+     the floating-object effect. (Stephane 2026-05-24.)
+
+     Scale-down pass (Stephane 2026-05-24): the prior 3:5 frame + 70%
+     max-width let the cigar dominate the column. Frame aspect-ratio
+     dropped; vertical containment is now a hard pixel cap on the
+     cigar itself. The PNGs are ~1:4 (Volage) and ~1:5 (Caprice), so
+     a max-height controls visual mass more reliably than a max-width:
+     once height is capped, the proportional width is small enough
+     that max-width acts as a belt-and-braces guard at narrow desktops
+     only. Frame min-height keeps the row from collapsing when the
+     cigar is short. */
   .range__media-frame--object {
-    aspect-ratio: 3 / 5;
+    min-height: clamp(360px, 38vw, 460px);
     padding: clamp(var(--space-5), 4vw, var(--space-7)) 0;
   }
   .range__cigar--object {
     width: auto;
-    max-width: 70%;
-    max-height: 100%;
+    /* Belt: caps the cigar's visual mass against the copy column's
+       ~420-480px height. ~420px ceiling keeps the cigar at or below
+       the copy column on every desktop width. */
+    max-height: clamp(320px, 32vw, 420px);
+    /* Braces: at narrow desktops where the column is ~340px wide, a
+       40% cap keeps the (already-narrow) cigar from creeping toward
+       the copy edge. Rarely active at full desktop widths because
+       the height cap binds first. */
+    max-width: 40%;
     object-fit: contain;
     filter: drop-shadow(0 22px 40px rgba(31, 27, 23, 0.22));
     will-change: transform;
@@ -567,13 +584,20 @@ const imageMode: Record<string, 'object' | 'scene'> = {
       grid-column: auto;
       grid-row: auto;
     }
-    /* Mobile — keep the object-mode portrait aspect but tighten width
-       so the cigar PNG doesn't dominate a small viewport. */
+    /* Mobile — tighten the cigar so it reads as an object above the
+       copy block, not a wall. Frame uses a min-height to hold the
+       row, cigar itself is height-capped. Width cap dropped from
+       240px to 160px to match the scaled-down desktop treatment. */
     .range__media-frame--object {
-      aspect-ratio: 3 / 5;
-      max-width: 240px;
+      aspect-ratio: auto;
+      min-height: 260px;
+      max-width: 160px;
       margin: 0 auto;
       padding: var(--space-4) 0;
+    }
+    .range__cigar--object {
+      max-height: 240px;
+      max-width: 100%;
     }
     .range__media-frame--scene {
       aspect-ratio: 1 / 1;
