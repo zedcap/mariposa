@@ -92,18 +92,17 @@ const { footer } = global;
     .site-footer__bottom {
       flex-direction: column;
       align-items: flex-start;
-      /* Halved stack gap (Stephane 2026-05-24): on mobile the wordmark
-         and copyright stack vertically, and the desktop --space-7 (48px)
-         opens too much air between them. --space-5 (24px) tightens the
-         pair back into a single bottom-row unit. */
-      gap: var(--space-5);
+      /* Stack gap reverts to the desktop --space-7 (48px) — Stephane
+         2026-05-24 reversed the prior tighten pass; the wordmark and
+         copyright should keep the section's standard vertical unit
+         even when stacked. */
     }
     .site-footer__copyright {
       text-align: left;
-      /* Step down one size (Stephane 2026-05-24): --fs-caption (13px)
-         reads too loud next to the wordmark on mobile. Drop to
-         --fs-eyebrow (12px). Desktop unchanged. */
-      font-size: var(--fs-eyebrow);
+      /* Step down two sizes (Stephane 2026-05-24): --fs-caption (13px)
+         → --fs-eyebrow (12px) → 11px. No named token below --fs-eyebrow;
+         literal 11px is the micro-fine-print step. Desktop unchanged. */
+      font-size: 11px;
     }
   }
 </style>

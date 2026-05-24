@@ -518,7 +518,11 @@ const discoverHref: Record<string, string> = {};
      mirroring how Volage's ghost hugs its cigar. right: auto so the
      pin holds even if a future rule sets a right value. */
   .range__frame--caprice .range__ghost {
-    left: 48%;
+    /* Nudged 1.5cm right (Stephane 2026-05-24): the ghost was sitting
+       a touch too close to the cigar's left edge on the flipped layout.
+       calc(48% + 1.5cm) keeps the percentage anchor against the grid
+       and adds a fixed physical offset (~56.7px at 96dpi). */
+    left: calc(48% + 1.5cm);
     right: auto;
   }
 
