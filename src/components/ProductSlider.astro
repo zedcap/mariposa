@@ -690,19 +690,32 @@ const discoverHref: Record<string, string> = {};
       grid-column: auto;
       grid-row: auto;
     }
+    /* Caprice ghost-C — neutralise the desktop right-side anchor on
+       mobile (Stephane 2026-05-25). Desktop pins the ghost to
+       `left: calc(48% + 1.5cm)` to sit opposite the flipped image;
+       on mobile the frame collapses to a single column with the cigar
+       absolutely centred behind the copy, so the ghost must mirror
+       Volage's base position (left: 4%). Without this reset the
+       ghost-C and copy read as pushed too far right on mobile. */
+    .range__frame--caprice .range__ghost {
+      left: 4%;
+      right: auto;
+    }
     /* Cigar layer — middle. Pulled out of grid flow, anchored to the
        frame, vertically centred and centred horizontally. Tall and
        slim: max-height tuned to ~80vh so the cigar reads as a
-       vertical column behind the copy. Lowered opacity (0.4) keeps
-       the copy on top readable without a scrim. z-index 1 sits
-       above the ghost (z 0) and below the copy (z 2). */
+       vertical column behind the copy. Opacity 0.5 (Stephane
+       2026-05-25, bumped from 0.4) keeps the copy on top readable
+       without a scrim while letting the cigar read more present
+       behind it. z-index 1 sits above the ghost (z 0) and below
+       the copy (z 2). */
     .range__media {
       position: absolute;
       inset: 0;
       display: grid;
       place-items: center;
       z-index: 1;
-      opacity: 0.4;
+      opacity: 0.5;
       pointer-events: none;
     }
     .range__media-frame--object {
