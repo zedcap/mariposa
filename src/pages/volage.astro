@@ -398,17 +398,17 @@ const specsBgImage = `url("${withBase('/specs-bg-volage-gold.jpg')}")`;
     width: 100vw;
     margin-inline: calc(50% - 50vw);
     /* Stacked background (2026-05-24): cigars-table.jpg as the base
-       layer, 80% --ink-brown wash on top via a flat linear-gradient.
+       layer, 90% --ink-brown wash on top via a flat linear-gradient.
        Single-element mechanism (no ::before) so the spec children
        inherit nothing extra and need no z-index. Wash hex must match
        --ink-brown (#2A1E14); CSS gradients don't accept var() inside
        rgba(), so the literal is repeated here. Photo shows through at
-       ~20%, enough texture to read as a table surface without
+       ~10%, enough texture to read as a table surface without
        compromising legibility of the inverted text. Fallback solid
        brown preserved for the no-image edge case. */
     background-color: var(--ink-brown);
     background-image:
-      linear-gradient(rgba(42, 30, 20, 0.8), rgba(42, 30, 20, 0.8)),
+      linear-gradient(rgba(42, 30, 20, 0.9), rgba(42, 30, 20, 0.9)),
       var(--specs-bg-image);
     background-size: cover;
     background-position: center;
