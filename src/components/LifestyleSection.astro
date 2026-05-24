@@ -183,32 +183,27 @@ const { paragraphs } = Astro.props;
      Strengthen the scrim so the prose stays legible against the
      larger relative share of the frame the type occupies on phones.
 
-     Vertical separation (Stephane 2026-05-24, pass 3): the previous
-     pass halved the band height on mobile (85vh→42.5vh / 560px→280px)
-     reading "halve the padding" as a height move. The actual ask was
-     MARGIN — visible space ABOVE and BELOW the band, separating it
-     from the sections above/below. Band height restored to the
-     original 85vh / 560px (matches desktop) so the photographic ground
-     reads at full editorial weight on phones; margin-block adds the
-     breathing room between this section and its neighbours.
-     clamp(--space-7, 8vw, --space-9) = 48-96px floor/ceiling, ~8vw
-     fluid in between (~32px at 400px viewport, ~58px at 720px). The
-     section is full-bleed and has no container, so margin-block on
-     the section element itself is the right insertion point. */
+     Vertical separation (Stephane 2026-05-24, pass 5): pass 3 added
+     `margin-block` on .story to create breathing room between the
+     section and its neighbours. That margin exposed the body's
+     white background between cream .range above and pearl footer
+     below — the "white bands" bug. Fix: drop margin-block entirely
+     and fold the breathing room into padding-block. The bed
+     (position:absolute; inset:0) extends into the padding, so the
+     photographic ground fills edge to edge with no white showing
+     through. Combined padding = the prior content padding + the
+     prior margin, so the visual separation is preserved as
+     photograph rather than void.
+
+     padding-block clamp(--space-8, 20vw, calc(var(--space-8) * 2))
+     = 64-128px (80px floor, ~80px at 400vw, 128px at 640vw+). Sum
+     of the previous content padding (~48-64px) and the previous
+     external margin (~48-96px). */
   @media (max-width: 720px) {
-    /* Internal vertical space (Stephane 2026-05-24, pass 4): the
-       85vh / 560px-min band centring the content via place-items
-       produced ~110-140px of void above the wordmark and below the
-       last paragraph. Spec: halve that. Mechanism: drop the fixed
-       band height entirely, let content + explicit padding-block
-       define the section height. clamp(--space-7, 12vw, --space-8)
-       = 48-64px (48px floor, ~48px at 400vw, 64px at 720vw), ~half
-       of the prior centring void. External margin-block unchanged. */
     .story {
       height: auto;
       min-height: 0;
-      padding-block: clamp(var(--space-7), 12vw, var(--space-8));
-      margin-block: clamp(var(--space-7), 8vw, var(--space-9));
+      padding-block: clamp(var(--space-8), 20vw, calc(var(--space-8) * 2));
     }
     .story__scrim {
       background: linear-gradient(
