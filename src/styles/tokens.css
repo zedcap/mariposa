@@ -121,12 +121,13 @@
   --page-pad-m: 24px;
 
   /* ─── Sticky nav ─────────────────────────────────────────── */
-  /* The nav surface is opaque and scroll-tied: it samples the section
-     directly beneath it and interpolates from white to cream as the
-     gradient bleed wedge passes through the nav band — see
-     Header.astro. The previous translucent --nav-bg + --nav-blur
-     tokens were retired in an earlier pass (Stephane: translucency
-     rejected for this surface). The opaque endpoints live in
-     Header.astro as --nav-white / --nav-cream, kept local to the
-     component because nothing else in the system pulls them. */
+  /* The nav surface is opaque solid white at all times. Two earlier
+     mechanisms were tried and retired:
+       1. Translucent --nav-bg + --nav-blur (rejected: translucency
+          unwanted on this surface).
+       2. Opaque white→cream scroll-tracking via --nav-white /
+          --nav-cream / --nav-bg-current (retired 2026-05-24: nav
+          stays white throughout, regardless of section beneath).
+     The bar is now styled directly in Header.astro; no nav-related
+     tokens live here. */
 }

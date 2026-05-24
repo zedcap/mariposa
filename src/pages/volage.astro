@@ -1,35 +1,50 @@
 ---
 /* Volage product page — restructured 2026-05-24.
    ------------------------------------------------------------------
-   Header replaced with Option A (tagline-led) from
-   volage-header-research.md, Part 3 — Pax's recommended pick.
-   Same-day pass also removed the SignatureBlock invocation and
-   the Caprice cross-link section. The page now sequences:
+   Two passes on this date:
 
-     1. Hero            — Option A. Pearl ground, 62/38 split,
-                          tagline as protagonist on a 22ch
-                          measure, "Volage" as a quiet signature
-                          beneath. cigar-volage.png with a soft
-                          drop shadow, no frame.
+   Pass 1 (earlier today) replaced the header with Option A
+   (tagline-led) from volage-header-research.md and removed the
+   SignatureBlock invocation + Caprice cross-link section.
+
+   Pass 2 (this commit) rebuilt the hero header order and removed
+   the Presentation section entirely. Page now sequences:
+
+     1. Hero            — Pearl ground, 62/38 split. Header order:
+                          (a) signature "Volage" (Spectral roman,
+                              size unchanged from prior signature),
+                          (b) gold hairline 120px (moved beneath
+                              the signature),
+                          (c) italic Spectral tagline (protagonist,
+                              22ch measure),
+                          (d) two eyebrow lines — "CANONAZO"
+                              uppercase, then "150 mm · 52 ring
+                              gauge" in the same eyebrow grammar but
+                              with `text-transform: none`.
+                          cigar-volage.png with a soft drop shadow
+                          in the right column, no frame.
      2. The cigar       — narrative + PROFILE / BLEND specs.
      3. The smoke arc   — tasting thirds on a sticky timeline.
-     4. Presentation    — three-up packaging gallery (placeholders).
 
-   The SignatureBlock import and invocation were dropped; the
-   component file remains on disk for possible reuse. The Caprice
-   cross-link markup + CSS + reveal were removed; the page now
-   terminates at Presentation and runs straight into the footer.
+   The Presentation section (3-image packaging gallery) was stripped
+   in Pass 2: markup, CSS (.packaging*, .placeholder*), and the
+   reveal call. The `packaging` field in volage.json stays as
+   harmless data; it is simply no longer rendered. Page now
+   terminates at the smoke arc and runs straight into the footer.
+
+   The SignatureBlock import and invocation were dropped in Pass 1;
+   the component file remains on disk for possible reuse. The
+   Caprice cross-link markup + CSS + reveal were also removed in
+   Pass 1.
 
    Background flow (top to bottom): pearl (hero) → white (cigar) →
-   white (smoke arc, component-owned) → pearl (presentation) →
-   footer. Two pearl beds at the two compositional pauses, white
-   in between for reading. The earlier cream #f2f0e9 crosslink
-   bed went with the section it served.
+   white (smoke arc, component-owned) → footer (component-owned
+   pearl). One pearl bed at the top, one at the foot via the
+   footer, white in between for reading.
 
    Motion: rise-and-fade reveals via the shared helper. Hero
-   uses the Option A cascade — eyebrow → rule (drawing
-   left-to-right) → tagline → signature, with the cigar
-   fading and scaling alongside. */
+   uses a cascade — signature → rule (drawing left-to-right) →
+   tagline → eyebrow lines, with the cigar fading alongside. */
 
 import { getEntry } from 'astro:content';
 import { Image } from 'astro:assets';
@@ -52,20 +67,25 @@ const specsBgImage = `url("${withBase('/specs-bg-header-1.jpg')}")`;
 ---
 
 <BaseLayout title={`Mariposa • ${product.name}`}>
-  {/* ─── 1. Hero — Option A, signature-below-tagline ──────────
-       Source + visual order match (Stephane 2026-05-24, reverted):
-         eyebrow (Canonazo only) → hairline → tagline → signature
-         (Volage).
-       Tagline is the protagonist; "Volage" sits beneath as the
-       quiet signature. Source order matches visual order; no flex
-       `order` flip needed. */}
+  {/* ─── 1. Hero — signature-led header (Stephane 2026-05-24) ───
+       Source + visual order:
+         signature (Volage) → hairline → tagline → vitola eyebrow
+         (CANONAZO) → format eyebrow (150 mm · 52 ring gauge).
+       The signature opens the page in the same Spectral roman as
+       before; the gold hairline now sits BELOW it; the italic
+       tagline carries protagonist size; two eyebrow lines close
+       the block. Format line uses .hero__eyebrow--cased so the
+       lowercase "mm" reads literally — same font/weight/colour/
+       tracking as the vitola eyebrow above, only text-transform
+       is overridden to none. */}
   <section class="hero" data-reveal-section>
     <div class="hero__inner container">
       <div class="hero__copy" data-reveal-copy>
-        <p class="hero__eyebrow">{product.vitola}</p>
+        <h1 class="hero__signature">{product.name}</h1>
         <span class="hero__rule" aria-hidden="true"></span>
         <p class="hero__tagline">{product.tagline}</p>
-        <h1 class="hero__signature">{product.name}</h1>
+        <p class="hero__eyebrow">{product.vitola}</p>
+        <p class="hero__eyebrow hero__eyebrow--cased">{product.format}</p>
       </div>
 
       <div class="hero__media" data-reveal-media>
@@ -156,32 +176,6 @@ const specsBgImage = `url("${withBase('/specs-bg-header-1.jpg')}")`;
 
   {/* ─── 3. The smoke arc ────────────────────────────────────── */}
   <SmokeArc tasting={product.tasting} />
-
-  {/* ─── 4. Presentation — static gallery ────────────────────── */}
-  {product.packaging && product.packaging.length > 0 && (
-    <section class="packaging" aria-labelledby="packaging-heading" data-reveal-section>
-      <div class="packaging__inner container">
-        <p class="eyebrow packaging__eyebrow" id="packaging-heading">Presentation</p>
-        <p class="packaging__lede">
-          Presented as a single cigar, the gold leaf set against the
-          band and the postcard tucked alongside.
-        </p>
-        <div class="packaging__grid">
-          {product.packaging.map((slot, i) => (
-            <figure class="placeholder placeholder--square" aria-label={slot.placeholderCaption ?? `Packaging placeholder ${i + 1}`} data-reveal-pack>
-              <span class="placeholder__corner placeholder__corner--tl" aria-hidden="true"></span>
-              <span class="placeholder__corner placeholder__corner--tr" aria-hidden="true"></span>
-              <span class="placeholder__corner placeholder__corner--bl" aria-hidden="true"></span>
-              <span class="placeholder__corner placeholder__corner--br" aria-hidden="true"></span>
-              <figcaption class="placeholder__caption">
-                {slot.placeholderCaption ?? 'PLACEHOLDER: packaging shot required.'}
-              </figcaption>
-            </figure>
-          ))}
-        </div>
-      </div>
-    </section>
-  )}
 </BaseLayout>
 
 <style>
@@ -238,21 +232,42 @@ const specsBgImage = `url("${withBase('/specs-bg-header-1.jpg')}")`;
     flex-direction: column;
     align-items: flex-start;
   }
+  /* Eyebrow lines (vitola + format). Matched to the CIGAR-section
+     strip-title treatment (Stephane 2026-05-24): weight 600,
+     letter-spacing --ls-section, colour --accent-strong. Two lines
+     sit at the foot of the header block: the vitola in canonical
+     uppercase, the format in --cased so its literal mixed case
+     ("150 mm · 52 ring gauge") reads as written. Spacing between
+     the two eyebrow rows is tight (--space-2) so they read as a
+     paired caption rather than two separate beats. */
   .hero__eyebrow {
     font-family: var(--font-body);
     font-size: var(--fs-eyebrow);
-    font-weight: 500;
-    letter-spacing: var(--ls-eyebrow);
+    font-weight: 600;
+    letter-spacing: var(--ls-section);
     text-transform: uppercase;
-    color: var(--gold-deep);
-    margin: 0 0 var(--space-5) 0;
+    color: var(--accent-strong);
+    margin: 0;
   }
+  /* First eyebrow sits a generous beat below the tagline. */
+  .hero__tagline + .hero__eyebrow {
+    margin-top: var(--space-5);
+  }
+  /* Format line — same eyebrow grammar but cased: text-transform
+     dropped so lowercase reads literally. Sits tight under the
+     vitola eyebrow above. */
+  .hero__eyebrow--cased {
+    text-transform: none;
+    margin-top: var(--space-2);
+  }
+  /* Gold hairline — sits BELOW the signature and ABOVE the tagline
+     (Stephane 2026-05-24). Margins carry both gaps. */
   .hero__rule {
     display: block;
     width: 120px;
     height: 1px;
     background: var(--gold-leaf);
-    margin: 0 0 var(--space-6) 0;
+    margin: var(--space-5) 0 var(--space-6) 0;
     /* Drawn-in entry: starts at scaleX(0); the rule's tween in the
        script below scales it to 1 left-to-right shortly after the
        copy column enters. Resting state for prefers-reduced-motion
@@ -260,12 +275,12 @@ const specsBgImage = `url("${withBase('/specs-bg-header-1.jpg')}")`;
     transform: scaleX(0);
     transform-origin: left center;
   }
-  /* Signature — one step up the scale (Stephane 2026-05-24):
-     1.2/2vw/1.5rem → 1.4/2.4vw/1.75rem. Stays smaller than the
-     tagline; tagline keeps its size-protagonist role. Sits below
-     the tagline (Stephane 2026-05-24, reverted): the gap lives
-     on margin-top so it separates the signature from the tagline
-     above. */
+  /* Signature — Spectral roman, sized as the prior signature
+     treatment (clamp 1.4/2.4vw/1.75rem). Now opens the header
+     block (Stephane 2026-05-24); the gold hairline sits beneath
+     it, then the tagline, then the eyebrow lines. The tagline
+     remains the size-protagonist; the signature is the quiet
+     opener. Margin top zeroed — first element in the column. */
   .hero__signature {
     font-family: var(--font-display);
     font-style: normal;
@@ -274,7 +289,7 @@ const specsBgImage = `url("${withBase('/specs-bg-header-1.jpg')}")`;
     line-height: var(--lh-snug);
     letter-spacing: var(--ls-display);
     color: var(--ink);
-    margin: var(--space-5) 0 0 0;
+    margin: 0;
   }
   .hero__tagline {
     font-family: var(--font-display);
@@ -519,81 +534,6 @@ const specsBgImage = `url("${withBase('/specs-bg-header-1.jpg')}")`;
     color: var(--pearl);
   }
 
-  /* ── 4. Presentation ──────────────────────────────────────────
-     Pearl bed — anchors the page's lower compositional pause and
-     mirrors the hero's pearl ground at the top. Smoke arc above
-     stays on the default white, so the sequence reads pearl →
-     white → white → pearl → footer (the footer itself is
-     component-owned pearl), one continuous editorial sheet
-     with two warmed beds at the two compositional pauses. */
-  .packaging {
-    background: var(--pearl);
-  }
-  .packaging__inner {
-    text-align: center;
-  }
-  .packaging__eyebrow {
-    margin-bottom: var(--space-5);
-  }
-  .packaging__lede {
-    font-family: var(--font-display);
-    font-style: italic;
-    font-weight: 400;
-    font-size: clamp(1.05rem, 1.8vw, 1.25rem);
-    line-height: var(--lh-loose);
-    color: var(--ink);
-    max-width: 44ch;
-    margin: 0 auto var(--space-7) auto;
-  }
-  .packaging__grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: clamp(var(--space-5), 4vw, var(--space-7));
-    text-align: left;
-  }
-  .placeholder--square {
-    aspect-ratio: 1 / 1;
-  }
-  @media (max-width: 720px) {
-    .packaging__grid {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  /* ── Placeholder grammar (page-scoped, used by section 4) ──
-     Same primitives as the components — kept inline here so the
-     packaging grid doesn't depend on a shared partial. If a fourth
-     placeholder use lands, extract. */
-  .placeholder {
-    position: relative;
-    margin: 0;
-    background: var(--white);
-    border: 1px dashed var(--gold-deep);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: clamp(var(--space-5), 4vw, var(--space-7));
-  }
-  .placeholder__caption {
-    font-family: var(--font-body);
-    font-size: var(--fs-small);
-    line-height: var(--lh-snug);
-    letter-spacing: 0.02em;
-    color: var(--gold-deep);
-    text-align: center;
-    max-width: 32ch;
-  }
-  .placeholder__corner {
-    position: absolute;
-    width: 12px;
-    height: 12px;
-    border: 1px solid var(--gold-deep);
-  }
-  .placeholder__corner--tl { top: -1px;  left: -1px;  border-right: 0; border-bottom: 0; }
-  .placeholder__corner--tr { top: -1px;  right: -1px; border-left: 0;  border-bottom: 0; }
-  .placeholder__corner--bl { bottom: -1px; left: -1px;  border-right: 0; border-top: 0; }
-  .placeholder__corner--br { bottom: -1px; right: -1px; border-left: 0;  border-top: 0; }
-
   /* ── Mobile collapse ───────────────────────────────────────── */
   @media (max-width: 720px) {
     .hero {
@@ -683,10 +623,6 @@ const specsBgImage = `url("${withBase('/specs-bg-header-1.jpg')}")`;
   const cigarStrips = document.querySelectorAll<HTMLElement>('.cigar [data-reveal-strip]');
   if (cigarParas.length) reveal(cigarParas, { y: 22, duration: 0.9, stagger: 0.14, start: 'top 82%' });
   if (cigarStrips.length) reveal(cigarStrips, { y: 24, duration: 0.9, stagger: 0.1, start: 'top 82%' });
-
-  // Section 4 (presentation) — packaging slots fade in as a block.
-  const packs = document.querySelectorAll('.packaging [data-reveal-pack]');
-  if (packs.length) reveal(packs, { y: 22, duration: 0.85, stagger: 0.12, start: 'top 84%' });
 
   refreshOnLoad();
 </script>
