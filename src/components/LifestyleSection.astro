@@ -1,32 +1,41 @@
 ---
 /* Home lifestyle section — the condensed Mariposa story.
    ------------------------------------------------------------------
-   2026-05-23. The image bed (brandmark-sq.jpg) and the duotone wash
-   that floated behind the card have been removed; the card now sits
-   directly on the page surface. The card-level "Mariposa" eyebrow has
-   also been removed — the story opens straight into the italic prose.
-   The closing display-scale line ("Don't wait for special occasions.
-   Create them.") has been stripped as redundant with the footer
-   brand-line; the closing thought now lives inline as the final
-   sentence of the second paragraph.
+   2026-05-24. Rebuild as Option A (full-bleed room), Stephane's pick
+   from `/story-mocks`. The cream-bed card-on-paper pattern is gone:
+   the section is now an 85vh edge-to-edge photographic ground
+   (volage_gold.jpg) with the story prose set in white italic
+   Spectral over a three-stop dark gradient.
 
-   2026-05-23 (later). The mariposa wordmark now opens the card as a
-   centred masthead, sized to match the .range__name SKU type in the
-   product slider (clamp(1.6rem, 4.0vw, 2.8rem) — height, with auto
-   width). Space-6 separates the mark from the first prose paragraph.
+   Adjustments to the mock-A baseline:
+     1. The eyebrow text ("Mariposa — a small story") is replaced by
+        the white mariposa wordmark, sized to the same height the
+        masthead wordmark used previously (clamp(1.6rem, 4.0vw,
+        2.8rem)). The mark opens the column at top; the prose closes.
+        No closing wordmark below the prose.
+     2. Background image: assets/story-bg-volage-gold.jpg (copied from
+        the creative-assets cigars folder). object-position 50% 35%
+        keeps the cigar shaft and 24-carat gold leaf in frame across
+        the 85vh band; the gradient bites hardest behind the prose's
+        vertical position (~42% ink mid-stop) so the white type holds.
 
-   2026-05-23 (revert). The cream section background (#f2f0e9) and
-   the [data-cream-bg] hook for the nav observer are restored after
-   Stephane reversed the strip-cream pass. The body is plain white
-   again, and the paper-fibre texture is now scoped to the story
-   card's interior only — applied as a tiled background on
-   .story__card so the card reads as a paper-toned surface against
-   the cream section bed. Card geometry, padding rhythm, and
-   paragraph-by-paragraph reveal are preserved.
+   Cream-bed mechanics:
+     - data-cream-bg attribute REMOVED. The section is now
+       photographic, not cream — the nav observer should return to
+       opaque white over this section. The product slider above keeps
+       its data-cream-bg, so the observer mechanism is unchanged for
+       that surface.
+
+   Motion:
+     - Single rise-and-fade on the prose column (wordmark + prose
+       lifted together as one block). The previous
+       paragraph-by-paragraph cascade was a card-era flourish; with
+       the card gone, a single editorial settle reads cleaner.
 
    prefers-reduced-motion: copy shown in place (handled by reveal). */
 
 import { Image } from 'astro:assets';
+import storyBg from '../assets/story-bg-volage-gold.jpg';
 import wordmarkWhite from '../assets/mariposa-logo-white.png';
 
 interface Props {
@@ -35,108 +44,131 @@ interface Props {
 const { paragraphs } = Astro.props;
 ---
 
-<section class="story" aria-labelledby="story-heading" data-story data-cream-bg>
-  <div class="story__layer container">
-    <article class="story__card grain" data-story-card>
-      <h2 class="visually-hidden" id="story-heading">The Mariposa story</h2>
+<section class="story" aria-labelledby="story-heading" data-story>
+  <h2 class="visually-hidden" id="story-heading">The Mariposa story</h2>
 
-      <Image
-        class="story__wordmark"
-        src={wordmarkWhite}
-        alt="Mariposa"
-        widths={[260, 420, 640]}
-        sizes="(max-width: 720px) 50vw, 320px"
-        loading="lazy"
-      />
+  <Image
+    class="story__bg"
+    src={storyBg}
+    alt=""
+    aria-hidden="true"
+    widths={[960, 1440, 1920, 2560]}
+    sizes="100vw"
+    loading="lazy"
+  />
 
-      <div class="story__prose">
-        {paragraphs.map((para) => <p class="story__para" data-story-para>{para}</p>)}
-      </div>
-    </article>
+  <div class="story__scrim" aria-hidden="true"></div>
+
+  <div class="story__inner" data-story-inner>
+    <Image
+      class="story__wordmark"
+      src={wordmarkWhite}
+      alt="Mariposa"
+      widths={[260, 420, 640]}
+      sizes="(max-width: 720px) 50vw, 320px"
+      loading="lazy"
+    />
+
+    <div class="story__prose">
+      {paragraphs.map((para) => <p>{para}</p>)}
+    </div>
   </div>
 </section>
 
 <style>
+  /* ── Section frame ──────────────────────────────────────────────
+     85vh band, edge-to-edge of the viewport. No container; the
+     section is its own bleed. min-height keeps the composition
+     intact on very short viewports (laptop landscape, etc.). */
   .story {
     position: relative;
-    /* Cream section bed restored (Stephane 2026-05-23, revert): the
-       lifestyle section returns to #f2f0e9, matching the product
-       section above so the cream zone reads as one continuous band
-       from the bleed wedge down to the footer.
-       Top padding halved (Stephane review 2026-05-23): paired cut
-       with .range's padding-bottom to close the slider-controls →
-       story-card gap ~50%. Bottom padding halved in the same shape
-       (Stephane review 2026-05-23, later) to close the story-card →
-       footer gap ~50%; mirrors the top value exactly. Footer's own
-       padding-top (--footer-rhythm: 48px) left alone — modest next
-       to the story's 96–179px range, so one knob does the work. */
-    background: #f2f0e9;
-    padding-top: clamp(var(--space-7), 7vw, calc(var(--space-10) * 0.7));
-    padding-bottom: clamp(var(--space-7), 7vw, calc(var(--space-10) * 0.7));
+    width: 100%;
+    height: 85vh;
+    min-height: 560px;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    isolation: isolate;
   }
 
-  /* ── Story card ─────────────────────────────────────────────── */
-  .story__layer {
+  /* ── Photographic ground ────────────────────────────────────────
+     Astro <Image> emits a sized <img>; we pin it absolutely and let
+     object-fit / object-position handle the crop. object-position
+     50% 35% keeps the gold-leaf signature and cigar shaft in frame
+     across the 85vh band; the source is squareish, so trimming top
+     and bottom is the honest read. */
+  .story__bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 35%;
+    z-index: 0;
+  }
+
+  /* ── Gradient overlay ───────────────────────────────────────────
+     Three-stop dark-to-clear, biting hardest mid-section where the
+     prose sits. ~18 / 42 / 28% ink — enough to hold white italic
+     Spectral, light enough to keep the photographic ground reading
+     as a photograph rather than a slab. Mobile gets a stronger pull
+     because the prose occupies a larger share of the frame. */
+  .story__scrim {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(
+      180deg,
+      rgba(31, 27, 23, 0.18) 0%,
+      rgba(31, 27, 23, 0.42) 50%,
+      rgba(31, 27, 23, 0.28) 100%
+    );
+  }
+
+  /* ── Prose column ───────────────────────────────────────────────
+     Centred, ~52ch measure, white italic Spectral. Wordmark at top,
+     prose immediately below — there is no closing mark; the prose
+     is the close. */
+  .story__inner {
     position: relative;
     z-index: 2;
-  }
-  .story__card {
-    /* Warm-gold exploratory pass (Stephane 2026-05-23). Card swapped
-       from --pink (#d06f98) to a hard-coded #c5ac6a — warm gold /
-       khaki — to test against the cream bed. Hex hard-coded
-       deliberately: exploratory, not yet a token. White wordmark and
-       white prose preserved. Card geometry, border, lift, and reveal
-       motion all unchanged. */
-    background-color: #c5ac6a;
-    border: 1px solid var(--border-gold);
-    box-shadow: var(--shadow-lift);
-    /* Centered + widened (Stephane review 2026-05-23). Previous
-       asymmetry (margin-left clamp + 600px cap) broke the now-removed
-       brandmark image bed; with the bed gone the offset has no
-       remaining rationale. Card recentred via margin-inline:auto and
-       widened 600 → 760px so it occupies more horizontal real estate
-       without losing the editorial measure on the prose inside. */
-    max-width: 760px;
+    text-align: center;
+    padding-inline: var(--page-pad-m);
+    max-inline-size: 52ch;
     margin-inline: auto;
-    padding: clamp(var(--space-7), 5vw, var(--space-9));
-  }
-  /* Paper-grain over the card surface. */
-  .story__card.grain::before {
-    opacity: 0.06;
   }
 
-  /* Wordmark masthead — centred above the prose, sized to match the
-     SKU name in the product slider (.range__name). Width auto so the
-     mark's natural aspect ratio (~6.66:1) is preserved. Block element
-     with auto inline margins so the centre call is one-line to flip
-     to left-alignment if Stephane prefers. */
   .story__wordmark {
     display: block;
     height: clamp(1.6rem, 4.0vw, 2.8rem);
     width: auto;
     margin-inline: auto;
-    margin-bottom: var(--space-6);
+    margin-bottom: var(--space-7);
   }
 
-  .story__para {
+  .story__prose p {
     font-family: var(--font-display);
     font-style: italic;
     font-weight: 400;
-    /* One step smaller (Stephane review 2026-05-23, later). Proportional
-       drop on all three clamp values, ~83%: floor 0.95→0.8rem, middle
-       1.8→1.5vw, ceiling 1.2→1.0rem. Italic treatment, line-height,
-       paragraph reveal motion all preserved. */
-    font-size: clamp(0.8rem, 1.5vw, 1rem);
+    font-size: clamp(1.1rem, 1.8vw, 1.4rem);
     line-height: var(--lh-loose);
     color: var(--white);
   }
-  .story__para + .story__para {
+  .story__prose p + p {
     margin-top: var(--space-5);
   }
 
+  /* ── Mobile ─────────────────────────────────────────────────────
+     Strengthen the scrim so the prose stays legible against the
+     larger relative share of the frame the type occupies on phones. */
   @media (max-width: 720px) {
-    .story__card {
-      padding: var(--space-7);
+    .story__scrim {
+      background: linear-gradient(
+        180deg,
+        rgba(31, 27, 23, 0.28) 0%,
+        rgba(31, 27, 23, 0.55) 50%,
+        rgba(31, 27, 23, 0.38) 100%
+      );
     }
   }
 </style>
@@ -144,13 +176,10 @@ const { paragraphs } = Astro.props;
 <script>
   import { reveal } from '../lib/motion';
 
-  const section = document.querySelector<HTMLElement>('[data-story]');
-  if (section) {
-    const card = section.querySelector<HTMLElement>('[data-story-card]');
-    const paras = section.querySelectorAll('[data-story-para]');
-
-    // The card lifts in as a whole, then its paragraphs cascade.
-    if (card) reveal(card, { y: 40, duration: 1, start: 'top 82%' });
-    reveal(paras, { y: 22, duration: 0.8, stagger: 0.14, delay: 0.2, start: 'top 78%' });
-  }
+  /* Single rise-and-fade on the prose column. Wordmark + paragraphs
+     lift together as one editorial block; the previous paragraph-by-
+     paragraph cascade belonged to the card era and would feel busy
+     against a still photographic ground. */
+  const inner = document.querySelector<HTMLElement>('[data-story-inner]');
+  if (inner) reveal(inner, { y: 32, duration: 1, start: 'top 82%' });
 </script>
