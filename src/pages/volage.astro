@@ -420,14 +420,14 @@ const specsBgImage = `url("${withBase('/specs-bg-volage-gold.jpg')}")`;
        inverted text. Fallback solid brown preserved for the no-image
        edge case. */
     background-color: var(--ink-brown);
-    /* Stacked backgrounds (2026-05-24): top layer is a transparent →
-       white wash over the bottom 200px, blurring the hard edge into
-       the .smoke (Tasting Notes) section beneath. Middle layer is the
-       flat 85% --ink-brown wash; base layer is the cigars-table photo.
-       Same fade recipe as the hero → cigar section transition and the
-       home position-statement → product transition. Stephane 2026-05-24. */
+    /* Stacked backgrounds: 85% --ink-brown wash over the cigars-table
+       photo. The bottom-fade-to-white layer was tried (2026-05-24) and
+       walked back same day per Stephane — the soft fade didn't read;
+       the hard horizontal boundary into the Tasting Notes section is
+       the preferred treatment. Wash hex must match --ink-brown
+       (#2A1E14); CSS gradients don't accept var() inside rgba(), so
+       the literal is repeated here. Photo shows through at ~15%. */
     background-image:
-      linear-gradient(to bottom, transparent 0%, transparent calc(100% - 200px), #FFFFFF 100%),
       linear-gradient(rgba(42, 30, 20, 0.85), rgba(42, 30, 20, 0.85)),
       var(--specs-bg-image);
     background-size: cover;

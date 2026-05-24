@@ -280,13 +280,12 @@ const specsBgImage = `url("${withBase('/specs-bg-caprice-gold.jpg')}")`;
     width: 100vw;
     margin-inline: calc(50% - 50vw);
     background-color: var(--ink-brown);
-    /* Stacked backgrounds (2026-05-24): top layer is a transparent →
-       white wash over the bottom 200px, blurring the hard edge into
-       the .smoke (Tasting Notes) section beneath. Middle layer is the
-       flat 85% --ink-brown wash; base layer is the caprice_gold photo.
-       Mirror of the Volage rule. Stephane 2026-05-24. */
+    /* Stacked backgrounds: 85% --ink-brown wash over the caprice_gold
+       photo. The bottom-fade-to-white layer was tried (2026-05-24) and
+       walked back same day per Stephane — the soft fade didn't read;
+       the hard horizontal boundary into the Tasting Notes section is
+       the preferred treatment. Mirror of the Volage rule. */
     background-image:
-      linear-gradient(to bottom, transparent 0%, transparent calc(100% - 200px), #FFFFFF 100%),
       linear-gradient(rgba(42, 30, 20, 0.85), rgba(42, 30, 20, 0.85)),
       var(--specs-bg-image);
     background-size: cover;

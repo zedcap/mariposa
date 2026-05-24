@@ -1,14 +1,22 @@
 ---
-/* Shared footer. Wordmark, brand line, copyright.
+/* Shared footer. Wordmark, brand line, copyright + Terms link.
    Contact channels handled by the sticky contact element.
    21+ requirement handled by the age gate at entry.
-   No legal-entity line (resolved decision 5). */
+   No legal-entity line (resolved decision 5).
+
+   The copyright reads as one continuous sentence: a static lead
+   ("© 2026 Mariposa.") followed by a linked phrase ("Terms &
+   Conditions.") that routes to /terms. Same register as the
+   surrounding copyright text — only the hover underline marks
+   it as a link. */
 import { getEntry } from 'astro:content';
+import { withBase } from '../lib/path';
 
 const global = (await getEntry('site', 'global'))!.data as {
-  footer: { brandLine: string; copyright: string };
+  footer: { brandLine: string; copyrightLead: string; termsLabel: string };
 };
 const { footer } = global;
+const termsHref = withBase('/terms');
 ---
 
 <footer class="site-footer grain" data-footer>
@@ -19,7 +27,10 @@ const { footer } = global;
 
     <div class="site-footer__bottom">
       <span class="wordmark site-footer__mark">mariposa</span>
-      <p class="site-footer__copyright">{footer.copyright}</p>
+      <p class="site-footer__copyright">
+        {footer.copyrightLead}{' '}
+        <a class="site-footer__terms" href={termsHref}>{footer.termsLabel}</a>
+      </p>
     </div>
   </div>
 </footer>
@@ -86,6 +97,26 @@ const { footer } = global;
     color: var(--ash);
     margin: 0;
     text-align: right;
+  }
+
+  /* Inline Terms link — same register as the copyright text, no
+     decoration at rest; hover lifts colour and reveals a hairline
+     underline. The phrase "Terms & Conditions." sits inside the
+     copyright sentence as the linked span. */
+  .site-footer__terms {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    padding-bottom: 1px;
+    transition:
+      color var(--dur-default) var(--ease-paper),
+      border-color var(--dur-default) var(--ease-paper);
+  }
+  .site-footer__terms:hover,
+  .site-footer__terms:focus-visible {
+    color: var(--ink);
+    border-bottom-color: var(--gold);
+    outline: none;
   }
 
   @media (max-width: 720px) {
