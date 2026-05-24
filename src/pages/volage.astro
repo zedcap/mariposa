@@ -1,109 +1,81 @@
 ---
-/* Volage product page — six-section build.
+/* Volage product page — restructured 2026-05-24.
    ------------------------------------------------------------------
-   Initial seven-section rebuild on 2026-05-23. Same day, Stephane's
-   first review trimmed two things:
-     - The Origin arc moved off this page and now lives at /about as
-       a placeholder, consuming the same `origin` array from this
-       JSON via getEntry. When About is properly authored later, the
-       origin field can be split out of volage.json.
-     - Section 4's condensed spec strip + <details> reveal was
-       dropped. All 12 specs render in one block now, in source
-       order.
+   Header replaced with Option A (tagline-led) from
+   volage-header-research.md, Part 3 — Pax's recommended pick.
+   Same-day pass also removed the SignatureBlock invocation and
+   the Caprice cross-link section. The page now sequences:
 
-   Section-by-section sources:
+     1. Hero            — Option A. Pearl ground, 62/38 split,
+                          tagline as protagonist on a 22ch
+                          measure, "Volage" as a quiet signature
+                          beneath. cigar-volage.png with a soft
+                          drop shadow, no frame.
+     2. The cigar       — narrative + PROFILE / BLEND specs.
+     3. The smoke arc   — tasting thirds on a sticky timeline.
+     4. Presentation    — three-up packaging gallery (placeholders).
 
-     1. Hero               — refined. Format line stripped (duplicates
-                             vitola). Existing image, existing rhythm.
-     2. The signature      — Gold-leaf differentiator surfaced out
-                             of the body copy and given its own
-                             pearl-bed section, second on the page.
-                             Image is a placeholder (commissioned
-                             macro pending).
-     3. The cigar          — two-paragraph narrative, then the
-                             full 12-row spec list as a single
-                             definition-list (same two-column
-                             treatment the condensed strip used).
-     4. The smoke arc      — three tasting thirds in a vertical
-                             stack, sticky gold timeline marks the
-                             0' / 15' / 30' / 45' beats. Existing
-                             tasting copy preserved. Pairings NOT
-                             included (future addition).
-     5. Packaging          — three-up static gallery. All three
-                             slots are placeholders.
-     6. Cross-link         — existing centred crosslink to Caprice
-                             preserved verbatim.
+   The SignatureBlock import and invocation were dropped; the
+   component file remains on disk for possible reuse. The Caprice
+   cross-link markup + CSS + reveal were removed; the page now
+   terminates at Presentation and runs straight into the footer.
 
-   Components: sections 2 and 4 are extracted so Caprice can drop
-   in its own content unchanged. Sections 1, 3, 5, 6 stay inline
-   on this page — they either carry SKU-specific layout (hero) or
-   are simple enough that componentising would cost more than it
-   saves at this scale. (OriginArc is also componentised; it just
-   no longer renders here — see /about.)
+   Background flow (top to bottom): pearl (hero) → white (cigar) →
+   white (smoke arc, component-owned) → pearl (presentation) →
+   footer. Two pearl beds at the two compositional pauses, white
+   in between for reading. The earlier cream #f2f0e9 crosslink
+   bed went with the section it served.
 
-   Motion: rise-and-fade reveals via the shared helper. Sticky
-   timeline in section 5 is CSS-only (no GSAP pin); active-tick
-   tracking is a small IntersectionObserver inside the component.
-   No scrubbed parallax anywhere. */
+   Motion: rise-and-fade reveals via the shared helper. Hero
+   uses the Option A cascade — eyebrow → rule (drawing
+   left-to-right) → tagline → signature, with the cigar
+   fading and scaling alongside. */
 
 import { getEntry } from 'astro:content';
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import SignatureBlock from '../components/SignatureBlock.astro';
 import SmokeArc from '../components/SmokeArc.astro';
-import { withBase } from '../lib/path';
-import cigarVolage from '../assets/cigar-volage-pink.jpg';
+import cigarVolage from '../assets/cigar-volage.png';
 
 const product = (await getEntry('products', 'volage'))!.data;
-
-/* Specs render as a single full list now (the prior condensed
-   strip + <details> reveal was dropped 2026-05-23 per Stephane —
-   12 entries shown verbatim, in source order). The
-   `condensedSpecKeys` field on the JSON is left in place but
-   unused; harmless until a future redesign re-earns it. */
 ---
 
 <BaseLayout title={`Mariposa — ${product.name}`}>
-  {/* ─── 1. Hero ──────────────────────────────────────────────── */}
+  {/* ─── 1. Hero — Option A, tagline-led ──────────────────────
+       Source order: <h1>Volage</h1> first for SEO and screen
+       readers; visual order is flipped via flex (.hero__copy uses
+       flex-direction: column with explicit `order` values) so the
+       tagline reads as the loudest element while the document
+       heading hierarchy stays semantically correct. */}
   <section class="hero" data-reveal-section>
     <div class="hero__inner container">
-      <div class="hero__media" data-reveal-media>
-        <div class="hero__media-frame">
-          <span class="hero__hairline" aria-hidden="true"></span>
-          <Image
-            class="hero__cigar"
-            src={cigarVolage}
-            alt={`The Mariposa ${product.name} cigar, ${product.tagline.toLowerCase()}`}
-            widths={[420, 720, 1080, 1440]}
-            sizes="(max-width: 720px) 90vw, 48vw"
-            loading="eager"
-          />
-        </div>
+      <div class="hero__copy" data-reveal-copy>
+        <p class="hero__eyebrow">
+          {product.edition}
+          <span class="hero__eyebrow-sep" aria-hidden="true">&middot;</span>
+          {product.vitola}
+        </p>
+        <span class="hero__rule" aria-hidden="true"></span>
+        {/* The <h1> is "Volage" for SEO/a11y; CSS demotes it to
+            signature scale below the tagline. */}
+        <h1 class="hero__signature">{product.name}</h1>
+        <p class="hero__tagline">{product.tagline}</p>
       </div>
 
-      <div class="hero__copy" data-reveal-copy>
-        {product.edition && (
-          <p class="hero__edition">{product.edition}</p>
-        )}
-        <h1 class="hero__name">{product.name}</h1>
-        <p class="hero__vitola">{product.vitola}</p>
-        {/* Format line removed (per brief): duplicates vitola and adds
-            noise. Format lives in the spec strip in section 4. */}
-        <p class="hero__tagline">{product.tagline}</p>
+      <div class="hero__media" data-reveal-media>
+        <Image
+          class="hero__cigar"
+          src={cigarVolage}
+          alt={`The Mariposa ${product.name} cigar, ${product.tagline.toLowerCase()}`}
+          widths={[260, 420, 640, 860]}
+          sizes="(max-width: 720px) 65vw, 30vw"
+          loading="eager"
+        />
       </div>
     </div>
   </section>
 
-  {/* ─── 2. The signature — gold leaf ────────────────────────── */}
-  {product.signature && (
-    <SignatureBlock
-      lede={product.signature.lede}
-      paragraph={product.signature.paragraph}
-      placeholderCaption={product.signature.placeholderCaption}
-    />
-  )}
-
-  {/* ─── 3. The cigar — narrative + full specs ───────────────── */}
+  {/* ─── 2. The cigar — narrative + full specs ───────────────── */}
   <section class="cigar" aria-labelledby="cigar-heading" data-reveal-section>
     <div class="cigar__inner container">
       <p class="eyebrow cigar__eyebrow" id="cigar-heading">The cigar</p>
@@ -146,10 +118,10 @@ const product = (await getEntry('products', 'volage'))!.data;
     </div>
   </section>
 
-  {/* ─── 4. The smoke arc ────────────────────────────────────── */}
+  {/* ─── 3. The smoke arc ────────────────────────────────────── */}
   <SmokeArc tasting={product.tasting} />
 
-  {/* ─── 5. Packaging — static gallery ───────────────────────── */}
+  {/* ─── 4. Presentation — static gallery ────────────────────── */}
   {product.packaging && product.packaging.length > 0 && (
     <section class="packaging" aria-labelledby="packaging-heading" data-reveal-section>
       <div class="packaging__inner container">
@@ -174,17 +146,6 @@ const product = (await getEntry('products', 'volage'))!.data;
       </div>
     </section>
   )}
-
-  {/* ─── 6. Cross-link — preserved ───────────────────────────── */}
-  <section class="crosslink" data-reveal-section>
-    <div class="crosslink__inner container">
-      <a class="crosslink__link" href={withBase('/caprice')}>
-        <span class="crosslink__lead">Also from Mariposa</span>
-        <span class="crosslink__sku">Caprice</span>
-        <span class="crosslink__arrow" aria-hidden="true">&rarr;</span>
-      </a>
-    </div>
-  </section>
 </BaseLayout>
 
 <style>
@@ -193,83 +154,121 @@ const product = (await getEntry('products', 'volage'))!.data;
     padding-block: clamp(var(--space-7), 7vw, var(--space-9));
   }
 
-  /* ── 1. Hero ───────────────────────────────────────────────── */
+  /* ── 1. Hero — Option A, tagline-led ───────────────────────
+     Pearl ground, constrained to the container (not full-bleed).
+     62/38 split at desktop: type left, image right. The tagline
+     is the loudest element on the page; "Volage" sits beneath as
+     a quiet signature. Source-order keeps <h1>Volage</h1> first;
+     flex `order` flips the visual sequence to:
+       eyebrow → rule → tagline → signature (Volage). */
   .hero {
-    padding-top: clamp(var(--space-8), 9vw, var(--space-10));
+    background: var(--pearl);
+    /* Commit the viewport on entry, per Option A spec (88–95vh).
+       Override the shared section rhythm to land on the min-height
+       move rather than padding alone. */
+    min-height: 88vh;
+    display: flex;
+    align-items: center;
+    padding-block: clamp(var(--space-8), 10vw, var(--space-10));
   }
   .hero__inner {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 62fr 38fr;
     gap: clamp(var(--space-7), 7vw, var(--space-10));
     align-items: center;
-  }
-  .hero__media {
-    position: relative;
-  }
-  .hero__media-frame {
-    position: relative;
-    background: var(--white);
-    border: 1px solid var(--border-gold);
-    aspect-ratio: 1 / 1;
-    overflow: hidden;
-  }
-  .hero__hairline {
-    position: absolute;
-    inset: 0 auto auto 0;
-    height: 2px;
     width: 100%;
-    background: var(--pink);
-    z-index: 2;
   }
-  .hero__cigar {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: 50% 100%;
-  }
+
+  /* Copy column — flex with explicit order so source <h1>Volage</h1>
+     can render visually beneath the tagline without losing its place
+     in the document outline. */
   .hero__copy {
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
   }
-  .hero__edition {
+  .hero__eyebrow {
+    order: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
     font-family: var(--font-body);
     font-size: var(--fs-eyebrow);
-    font-weight: 400;
+    font-weight: 500;
     letter-spacing: var(--ls-eyebrow);
     text-transform: uppercase;
     color: var(--gold-deep);
     margin: 0 0 var(--space-5) 0;
   }
-  .hero__name {
-    font-family: var(--font-display);
-    font-weight: 300;
-    font-size: clamp(2.2rem, 5.6vw, 4rem);
-    line-height: 0.96;
-    letter-spacing: var(--ls-display);
-    margin: 0;
-    color: var(--ink);
+  .hero__eyebrow-sep {
+    color: var(--gold);
+    letter-spacing: 0;
   }
-  .hero__vitola {
-    font-family: var(--font-body);
-    font-size: var(--fs-eyebrow);
-    font-weight: 400;
-    letter-spacing: var(--ls-eyebrow);
-    text-transform: uppercase;
-    color: var(--gold-deep);
-    margin: var(--space-5) 0 0 0;
+  .hero__rule {
+    order: 2;
+    display: block;
+    width: 120px;
+    height: 1px;
+    background: var(--gold-leaf);
+    margin: 0 0 var(--space-6) 0;
+    /* Drawn-in entry: starts at scaleX(0); the rule's tween in the
+       script below scales it to 1 left-to-right shortly after the
+       copy column enters. Resting state for prefers-reduced-motion
+       restored in the script (the helper handles that branch). */
+    transform: scaleX(0);
+    transform-origin: left center;
   }
   .hero__tagline {
+    order: 3;
     font-family: var(--font-display);
     font-style: italic;
     font-weight: 400;
-    font-size: clamp(1.15rem, 2.2vw, 1.5rem);
-    line-height: var(--lh-snug);
+    font-size: clamp(2.4rem, 5vw, 4.2rem);
+    line-height: 1.05;
     color: var(--ink);
-    margin: var(--space-6) 0 0 0;
+    margin: 0;
     max-width: 22ch;
   }
+  .hero__signature {
+    order: 4;
+    font-family: var(--font-display);
+    font-style: normal;
+    font-weight: 300;
+    font-size: clamp(1.2rem, 2vw, 1.5rem);
+    line-height: var(--lh-snug);
+    letter-spacing: var(--ls-display);
+    color: var(--ink);
+    margin: var(--space-6) 0 0 0;
+  }
 
-  /* ── 4. The cigar ──────────────────────────────────────────── */
+  /* Image column — existing isolated-cigar PNG (alpha channel),
+     centred in its grid cell, no frame. Soft directional drop
+     shadow stands in for the old gold border — matches the home
+     slider's floating-cigar shadow register. */
+  .hero__media {
+    display: grid;
+    place-items: center;
+  }
+  .hero__cigar {
+    width: auto;
+    max-width: 78%;
+    max-height: 72vh;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 24px 40px rgba(31, 27, 23, 0.18));
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    /* Reduced-motion: the rule renders at its resting (full-width)
+       state immediately. The reveal script also no-ops under the
+       helper's REDUCED branch, so a CSS-level fallback here keeps
+       things sane if the script never runs at all. */
+    .hero__rule {
+      transform: scaleX(1);
+    }
+  }
+
+  /* ── 2. The cigar ──────────────────────────────────────────── */
   .cigar__inner {
     max-width: 880px;
     margin-inline: auto;
@@ -370,7 +369,13 @@ const product = (await getEntry('products', 'volage'))!.data;
     white-space: pre-line;
   }
 
-  /* ── 5. Packaging ──────────────────────────────────────────── */
+  /* ── 4. Presentation ──────────────────────────────────────────
+     Pearl bed — anchors the page's lower compositional pause and
+     mirrors the hero's pearl ground at the top. Smoke arc above
+     stays on the default white, so the sequence reads pearl →
+     white → white → pearl → footer (the footer itself is
+     component-owned pearl), one continuous editorial sheet
+     with two warmed beds at the two compositional pauses. */
   .packaging {
     background: var(--pearl);
   }
@@ -405,7 +410,7 @@ const product = (await getEntry('products', 'volage'))!.data;
     }
   }
 
-  /* ── Placeholder grammar (page-scoped, used by section 5) ──
+  /* ── Placeholder grammar (page-scoped, used by section 4) ──
      Same primitives as the components — kept inline here so the
      packaging grid doesn't depend on a shared partial. If a fourth
      placeholder use lands, extract. */
@@ -439,79 +444,25 @@ const product = (await getEntry('products', 'volage'))!.data;
   .placeholder__corner--bl { bottom: -1px; left: -1px;  border-right: 0; border-top: 0; }
   .placeholder__corner--br { bottom: -1px; right: -1px; border-left: 0;  border-top: 0; }
 
-  /* ── 6. Cross-link ─────────────────────────────────────────── */
-  .crosslink {
-    /* Cream bed (Stephane 2026-05-23) so the surface above the
-       footer on Volage matches the home page's lifestyle band.
-       Footer component itself is --pearl on both pages; the
-       perceived "footer area" on home reads as cream-into-pearl
-       because LifestyleSection sits directly above it on #f2f0e9.
-       Volage previously dropped the crosslink straight onto body
-       white, so the same Footer read brighter. Same hex used by
-       the product + lifestyle sections; once a third use lands
-       this earns a token (e.g. --bg-cream). */
-    background: #f2f0e9;
-    padding-bottom: clamp(var(--space-8), 9vw, var(--space-10));
-  }
-  .crosslink__inner {
-    display: flex;
-    justify-content: center;
-  }
-  .crosslink__link {
-    display: inline-flex;
-    align-items: baseline;
-    gap: var(--space-3);
-    padding: var(--space-5) 0;
-    font-family: var(--font-body);
-    font-size: var(--fs-eyebrow);
-    font-weight: 400;
-    letter-spacing: var(--ls-eyebrow);
-    text-transform: uppercase;
-    color: var(--gold-deep);
-    text-decoration: none;
-    border-top: 1px solid var(--border-gold);
-    border-bottom: 1px solid var(--border-gold);
-  }
-  .crosslink__lead {
-    color: var(--ash);
-  }
-  .crosslink__sku {
-    color: var(--gold-deep);
-    position: relative;
-    padding-bottom: 3px;
-  }
-  .crosslink__sku::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    height: 1px;
-    background: var(--gold-deep);
-    transform: scaleX(0);
-    transform-origin: left center;
-    transition: transform var(--dur-default) var(--ease-paper);
-  }
-  .crosslink__link:hover .crosslink__sku::after,
-  .crosslink__link:focus-visible .crosslink__sku::after {
-    transform: scaleX(1);
-  }
-  .crosslink__arrow {
-    transition: transform var(--dur-default) var(--ease-paper);
-  }
-  .crosslink__link:hover .crosslink__arrow {
-    transform: translateX(5px);
-  }
-
   /* ── Mobile collapse ───────────────────────────────────────── */
   @media (max-width: 720px) {
+    .hero {
+      min-height: 0;
+      padding-block: clamp(var(--space-7), 12vw, var(--space-9));
+    }
     .hero__inner {
       grid-template-columns: 1fr;
       gap: var(--space-7);
     }
-    .hero__media-frame {
-      max-width: 360px;
-      margin-inline: auto;
+    /* On mobile, restore image-above-type reading order — flex
+       order on .hero__copy keeps tagline-above-signature; the
+       outer grid handles media-vs-copy stacking. */
+    .hero__media {
+      order: -1;
+    }
+    .hero__cigar {
+      max-width: 65vw;
+      max-height: 60vh;
     }
     .cigar__strip {
       grid-template-columns: 1fr;
@@ -522,30 +473,44 @@ const product = (await getEntry('products', 'volage'))!.data;
 <script>
   /* Section reveals — restrained editorial entry. Each block's
      animatable children rise-and-fade as it scrolls into view.
-     Reveals for the three componentised sections (signature,
-     origin, smoke) are handled inside the components themselves. */
-  import { reveal, refreshOnLoad } from '../lib/motion';
+     Reveals for the componentised sections (smoke) are handled
+     inside the components themselves. */
+  import { reveal, refreshOnLoad, gsap } from '../lib/motion';
 
-  // Hero — media and copy column rise together with a small stagger.
-  const heroMedia = document.querySelector<HTMLElement>('[data-reveal-media]');
-  const heroCopy  = document.querySelector<HTMLElement>('[data-reveal-copy]');
-  if (heroMedia) reveal(heroMedia, { y: 32, duration: 1,   start: 'top 88%' });
-  if (heroCopy)  reveal(heroCopy,  { y: 26, duration: 0.9, delay: 0.12, start: 'top 88%' });
+  // Hero — Option A cascade.
+  //   Copy column rises as a single composed unit; cigar image
+  //   fades and lifts alongside; the gold hairline draws in from
+  //   left to right on its own scrollTrigger so the visual order
+  //   reads as eyebrow → rule (drawing) → tagline → signature.
+  const heroMedia = document.querySelector<HTMLElement>('.hero [data-reveal-media]');
+  const heroCopy  = document.querySelector<HTMLElement>('.hero [data-reveal-copy]');
+  const heroRule  = document.querySelector<HTMLElement>('.hero__rule');
+  if (heroCopy)  reveal(heroCopy,  { y: 28, duration: 0.95, start: 'top 88%' });
+  if (heroMedia) reveal(heroMedia, { y: 24, duration: 1.1, delay: 0.1, start: 'top 88%' });
+  if (heroRule) {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) {
+      gsap.set(heroRule, { scaleX: 1 });
+    } else {
+      gsap.to(heroRule, {
+        scaleX: 1,
+        duration: 0.6,
+        delay: 0.25,
+        ease: 'power2.out',
+        scrollTrigger: { trigger: heroCopy ?? heroRule, start: 'top 88%', toggleActions: 'play none none none' },
+      });
+    }
+  }
 
-  // Section 4 — narrative paragraphs cascade, spec strips lift in
-  // (two blocks of six since 2026-05-24; both share the same reveal).
+  // Section 2 (cigar) — narrative paragraphs cascade, spec strips lift in.
   const cigarParas = document.querySelectorAll('.cigar [data-reveal-para]');
   const cigarStrips = document.querySelectorAll<HTMLElement>('.cigar [data-reveal-strip]');
   if (cigarParas.length) reveal(cigarParas, { y: 22, duration: 0.9, stagger: 0.14, start: 'top 82%' });
   if (cigarStrips.length) reveal(cigarStrips, { y: 24, duration: 0.9, stagger: 0.1, start: 'top 82%' });
 
-  // Section 6 — packaging slots fade in as a block.
+  // Section 4 (presentation) — packaging slots fade in as a block.
   const packs = document.querySelectorAll('.packaging [data-reveal-pack]');
   if (packs.length) reveal(packs, { y: 22, duration: 0.85, stagger: 0.12, start: 'top 84%' });
-
-  // Section 7 — cross-link.
-  const crosslink = document.querySelector<HTMLElement>('.crosslink__inner');
-  if (crosslink) reveal(crosslink, { y: 22, duration: 0.8, start: 'top 88%' });
 
   refreshOnLoad();
 </script>
