@@ -1,0 +1,670 @@
+---
+/* Volage page header — comparison mocks.
+   ------------------------------------------------------------------
+   2026-05-24. Comparison surface for Stephane: the four Volage page
+   header treatments (Options A / B / C / D per Pax's
+   `volage-header-research.md`, Part 3) stacked vertically at full
+   scale so they can be reviewed side by side before committing.
+
+   Direct-URL only. NOT linked from the nav. The live /volage page
+   stays UNTOUCHED. Same pattern as `/story-mocks` and
+   `/product-mocks`.
+
+   Source of truth: `volage-header-research.md`, Part 3.
+
+   Information rendered in every option (identical across all four —
+   what changes is the COMPOSITION, not the content):
+     · Edition: First Edition
+     · Name:    Volage
+     · Vitola:  Canonazo
+     · Tagline: A cigar that doesn't wait for an occasion.
+     · Image:   `cigar-volage.png` (the existing isolated cigar-on-
+                void PNG, 848 × 3334, alpha channel). Options that
+                want a different image register (B's full-bleed
+                scene) use a captioned placeholder built from the
+                same dashed-gold-with-corners pattern used by the
+                live /volage page's packaging gallery — flagged so
+                the photography gap is visible at review.
+
+   Per option, in one line:
+     · A — Tagline-led (Pax's recommendation). Type column ~62% of
+           grid, image column ~38%. Tagline at display Spectral
+           italic is the protagonist; eyebrow combines edition +
+           vitola on one row; name is signature-scale below the
+           tagline. Existing PNG, no frame, soft drop shadow.
+     · B — Full-bleed photographic room. Landscape placeholder runs
+           edge-to-edge; type block sits bottom-left as a small
+           composed caption (eyebrow + name + vitola + tagline) in
+           cream over the photographic ground. Real landscape
+           shoot is the dependency.
+     · C — Deferred hero (two beats). Compact header keeps the
+           split, with the name promoted to display scale; tagline
+           pulled out as its own centred italic pull-quote in a
+           second sub-section immediately below.
+     · D — Typographic pause (no image in header). Pure centred
+           type moment on cream: eyebrow, very-large name, vitola
+           caption, gold hairline, italic tagline. Cigar image is
+           deferred to section 2 of the live page. */
+
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import cigarVolage from '../assets/cigar-volage.png';
+
+// Identical content across all four options. Brief says these
+// literal strings, not the JSON values (JSON has "1st Edition";
+// the brief specifies "First Edition"). Hard-coded so the four
+// options are unambiguously the same content.
+const edition = 'First Edition';
+const name    = 'Volage';
+const vitola  = 'Canonazo';
+const tagline = "A cigar that doesn't wait for an occasion.";
+---
+
+<BaseLayout title="Mariposa — Volage page header comparison mocks">
+  <section class="intro">
+    <div class="container">
+      <p class="intro__eyebrow">Internal &mdash; comparison surface</p>
+      <h1 class="intro__title">Volage page header &mdash; comparison mocks</h1>
+      <p class="intro__lede">
+        Four header treatments for the Volage product page. Same
+        information in all four: First Edition, Volage, Canonazo,
+        tagline. Source: Pax&rsquo;s
+        <em>volage-header-research.md</em>, Part 3. The live
+        <code>/volage</code> page is unchanged.
+      </p>
+    </div>
+  </section>
+
+  {/* ─── Option A label ─────────────────────────────────────── */}
+  <section class="label">
+    <div class="container">
+      <p class="label__eyebrow">
+        Option A &mdash; Tagline-led
+        <span class="label__pick">Pax&rsquo;s recommendation</span>
+      </p>
+      <p class="label__desc">
+        The tagline is the protagonist at display Spectral italic
+        on a 22ch measure. Edition and vitola fold into a single
+        composed eyebrow row above; the name &ldquo;Volage&rdquo;
+        sits beneath the tagline as a signature, not a headline.
+        Existing <code>cigar-volage.png</code> on a cream ground,
+        no frame, soft drop shadow. Type column ~62% of the grid,
+        image column ~38%.
+      </p>
+    </div>
+  </section>
+
+  <section class="mock mock--a" aria-label="Option A — Tagline-led">
+    <div class="mock-a__inner container">
+      <div class="mock-a__copy">
+        <p class="mock-a__eyebrow">
+          {edition}
+          <span class="mock-a__eyebrow-sep" aria-hidden="true">&middot;</span>
+          {vitola}
+        </p>
+        <span class="mock-a__rule" aria-hidden="true"></span>
+        <p class="mock-a__tagline">{tagline}</p>
+        <p class="mock-a__signature">{name}</p>
+      </div>
+      <div class="mock-a__media">
+        <Image
+          class="mock-a__cigar"
+          src={cigarVolage}
+          alt={`The Mariposa ${name} cigar, ${tagline.toLowerCase()}`}
+          widths={[260, 420, 640]}
+          sizes="(max-width: 720px) 65vw, 30vw"
+          loading="lazy"
+        />
+      </div>
+    </div>
+  </section>
+
+  {/* ─── Option B label ─────────────────────────────────────── */}
+  <section class="label">
+    <div class="container">
+      <p class="label__eyebrow">Option B &mdash; Full-bleed room</p>
+      <p class="label__desc">
+        Edge-to-edge landscape photograph (Davidoff Winston
+        Churchill register), the cigar in its scene, type laid
+        over as a small composed caption block in the bottom-left
+        corner. Eyebrow + name + vitola + tagline read as
+        signature on a print. A commissioned landscape shoot is
+        the dependency &mdash; rendered here as a captioned
+        placeholder (same dashed-gold-with-corners grammar the
+        live <code>/volage</code> packaging gallery uses).
+      </p>
+    </div>
+  </section>
+
+  <section class="mock mock--b" aria-label="Option B — Full-bleed room">
+    <figure class="mock-b__frame placeholder" aria-label="Full-bleed landscape scene placeholder">
+      <span class="placeholder__corner placeholder__corner--tl" aria-hidden="true"></span>
+      <span class="placeholder__corner placeholder__corner--tr" aria-hidden="true"></span>
+      <span class="placeholder__corner placeholder__corner--bl" aria-hidden="true"></span>
+      <span class="placeholder__corner placeholder__corner--br" aria-hidden="true"></span>
+      <figcaption class="placeholder__caption mock-b__placeholder-caption">
+        PLACEHOLDER: commissioned landscape scene required &mdash;
+        cigar in context, ambient pink / cream environment,
+        generous negative space on the lower-left for the type
+        overlay.
+      </figcaption>
+      <div class="mock-b__caption">
+        <p class="mock-b__eyebrow">{edition}</p>
+        <p class="mock-b__name">{name}</p>
+        <p class="mock-b__vitola">{vitola}</p>
+        <p class="mock-b__tagline">{tagline}</p>
+      </div>
+    </figure>
+  </section>
+
+  {/* ─── Option C label ─────────────────────────────────────── */}
+  <section class="label">
+    <div class="container">
+      <p class="label__eyebrow">Option C &mdash; Deferred hero</p>
+      <p class="label__desc">
+        Two beats instead of one. The header keeps the split but
+        compacts to ~58vh, with &ldquo;Volage&rdquo; promoted to
+        display scale and a single gold hairline as the section&rsquo;s
+        foot. The tagline is then extracted into its own centred
+        italic pull-quote in a short sub-section immediately
+        below. Same <code>cigar-volage.png</code> as Option A, no
+        frame.
+      </p>
+    </div>
+  </section>
+
+  <section class="mock mock--c" aria-label="Option C — Deferred hero">
+    <div class="mock-c__inner container">
+      <div class="mock-c__media">
+        <Image
+          class="mock-c__cigar"
+          src={cigarVolage}
+          alt={`The Mariposa ${name} cigar, ${tagline.toLowerCase()}`}
+          widths={[260, 420, 640]}
+          sizes="(max-width: 720px) 65vw, 28vw"
+          loading="lazy"
+        />
+      </div>
+      <div class="mock-c__copy">
+        <p class="mock-c__eyebrow">
+          {edition}
+          <span class="mock-c__eyebrow-sep" aria-hidden="true">&middot;</span>
+          {vitola}
+        </p>
+        <p class="mock-c__name">{name}</p>
+        <span class="mock-c__rule" aria-hidden="true"></span>
+      </div>
+    </div>
+  </section>
+  <section class="mock-c__pull" aria-label="Option C — pull-quote sub-section">
+    <p class="mock-c__pull-text">
+      <span class="mock-c__pull-quote" aria-hidden="true">&ldquo;</span>{tagline}
+    </p>
+  </section>
+
+  {/* ─── Option D label ─────────────────────────────────────── */}
+  <section class="label">
+    <div class="container">
+      <p class="label__eyebrow">Option D &mdash; Typographic pause</p>
+      <p class="label__desc">
+        No image in the header. Pure centred type moment on
+        cream: eyebrow, very-large &ldquo;Volage&rdquo; at
+        Spectral display, vitola caption, a centred gold
+        hairline, italic tagline. The cigar image moves to
+        section 2 (signature) on the live page. The Aesop /
+        Patek 5236 register.
+      </p>
+    </div>
+  </section>
+
+  <section class="mock mock--d" aria-label="Option D — Typographic pause">
+    <div class="mock-d__inner container">
+      <p class="mock-d__eyebrow">{edition}</p>
+      <p class="mock-d__name">{name}</p>
+      <p class="mock-d__vitola">{vitola}</p>
+      <span class="mock-d__rule" aria-hidden="true"></span>
+      <p class="mock-d__tagline">{tagline}</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* ─── Intro ──────────────────────────────────────────────── */
+  .intro {
+    padding-block: var(--space-9) var(--space-7);
+    background: var(--white);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .intro__eyebrow {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: var(--ls-section);
+    color: var(--gold-deep);
+    margin-bottom: var(--space-4);
+  }
+  .intro__title {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(2rem, 4.4vw, 3.25rem);
+    line-height: var(--lh-snug);
+    color: var(--ink);
+    margin-bottom: var(--space-5);
+  }
+  .intro__lede {
+    font-family: var(--font-body);
+    font-size: var(--fs-lede);
+    line-height: var(--lh-body);
+    color: var(--ink-soft);
+    max-width: 60ch;
+  }
+  .intro__lede code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.92em;
+    color: var(--ink);
+  }
+
+  /* ─── Option labels (banner above each mock) ─────────────── */
+  .label {
+    background: var(--ink);
+    color: var(--white);
+    padding-block: var(--space-6);
+  }
+  .label__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: var(--ls-section);
+    color: var(--gold-leaf);
+    margin-bottom: var(--space-3);
+  }
+  .label__pick {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 400;
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
+    color: var(--pink);
+    border: 1px solid var(--pink);
+    padding: 2px 8px;
+  }
+  .label__desc {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--pearl);
+    max-width: 72ch;
+  }
+  .label__desc code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.92em;
+    color: var(--gold-soft);
+  }
+
+  /* ─── Shared mock chrome ─────────────────────────────────── */
+  .mock {
+    background: var(--white);
+  }
+
+  /* ─── Option A — Tagline-led ─────────────────────────────── */
+  /* 88–95vh. Pearl ground. 62 / 38 split with the tagline as
+     protagonist on the wider column. No frame; soft directional
+     drop shadow on the PNG. */
+  .mock--a {
+    background: var(--pearl);
+    min-height: 88vh;
+    display: flex;
+    align-items: center;
+    padding-block: clamp(var(--space-8), 10vw, var(--space-10));
+  }
+  .mock-a__inner {
+    display: grid;
+    grid-template-columns: 62fr 38fr;
+    gap: clamp(var(--space-7), 7vw, var(--space-10));
+    align-items: center;
+    width: 100%;
+  }
+  .mock-a__copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .mock-a__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 500;
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    margin: 0 0 var(--space-5) 0;
+  }
+  .mock-a__eyebrow-sep {
+    color: var(--gold);
+    letter-spacing: 0;
+  }
+  .mock-a__rule {
+    display: block;
+    width: 120px;
+    height: 1px;
+    background: var(--gold-leaf);
+    margin-bottom: var(--space-6);
+  }
+  .mock-a__tagline {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(2.4rem, 5vw, 4.2rem);
+    line-height: 1.05;
+    color: var(--ink);
+    margin: 0;
+    max-width: 22ch;
+  }
+  .mock-a__signature {
+    font-family: var(--font-display);
+    font-style: normal;
+    font-weight: 400;
+    font-size: clamp(1rem, 1.6vw, 1.3rem);
+    line-height: var(--lh-snug);
+    color: var(--ink);
+    margin: var(--space-6) 0 0 0;
+  }
+  .mock-a__media {
+    display: grid;
+    place-items: center;
+  }
+  .mock-a__cigar {
+    width: auto;
+    max-width: 70%;
+    max-height: 70vh;
+    object-fit: contain;
+    filter: drop-shadow(0 24px 40px rgba(31, 27, 23, 0.18));
+  }
+
+  /* ─── Option B — Full-bleed room ─────────────────────────── */
+  /* 92vh, edge-to-edge landscape scene. Type overlay block sits in
+     the bottom-left corner. Real shoot is the dependency; the
+     placeholder retains the same dashed-gold-with-corners grammar
+     used on the live /volage packaging gallery. */
+  .mock--b {
+    /* Break out of the container to true viewport width. */
+    width: 100vw;
+    margin-inline: calc(50% - 50vw);
+    padding: 0;
+  }
+  .mock-b__frame {
+    position: relative;
+    width: 100%;
+    height: 92vh;
+    margin: 0;
+    /* Reuse the placeholder grammar — pearl ground, dashed gold
+       border, four corner ticks. The placeholder caption sits at
+       centre; the type overlay sits at bottom-left. */
+    background: var(--pearl);
+    border: 1px dashed var(--gold-deep);
+    display: block;
+    padding: 0;
+  }
+  .mock-b__placeholder-caption {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 36ch;
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    line-height: var(--lh-snug);
+    letter-spacing: 0.02em;
+    color: var(--gold-deep);
+    text-align: center;
+  }
+  .mock-b__caption {
+    position: absolute;
+    bottom: clamp(var(--space-6), 5vw, var(--space-8));
+    left: clamp(var(--space-6), 5vw, var(--space-8));
+    max-width: 42ch;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  .mock-b__eyebrow {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 500;
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    margin: 0;
+  }
+  .mock-b__name {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(2.6rem, 4.8vw, 3.6rem);
+    line-height: 0.96;
+    letter-spacing: var(--ls-display);
+    color: var(--ink);
+    margin: 0;
+  }
+  .mock-b__vitola {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 500;
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    margin: 0;
+  }
+  .mock-b__tagline {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.1rem, 1.6vw, 1.35rem);
+    line-height: var(--lh-snug);
+    color: var(--ink);
+    margin: var(--space-3) 0 0 0;
+    max-width: 38ch;
+  }
+
+  /* ─── Option C — Deferred hero (two beats) ───────────────── */
+  .mock--c {
+    background: var(--white);
+    min-height: 58vh;
+    display: flex;
+    align-items: center;
+    padding-block: clamp(var(--space-7), 7vw, var(--space-9));
+  }
+  .mock-c__inner {
+    display: grid;
+    grid-template-columns: 38fr 52fr;
+    gap: clamp(var(--space-7), 7vw, var(--space-10));
+    align-items: center;
+    width: 100%;
+  }
+  .mock-c__media {
+    display: grid;
+    place-items: center;
+  }
+  .mock-c__cigar {
+    width: auto;
+    max-width: 80%;
+    max-height: 52vh;
+    object-fit: contain;
+    filter: drop-shadow(0 18px 36px rgba(31, 27, 23, 0.16));
+  }
+  .mock-c__copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .mock-c__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 500;
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    margin: 0 0 var(--space-5) 0;
+  }
+  .mock-c__eyebrow-sep {
+    color: var(--gold);
+    letter-spacing: 0;
+  }
+  .mock-c__name {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(3.6rem, 7vw, 5.4rem);
+    line-height: 0.92;
+    letter-spacing: var(--ls-display);
+    color: var(--ink);
+    margin: 0;
+  }
+  .mock-c__rule {
+    display: block;
+    width: 140px;
+    height: 1px;
+    background: var(--gold-leaf);
+    margin-top: var(--space-6);
+  }
+  /* Pull-quote sub-section — 18vh cream/pearl band. */
+  .mock-c__pull {
+    background: var(--pearl);
+    min-height: 18vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-block: var(--space-7);
+    border-top: 1px solid var(--hairline);
+  }
+  .mock-c__pull-text {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    line-height: var(--lh-snug);
+    color: var(--ink);
+    margin: 0;
+    max-width: 30ch;
+    text-align: center;
+    text-indent: -0.3em;
+  }
+  .mock-c__pull-quote {
+    color: var(--gold-deep);
+    font-style: italic;
+  }
+
+  /* ─── Option D — Typographic pause ───────────────────────── */
+  .mock--d {
+    background: var(--pearl);
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-block: clamp(var(--space-8), 10vw, var(--space-10));
+  }
+  .mock-d__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 720px;
+  }
+  .mock-d__eyebrow {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 500;
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    margin: 0 0 var(--space-5) 0;
+  }
+  .mock-d__name {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(4.4rem, 9vw, 7rem);
+    line-height: 0.96;
+    letter-spacing: var(--ls-display);
+    color: var(--ink);
+    margin: 0;
+  }
+  .mock-d__vitola {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 500;
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    margin: var(--space-4) 0 0 0;
+  }
+  .mock-d__rule {
+    display: block;
+    width: 80px;
+    height: 1px;
+    background: var(--gold-leaf);
+    margin: var(--space-6) 0;
+  }
+  .mock-d__tagline {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.2rem, 2vw, 1.5rem);
+    line-height: var(--lh-snug);
+    color: var(--ink);
+    margin: 0;
+    max-width: 28ch;
+  }
+
+  /* ─── Placeholder grammar (reused from /volage) ──────────── */
+  .placeholder__corner {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border: 1px solid var(--gold-deep);
+    z-index: 2;
+  }
+  .placeholder__corner--tl { top: -1px;    left: -1px;  border-right: 0; border-bottom: 0; }
+  .placeholder__corner--tr { top: -1px;    right: -1px; border-left: 0;  border-bottom: 0; }
+  .placeholder__corner--bl { bottom: -1px; left: -1px;  border-right: 0; border-top: 0; }
+  .placeholder__corner--br { bottom: -1px; right: -1px; border-left: 0;  border-top: 0; }
+
+  /* ─── Mobile ─────────────────────────────────────────────── */
+  @media (max-width: 720px) {
+    .mock-a__inner,
+    .mock-c__inner {
+      grid-template-columns: 1fr;
+      gap: var(--space-7);
+    }
+    .mock-a__copy,
+    .mock-c__copy {
+      align-items: center;
+      text-align: center;
+    }
+    .mock-a__rule,
+    .mock-c__rule {
+      margin-inline: auto;
+    }
+    .mock-a__cigar,
+    .mock-c__cigar {
+      max-width: 65vw;
+    }
+    .mock-b__frame {
+      height: 80vh;
+    }
+    .mock-b__caption {
+      bottom: var(--space-5);
+      left: var(--space-5);
+      right: var(--space-5);
+      max-width: none;
+    }
+  }
+</style>
