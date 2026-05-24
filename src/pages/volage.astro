@@ -41,20 +41,20 @@ const product = (await getEntry('products', 'volage'))!.data;
 ---
 
 <BaseLayout title={`Mariposa • ${product.name}`}>
-  {/* ─── 1. Hero — Option A, signature-above-tagline ──────────
-       Source + visual order now match (Stephane 2026-05-24):
-         eyebrow (Canonazo only) → hairline → signature (Volage) →
-         tagline.
-       The earlier flex `order` flip is retired — <h1>Volage</h1>
-       sits above the tagline in both the DOM and on screen. The
-       eyebrow drops the edition + middle-dot; vitola alone. */}
+  {/* ─── 1. Hero — Option A, signature-below-tagline ──────────
+       Source + visual order match (Stephane 2026-05-24, reverted):
+         eyebrow (Canonazo only) → hairline → tagline → signature
+         (Volage).
+       Tagline is the protagonist; "Volage" sits beneath as the
+       quiet signature. Source order matches visual order; no flex
+       `order` flip needed. */}
   <section class="hero" data-reveal-section>
     <div class="hero__inner container">
       <div class="hero__copy" data-reveal-copy>
         <p class="hero__eyebrow">{product.vitola}</p>
         <span class="hero__rule" aria-hidden="true"></span>
-        <h1 class="hero__signature">{product.name}</h1>
         <p class="hero__tagline">{product.tagline}</p>
+        <h1 class="hero__signature">{product.name}</h1>
       </div>
 
       <div class="hero__media" data-reveal-media>
@@ -215,9 +215,9 @@ const product = (await getEntry('products', 'volage'))!.data;
   }
 
   /* Copy column — source order matches visual order
-     (eyebrow → rule → signature → tagline). The earlier flex
-     `order` choreography was retired when the signature moved
-     above the tagline. */
+     (eyebrow → rule → tagline → signature). Signature sits beneath
+     the tagline as a quiet sign-off; no flex `order` choreography
+     needed. */
   .hero__copy {
     display: flex;
     flex-direction: column;
@@ -247,7 +247,10 @@ const product = (await getEntry('products', 'volage'))!.data;
   }
   /* Signature — one step up the scale (Stephane 2026-05-24):
      1.2/2vw/1.5rem → 1.4/2.4vw/1.75rem. Stays smaller than the
-     tagline; tagline keeps its size-protagonist role. */
+     tagline; tagline keeps its size-protagonist role. Sits below
+     the tagline (Stephane 2026-05-24, reverted): the gap lives
+     on margin-top so it separates the signature from the tagline
+     above. */
   .hero__signature {
     font-family: var(--font-display);
     font-style: normal;
@@ -256,7 +259,7 @@ const product = (await getEntry('products', 'volage'))!.data;
     line-height: var(--lh-snug);
     letter-spacing: var(--ls-display);
     color: var(--ink);
-    margin: 0 0 var(--space-5) 0;
+    margin: var(--space-5) 0 0 0;
   }
   .hero__tagline {
     font-family: var(--font-display);
@@ -559,9 +562,9 @@ const product = (await getEntry('products', 'volage'))!.data;
       grid-template-columns: 1fr;
       gap: var(--space-7);
     }
-    /* On mobile, restore image-above-type reading order — flex
-       order on .hero__copy keeps tagline-above-signature; the
-       outer grid handles media-vs-copy stacking. */
+    /* On mobile, restore image-above-type reading order — source
+       order inside .hero__copy already reads tagline-above-signature;
+       the outer grid handles media-vs-copy stacking. */
     .hero__media {
       order: -1;
     }
@@ -585,8 +588,8 @@ const product = (await getEntry('products', 'volage'))!.data;
   // Hero — Option A cascade.
   //   Copy column rises as a single composed unit; cigar image
   //   fades and lifts alongside; the gold hairline draws in from
-  //   left to right on its own scrollTrigger so the visual order
-  //   reads as eyebrow → rule (drawing) → tagline → signature.
+  //   left to right on its own scrollTrigger. Visual order reads
+  //   eyebrow → rule (drawing) → tagline → signature.
   const heroMedia = document.querySelector<HTMLElement>('.hero [data-reveal-media]');
   const heroCopy  = document.querySelector<HTMLElement>('.hero [data-reveal-copy]');
   const heroRule  = document.querySelector<HTMLElement>('.hero__rule');
