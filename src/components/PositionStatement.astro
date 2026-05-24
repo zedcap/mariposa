@@ -113,7 +113,10 @@ const { positionPink, positionInk, subline } = Astro.props;
      of column width — the max-width cap is gone, the staircase does
      all the line-breaking. First half hugs the left third, second
      half hugs the right third, on a wide stage. Per-half slide-in
-     motion is unaffected (the masks sit inside the offset halves). */
+     motion is unaffected (the masks sit inside the offset halves).
+     Size scale (Stephane 2026-05-24): clamp(3.4rem, 9vw, 6.5rem) —
+     pushed up from the earlier 2.6/7vw/5rem so the opening line
+     carries the section at full display weight. */
   .position__line {
     font-family: var(--font-display);
     font-style: italic;
@@ -138,14 +141,14 @@ const { positionPink, positionInk, subline } = Astro.props;
      second half's offset — the cascade reads as a clear diagonal but
      "Volcanic Soul." no longer hugs the gutter. */
   .position__half--first {
-    margin-left: calc(14% + 0.7ch);
+    margin-left: calc(14% - 0.3ch);
   }
   /* Second half pushed right to read as a clearly diagonal staircase.
      Was 14% — now 30% desktop. Plus one character of additional offset
      (Stephane 2026-05-23) so "24-Carat Gold." nudges right by the width
      of one display-italic letter. */
   .position__half--second {
-    margin-left: calc(30% + 0.7ch);
+    margin-left: calc(30% - 1.3ch);
   }
   @media (max-width: 480px) {
     /* Narrower viewport, tighter (but still bigger than the old 10%)
@@ -154,10 +157,10 @@ const { positionPink, positionInk, subline } = Astro.props;
        its desktop offset so the cascade keeps the same shape at a
        narrower stage. */
     .position__half--first {
-      margin-left: calc(9% + 0.7ch);
+      margin-left: calc(9% - 0.3ch);
     }
     .position__half--second {
-      margin-left: calc(18% + 0.7ch);
+      margin-left: calc(18% - 1.3ch);
     }
   }
   /* Half-level colour spans. `--em` = pink (left half: "Volcanic
