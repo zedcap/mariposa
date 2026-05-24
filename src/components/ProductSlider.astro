@@ -159,8 +159,11 @@ const imageMode: Record<string, 'object' | 'scene'> = {
        gap above them — same clamp, symmetric breathing room. Earlier
        half-step from clamp(--space-9, 12vw, --space-10) →
        clamp(--space-7, 6vw, --space-9) collapsed further to the
-       controls' own top-gap token. */
-    padding-bottom: clamp(var(--space-4), 2vw, var(--space-6));
+       controls' own top-gap token. Doubled (Stephane 2026-05-24):
+       each clamp stop stepped up one token / 2× the vw so the
+       controls-to-next-section gap doubles. .range__controls
+       margin-top intentionally left unchanged. */
+    padding-bottom: clamp(var(--space-6), 4vw, var(--space-8));
     overflow: hidden;
   }
 
