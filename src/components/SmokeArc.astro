@@ -16,10 +16,18 @@
    Mobile: timeline collapses inline above each third — the brief's
    stated mobile fallback.
 
-   Marks (2026-05-24, Stephane): one ordinal label per third (1st /
-   2nd / 3rd) instead of minute timecodes. Three marks for three
-   thirds, 1:1 with the IntersectionObserver active-third logic. No
-   closing tick — the line ends at the third mark.
+   Marks (2026-05-24, Stephane, reverted): minute timecodes per cigar
+   instead of ordinals. Four marks for three thirds — the first tick
+   sits at the top of the rail, the last at the bottom, intermediate
+   ticks at the seams between thirds. Tick top% follows
+   `i / (N-1) * 100%` so a 4-mark set lands at 0 / 33 / 66 / 100.
+   Active-tick logic still maps 1:1 with thirds (tick N activates as
+   third N enters); the closing tick is a passive end-marker and
+   never carries the active state.
+
+   Per-page values come from the consumer via the `marks` prop:
+     · Volage  → ["0", "20", "40", "60"]  (60-min smoke, 20-min beats)
+     · Caprice → ["0", "12", "24", "36"]  (~36-min smoke, 12-min beats)
 
    Pairings: NOT implemented this build. The brief flags them as a
    future addition pending Axel-drafted copy. */
@@ -39,15 +47,18 @@ interface Props {
 
 const {
   tasting,
-  marks = ["1st", "2nd", "3rd"],
+  marks = ["0", "20", "40", "60"],
 } = Astro.props;
 
-/* One mark per third (length = tasting.length). Trim or pad to
-   match so the caller can't accidentally desynchronise the rail
-   from the thirds. */
-const fullMarks = marks.length >= tasting.length
-  ? marks.slice(0, tasting.length)
-  : [...marks, ...Array(tasting.length - marks.length).fill('')];
+/* Marks length is N = tasting.length + 1 (three thirds → four ticks:
+   0, third-1/2 seam, third-2/3 seam, end). Trim or pad to that target
+   so the caller can't accidentally desynchronise the rail. The first
+   three ticks map 1:1 to thirds for active-state highlighting; the
+   fourth is a passive end-marker. */
+const targetMarkCount = tasting.length + 1;
+const fullMarks = marks.length >= targetMarkCount
+  ? marks.slice(0, targetMarkCount)
+  : [...marks, ...Array(targetMarkCount - marks.length).fill('')];
 ---
 
 <section class="smoke" aria-labelledby="smoke-heading" data-reveal-section>
@@ -64,7 +75,7 @@ const fullMarks = marks.length >= tasting.length
             <span
               class="smoke__tick"
               data-tick-index={i}
-              style={`top: ${((i + 0.5) / fullMarks.length) * 100}%`}
+              style={`top: ${(i / (fullMarks.length - 1)) * 100}%`}
             >
               <span class="smoke__dot"></span>
               <span class="smoke__time">{m}</span>
@@ -364,8 +375,11 @@ const fullMarks = marks.length >= tasting.length
 
   // Tick activation — the tick at index N lights when third N is
   // the most-centred third in the viewport. The same enter also
-  // reveals third N (and is sticky thereafter). Marks are 1:1 with
-  // thirds (2026-05-24), so there is no closing tick to handle.
+  // reveals third N (and is sticky thereafter). With 4 ticks against
+  // 3 thirds (2026-05-24, reverted to minute marks), ticks 0-2 map
+  // 1:1 to thirds; tick 3 is the closing end-marker and is never
+  // activated by the observer — it sits at full rail height as a
+  // passive terminator.
   if (thirds.length && ticks.length) {
     const setActive = (i: number) => {
       ticks.forEach((t) => t.classList.remove('is-active'));

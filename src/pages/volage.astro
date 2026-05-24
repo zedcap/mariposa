@@ -175,7 +175,10 @@ const specsBgImage = `url("${withBase('/specs-bg-header-1.jpg')}")`;
   </section>
 
   {/* ─── 3. The smoke arc ────────────────────────────────────── */}
-  <SmokeArc tasting={product.tasting} marks={["1st", "2nd", "3rd"]} />
+  {/* Minute marks per Stephane 2026-05-24 (reverted from ordinals).
+       60-min smoke in 20-min beats: 0 → 20 → 40 → 60. Four ticks,
+       three thirds; the trailing 60 is the end-marker. */}
+  <SmokeArc tasting={product.tasting} marks={["0", "20", "40", "60"]} />
 </BaseLayout>
 
 <style>

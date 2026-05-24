@@ -10,8 +10,9 @@
      · Narrative                     → Caprice paragraphs from JSON
      · Specs                         → 12-row split (PROFILE + BLEND),
                                        Maduro wrapper / 65-35 filler
-     · SmokeArc marks                → identical to Volage (ordinals
-                                       1st / 2nd / 3rd, one per third)
+     · SmokeArc marks                → Caprice minute beats
+                                       (0 / 12 / 24 / 36), 12-min
+                                       intervals for a ~36-min smoke
 
    Background flow and motion are identical to the Volage page —
    pearl hero → white cigar → white smoke arc → pearl footer; rise-
@@ -26,7 +27,7 @@
      2. The cigar       — narrative + PROFILE / BLEND specs on the
                           dark-brown bleed band.
      3. The smoke arc   — three thirds against the sticky timeline,
-                          1st / 2nd / 3rd ordinal markers. */
+                          minute marks 0 / 12 / 24 / 36. */
 
 import { getEntry } from 'astro:content';
 import { Image } from 'astro:assets';
@@ -125,7 +126,13 @@ const specsBgImage = `url("${withBase('/specs-bg-header-1.jpg')}")`;
   </section>
 
   {/* ─── 3. The smoke arc ────────────────────────────────────── */}
-  <SmokeArc tasting={product.tasting} marks={["1st", "2nd", "3rd"]} />
+  {/* Minute marks per Stephane 2026-05-24 (reverted from ordinals).
+       Stephane's note read "0, 2, 24, 36"; the "2" is an inferred
+       dictation typo for "12" — the pattern is three 12-min beats
+       for a ~36-min smoke, matching the "~35 minutes" smoke-time
+       elsewhere on the page. Flag and override here if "2" was
+       intentional. */}
+  <SmokeArc tasting={product.tasting} marks={["0", "12", "24", "36"]} />
 </BaseLayout>
 
 <style>
