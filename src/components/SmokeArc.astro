@@ -134,30 +134,25 @@ const fullMarks = marks.length >= tasting.length + 1
   }
 
   /* ── Timeline ────────────────────────────────────────────── */
-  /* Rail floats to the left of the notes column, in the page gutter
-     (2026-05-24). Absolute-positioned to the left edge of
-     .smoke__layout so the notes column itself can occupy the full
-     880px measure, flush-aligning with the cigar narrative and spec
-     strips above. The rail still spans the full height of the
-     layout block (top:0; bottom:0), so the first and last ticks sit
-     at the top of the first third and the bottom of the last —
-     unchanged from the prior grid-stretched behaviour. The rail
-     translates left by its own width + a small offset so the dots
-     and minute-labels live outside the notes measure rather than
-     pinching its left margin.
-     Previously: grid column at minmax(120px, 160px) + gap, which
-     inset the notes ~140-180px from the container left. */
+  /* Rail sits inside .smoke__inner, anchored to its right edge
+     (2026-05-24, revised same day). Earlier in the day the rail was
+     pushed into the right gutter via `left: 100%; margin-left`; that
+     placed its right edge ~24px past the spec table's right edge on
+     the page above, breaking the alignment line. The thirds prose is
+     capped at 56ch (~560-600px) inside the 880px column, leaving
+     ~280px of dead space on the right of the layout that the rail
+     occupies without crowding the notes. The rail line and tick dots
+     remain anchored to the rail's right edge, so they now sit flush
+     with the spec table's right margin; minute labels still read
+     leftward toward the prose.
+     Previously: left: 100% + margin-left placed the rail past the
+     880px column edge into the page gutter. */
   .smoke__timeline {
     position: absolute;
     top: 0;
     bottom: 0;
-    /* Rail moved to the right-hand gutter (2026-05-24): sits outside
-       the notes column on the right rather than the left. Rail line
-       lives on the rail's right edge (see .smoke__line / .smoke__tick)
-       so the minute labels extend leftward toward the notes column. */
-    left: 100%;
+    right: 0;
     width: clamp(80px, 10vw, 120px);
-    margin-left: var(--space-5);
     pointer-events: none;
   }
   /* Below ~1080px the viewport no longer has comfortable gutter room
