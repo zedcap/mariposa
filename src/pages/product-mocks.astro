@@ -1,0 +1,592 @@
+---
+/* Product card — image-side comparison mocks.
+   ------------------------------------------------------------------
+   2026-05-24. Comparison surface for Stephane: three image-side
+   treatments for the home product card (Volage / Caprice) stacked
+   vertically at full scale so they can be reviewed side by side
+   before committing.
+
+   Direct-URL only. NOT linked from the nav. The live home page
+   (`/`, `ProductSlider.astro`) is untouched. Same pattern as
+   `/story-mocks`.
+
+   Source of truth: Pax's `product-image-research.md`, Part 3.
+   Copy side (vitola eyebrow, name, italic tagline, two-paragraph
+   lede, discover link) is unchanged across all three options —
+   identical to the live slider minus the slider mechanism. Only
+   the image side changes.
+
+   Each option renders BOTH Volage and Caprice frames stacked
+   (no live slider) so both products can be judged in each
+   treatment. Copy is pulled from the existing JSON content
+   collections, identical to what the live slider reads.
+
+   Assets used:
+     · Option 1 (object on void)
+         · Volage   — cigar-volage-pink.jpg  (fallback; a real
+                       cigar-on-void PNG is needed for production
+                       — flagged in the banner)
+         · Caprice  — cigar-caprice.png       (existing alpha-PNG,
+                       matches the treatment cleanly)
+     · Option 2 (macro detail)
+         · Volage   — cigar-volage-pink.jpg   (object-position
+                       used to fake a tight crop on the band)
+         · Caprice  — cigar-caprice-terrasse.jpg (object-position
+                       on the cap / wrapper)
+     · Option 3 (editorial whitespace)
+         · Volage   — cigar-volage-pink.jpg   (3:4 portrait crop,
+                       narrow island in a wide quiet column)
+         · Caprice  — cigar-caprice-terrasse.jpg (3:4 portrait,
+                       same column treatment) */
+
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import cigarVolagePink from '../assets/cigar-volage-pink.jpg';
+import cigarCapricePng from '../assets/cigar-caprice.png';
+import cigarCapriceTerrasse from '../assets/cigar-caprice-terrasse.jpg';
+import { withBase } from '../lib/path';
+
+const products = (await getCollection('products'))
+  .map((entry) => entry.data)
+  .sort((a, b) => a.order - b.order);
+
+// Per-option asset maps — keyed by slug.
+const opt1Assets: Record<string, { src: any; note?: string }> = {
+  volage: {
+    src: cigarVolagePink,
+    note: 'Fallback — real cigar-on-void PNG needed for Volage.',
+  },
+  caprice: {
+    src: cigarCapricePng,
+  },
+};
+
+const opt2Assets: Record<string, { src: any; objectPosition: string }> = {
+  // Macros are faked from existing scene shots via object-position.
+  // The crop is forced tight so the eye lands on band / cap detail.
+  volage: { src: cigarVolagePink, objectPosition: '52% 64%' },
+  caprice: { src: cigarCapriceTerrasse, objectPosition: '60% 58%' },
+};
+
+const opt3Assets: Record<string, { src: any; objectPosition: string }> = {
+  volage: { src: cigarVolagePink, objectPosition: '50% 50%' },
+  caprice: { src: cigarCapriceTerrasse, objectPosition: '50% 50%' },
+};
+---
+
+<BaseLayout title="Mariposa — Product card image comparison mocks">
+  <section class="intro">
+    <div class="container">
+      <p class="intro__eyebrow">Internal — comparison surface</p>
+      <h1 class="intro__title">Product card image &mdash; comparison mocks</h1>
+      <p class="intro__lede">
+        Three image-side treatments for the product card. Copy side
+        unchanged across all three. Both Volage and Caprice frames
+        are shown under each option so the pair can be judged
+        together. Source: Pax&rsquo;s <em>product-image-research.md</em>,
+        Part 3. The live home (<code>/</code>) is unchanged.
+      </p>
+    </div>
+  </section>
+
+  {/* ─── Option 1 label ─────────────────────────────────────── */}
+  <section class="label label--recommended">
+    <div class="container">
+      <p class="label__eyebrow">
+        Option 1 &mdash; Object on void
+        <span class="label__pick">Pax&rsquo;s recommendation</span>
+      </p>
+      <p class="label__desc">
+        Cigar isolated on the cream ground &mdash; no border, no
+        scene, no card. A single gold hairline as the section&rsquo;s
+        only piece of gold geometry. The Davidoff / Hermès move.
+        Caprice uses the existing <code>cigar-caprice.png</code>
+        (alpha); Volage falls back to the scene shot until a
+        matching cigar-on-void PNG is shot.
+      </p>
+    </div>
+  </section>
+
+  {products.map((product) => (
+    <article class:list={['mock mock--opt1', `mock--${product.slug}`]} aria-label={`Option 1 — ${product.name}`}>
+      <div class="mock__inner container">
+        <div class="mock__media mock--opt1__media">
+          <span class="mock--opt1__hairline" aria-hidden="true"></span>
+          <Image
+            class="mock--opt1__cigar"
+            src={opt1Assets[product.slug].src}
+            alt={`The Mariposa ${product.name} cigar, ${product.tagline.toLowerCase()}`}
+            widths={[260, 420, 640]}
+            sizes="(max-width: 720px) 60vw, 32vw"
+            loading="lazy"
+          />
+          {opt1Assets[product.slug].note && (
+            <p class="mock__note">{opt1Assets[product.slug].note}</p>
+          )}
+        </div>
+        <div class="mock__copy">
+          <p class="mock__vitola">{product.vitola}</p>
+          <h3 class="mock__name">{product.name}</h3>
+          <p class="mock__tagline">{product.tagline}</p>
+          {product.homeLede.map((para) => (
+            <p class="mock__lede">{para}</p>
+          ))}
+          <a class="mock__link" href={withBase(`/${product.slug}`)}>
+            <span class="mock__link-text">Discover {product.name}</span>
+            <span class="mock__link-arrow" aria-hidden="true">&rarr;</span>
+          </a>
+        </div>
+      </div>
+    </article>
+  ))}
+
+  {/* ─── Option 2 label ─────────────────────────────────────── */}
+  <section class="label">
+    <div class="container">
+      <p class="label__eyebrow">Option 2 &mdash; Macro detail</p>
+      <p class="label__desc">
+        Tight landscape crop &mdash; the cigar partially in frame,
+        editorial register. The watch move. Existing scene shots
+        cropped via <code>object-position</code> to fake the macro
+        feel; a real half-day commissioned shoot is required for
+        production (band / leaf on Volage; cap or wrapper texture
+        on Caprice).
+      </p>
+    </div>
+  </section>
+
+  {products.map((product) => (
+    <article class:list={['mock mock--opt2', `mock--${product.slug}`]} aria-label={`Option 2 — ${product.name}`}>
+      <div class="mock__inner container">
+        <div class="mock__media mock--opt2__media">
+          <span class="mock--opt2__hairline" aria-hidden="true"></span>
+          <div class="mock--opt2__frame">
+            <Image
+              class="mock--opt2__cigar"
+              src={opt2Assets[product.slug].src}
+              alt={`Macro placeholder — tight crop of the Mariposa ${product.name} cigar, faked from the existing scene shot via object-position.`}
+              widths={[640, 960, 1440]}
+              sizes="(max-width: 720px) 100vw, 44vw"
+              loading="lazy"
+              style={`object-position: ${opt2Assets[product.slug].objectPosition};`}
+            />
+          </div>
+          <p class="mock__note">Faked macro &mdash; real commissioned shot needed for production.</p>
+        </div>
+        <div class="mock__copy">
+          <p class="mock__vitola">{product.vitola}</p>
+          <h3 class="mock__name">{product.name}</h3>
+          <p class="mock__tagline">{product.tagline}</p>
+          {product.homeLede.map((para) => (
+            <p class="mock__lede">{para}</p>
+          ))}
+          <a class="mock__link" href={withBase(`/${product.slug}`)}>
+            <span class="mock__link-text">Discover {product.name}</span>
+            <span class="mock__link-arrow" aria-hidden="true">&rarr;</span>
+          </a>
+        </div>
+      </div>
+    </article>
+  ))}
+
+  {/* ─── Option 3 label ─────────────────────────────────────── */}
+  <section class="label">
+    <div class="container">
+      <p class="label__eyebrow">Option 3 &mdash; Editorial whitespace</p>
+      <p class="label__desc">
+        Scene shot kept but demoted &mdash; a narrow 3:4 portrait
+        island in a generous quiet column. No frame, single gold
+        hairline beside it. Whitespace is the protagonist.
+        Aesop / fashion-editorial direction.
+      </p>
+    </div>
+  </section>
+
+  {products.map((product) => (
+    <article class:list={['mock mock--opt3', `mock--${product.slug}`]} aria-label={`Option 3 — ${product.name}`}>
+      <div class="mock__inner container">
+        <div class="mock__media mock--opt3__media">
+          <div class="mock--opt3__column">
+            <span class="mock--opt3__rule" aria-hidden="true"></span>
+            <div class="mock--opt3__frame">
+              <Image
+                class="mock--opt3__cigar"
+                src={opt3Assets[product.slug].src}
+                alt={`The Mariposa ${product.name} cigar, ${product.tagline.toLowerCase()}`}
+                widths={[420, 640, 840]}
+                sizes="(max-width: 720px) 60vw, 22vw"
+                loading="lazy"
+                style={`object-position: ${opt3Assets[product.slug].objectPosition};`}
+              />
+            </div>
+          </div>
+        </div>
+        <div class="mock__copy">
+          <p class="mock__vitola">{product.vitola}</p>
+          <h3 class="mock__name">{product.name}</h3>
+          <p class="mock__tagline">{product.tagline}</p>
+          {product.homeLede.map((para) => (
+            <p class="mock__lede">{para}</p>
+          ))}
+          <a class="mock__link" href={withBase(`/${product.slug}`)}>
+            <span class="mock__link-text">Discover {product.name}</span>
+            <span class="mock__link-arrow" aria-hidden="true">&rarr;</span>
+          </a>
+        </div>
+      </div>
+    </article>
+  ))}
+</BaseLayout>
+
+<style>
+  /* ─── Intro ──────────────────────────────────────────────── */
+  .intro {
+    padding-block: var(--space-9) var(--space-7);
+    background: var(--white);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .intro__eyebrow {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: var(--ls-section);
+    color: var(--gold-deep);
+    margin-bottom: var(--space-4);
+  }
+  .intro__title {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(2rem, 4.4vw, 3.25rem);
+    line-height: var(--lh-snug);
+    color: var(--ink);
+    margin-bottom: var(--space-5);
+  }
+  .intro__lede {
+    font-family: var(--font-body);
+    font-size: var(--fs-lede);
+    line-height: var(--lh-body);
+    color: var(--ink-soft);
+    max-width: 60ch;
+  }
+  .intro__lede code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.92em;
+    color: var(--ink);
+  }
+
+  /* ─── Option labels (banner above each mock pair) ────────── */
+  .label {
+    background: var(--ink);
+    color: var(--white);
+    padding-block: var(--space-6);
+  }
+  .label__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: var(--ls-section);
+    color: var(--gold-leaf);
+    margin-bottom: var(--space-3);
+  }
+  .label__pick {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 400;
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
+    color: var(--pink);
+    border: 1px solid var(--pink);
+    padding: 2px 8px;
+  }
+  .label__desc {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--pearl);
+    max-width: 72ch;
+  }
+  .label__desc code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.92em;
+    color: var(--gold-soft);
+  }
+
+  /* ─── Shared mock chrome ─────────────────────────────────── */
+  /* Cream bed matches the live ProductSlider section background
+     so the mock reads in the same surrounding tone the live card
+     sits on at the live homepage. */
+  .mock {
+    background: #f2f0e9;
+    padding-block: clamp(var(--space-7), 9vw, var(--space-9));
+  }
+  .mock + .mock {
+    /* Pair the two SKU frames inside the same option with a
+       thin hairline rather than the dark option banner — the
+       banner only sits between distinct options. */
+    border-top: 1px solid color-mix(in srgb, var(--gold-deep) 14%, transparent);
+  }
+  .mock__inner {
+    display: grid;
+    grid-template-columns: 0.92fr 1fr;
+    gap: clamp(var(--space-7), 7vw, var(--space-10));
+    align-items: center;
+    width: 100%;
+  }
+  .mock__media {
+    position: relative;
+  }
+  .mock__note {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 400;
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
+    color: var(--pink-deep);
+    margin-top: var(--space-4);
+    max-width: 32ch;
+  }
+
+  /* Caprice — image right, copy left (matches the live slider's
+     editorial-spread flip introduced 2026-05-23). */
+  .mock--caprice .mock__media {
+    grid-column: 2;
+  }
+  .mock--caprice .mock__copy {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  /* Copy column — identical type ladder to the live slider. */
+  .mock__vitola {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 400;
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    margin: 0 0 var(--space-3) 0;
+  }
+  .mock__name {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(1.6rem, 4.0vw, 2.8rem);
+    line-height: 0.96;
+    letter-spacing: var(--ls-display);
+    margin: 0;
+  }
+  .mock__tagline {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.05rem, 2.0vw, 1.35rem);
+    color: var(--ink);
+    margin-top: var(--space-5);
+  }
+  .mock__lede {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--ink-soft);
+    margin-top: var(--space-4);
+    max-width: 46ch;
+  }
+  .mock__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-top: var(--space-4);
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 400;
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    text-decoration: none;
+  }
+  .mock__link-text {
+    position: relative;
+    padding-bottom: 3px;
+  }
+  .mock__link-text::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--gold-deep);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform var(--dur-default) var(--ease-paper);
+  }
+  .mock__link:hover .mock__link-text::after,
+  .mock__link:focus-visible .mock__link-text::after {
+    transform: scaleX(1);
+  }
+  .mock__link-arrow {
+    transition: transform var(--dur-default) var(--ease-paper);
+  }
+  .mock__link:hover .mock__link-arrow {
+    transform: translateX(5px);
+  }
+
+  /* ─── Option 1 — Object on void ─────────────────────────── */
+  /* No frame, no border, no card. Cigar floats on the cream
+     ground with a soft directional shadow. A single gold hairline
+     sits below the cigar as the section's only piece of gold
+     geometry. */
+  .mock--opt1__media {
+    min-height: 420px;
+    display: grid;
+    place-items: center;
+    text-align: center;
+  }
+  .mock--opt1__cigar {
+    width: auto;
+    max-height: 480px;
+    max-width: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 18px 36px rgba(31, 27, 23, 0.22));
+  }
+  .mock--opt1__hairline {
+    display: block;
+    width: 80px;
+    height: 1px;
+    background: var(--gold);
+    margin: 0 auto var(--space-6);
+    grid-row: 2;
+  }
+  /* Grid layout: hairline above the cigar so its scale is read
+     before the object. */
+  .mock--opt1__media {
+    grid-template-rows: auto auto;
+    row-gap: var(--space-5);
+  }
+  .mock--opt1__media .mock--opt1__hairline {
+    grid-row: 1;
+    margin-bottom: 0;
+  }
+  .mock--opt1__media .mock--opt1__cigar {
+    grid-row: 2;
+  }
+  .mock--opt1__media .mock__note {
+    grid-row: 3;
+    margin-inline: auto;
+  }
+
+  /* ─── Option 2 — Macro detail ───────────────────────────── */
+  /* Landscape 16:9 frame, no border. Pink hairline sits across
+     the top edge as the activation stroke (mirrors the live
+     slider's hairline behaviour). Image is object-cover so the
+     forced object-position lands a fake macro. */
+  .mock--opt2__media {
+    display: grid;
+    gap: var(--space-4);
+  }
+  .mock--opt2__frame {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: var(--ink);
+  }
+  .mock--opt2__hairline {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background: var(--pink);
+  }
+  .mock--opt2__cigar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* ─── Option 3 — Editorial whitespace ───────────────────── */
+  /* Tall narrow island, ~58% of the column width, sat against a
+     wide quiet column. Hairline kerb to the left of the image as
+     the only ornament. */
+  .mock--opt3__media {
+    min-height: 520px;
+    display: flex;
+    align-items: center;
+  }
+  .mock--opt3__column {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: clamp(var(--space-5), 3vw, var(--space-7));
+    align-items: stretch;
+    width: 58%;
+    margin-inline: auto;
+  }
+  .mock--opt3__rule {
+    display: block;
+    width: 1px;
+    background: var(--gold);
+    align-self: stretch;
+  }
+  .mock--opt3__frame {
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    background: var(--ink);
+  }
+  .mock--opt3__cigar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  /* Caprice flips the column position — keep the hairline kerb
+     on the inside edge of the column so it always reads as a
+     gutter against the copy. */
+  .mock--caprice .mock--opt3__column {
+    grid-template-columns: 1fr auto;
+  }
+  .mock--caprice .mock--opt3__rule {
+    grid-column: 2;
+  }
+  .mock--caprice .mock--opt3__frame {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  /* ─── Mobile ─────────────────────────────────────────────── */
+  @media (max-width: 720px) {
+    .mock__inner {
+      grid-template-columns: 1fr;
+      gap: var(--space-6);
+    }
+    .mock--caprice .mock__media,
+    .mock--caprice .mock__copy {
+      grid-column: auto;
+      grid-row: auto;
+    }
+    .mock--opt1__media {
+      min-height: 320px;
+    }
+    .mock--opt1__cigar {
+      max-height: 340px;
+    }
+    .mock--opt3__media {
+      min-height: 0;
+    }
+    .mock--opt3__column {
+      width: 80%;
+    }
+    .mock--caprice .mock--opt3__column {
+      grid-template-columns: auto 1fr;
+    }
+    .mock--caprice .mock--opt3__rule {
+      grid-column: 1;
+    }
+    .mock--caprice .mock--opt3__frame {
+      grid-column: 2;
+      grid-row: 1;
+    }
+  }
+</style>
