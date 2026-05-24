@@ -39,12 +39,10 @@ interface Props {
 }
 const { products } = Astro.props;
 
-// Slug → cigar image. Volage 2 reuses the Volage PNG (comparison-only
-// frame; same asset, same +30% size treatment as Volage).
+// Slug → cigar image.
 const cigarImages: Record<string, ImageMetadata> = {
   volage: cigarVolage,
   caprice: cigarCaprice,
-  'volage-2': cigarVolage,
 };
 
 // Per-slug image mode. 'object' = cigar-on-void PNG floating in
@@ -57,15 +55,12 @@ const cigarImages: Record<string, ImageMetadata> = {
 const imageMode: Record<string, 'object' | 'scene'> = {
   volage: 'object',
   caprice: 'object',
-  'volage-2': 'object',
 };
 
-// Slug → Discover link target. Defaults to `/<slug>` for SKUs with their
-// own product page; the volage-2 comparison frame routes to /volage
-// because no separate page exists (or is needed).
-const discoverHref: Record<string, string> = {
-  'volage-2': '/volage',
-};
+// Slug → Discover link target override. Defaults to `/<slug>`; map an
+// entry only when a frame should route somewhere other than its own
+// product page.
+const discoverHref: Record<string, string> = {};
 ---
 
 <section class="range grain" id="range" aria-label="The Mariposa range" data-range data-cream-bg>
@@ -441,32 +436,16 @@ const discoverHref: Record<string, string> = {
      steps up so the taller cigar has vertical room without the
      copy column pushing the row. Caprice continues to use the
      base .range__cigar--object sizing. */
-  /* Volage 2 reuses the same Volage PNG and the same +30% bump — it is
-     a comparison frame for the slider only (no separate product page).
-     Selectors generalised to match both --volage and --volage-2 so the
-     sizing rules stay in one place. */
-  .range__frame--volage .range__media-frame--object,
-  .range__frame--volage-2 .range__media-frame--object {
+  .range__frame--volage .range__media-frame--object {
     /* Bumped ×1.15 alongside the cigar (Stephane 2026-05-24):
        468/49.4vw/598 → 538/56.8vw/688. */
     min-height: clamp(538px, 56.8vw, 688px);
   }
-  .range__frame--volage .range__cigar--object,
-  .range__frame--volage-2 .range__cigar--object {
+  .range__frame--volage .range__cigar--object {
     /* Bumped ×1.15 (Stephane 2026-05-24): 416/41.6vw/546 → 478/47.8vw/628;
        max-width 52% → 60%. */
     max-height: clamp(478px, 47.8vw, 628px);
     max-width: 60%;
-  }
-  /* Volage 2 — double the gap above the discover link (Stephane
-     2026-05-24). Base .range__link uses margin-top: var(--space-4) (16px)
-     to read as one paragraph step from the lede. On the Volage 2
-     comparison frame Stephane wants this doubled to 32px so the link
-     sits as its own beat under the spec block. --space-4 × 2 = 32px =
-     --space-6 exactly; using the named token over calc() for token
-     discipline. Volage and Caprice continue to use the --space-4 base. */
-  .range__frame--volage-2 .range__link {
-    margin-top: var(--space-6);
   }
 
   /* ── Quick-spec block (inline dl, slider-only) ──────────────────
@@ -716,16 +695,12 @@ const discoverHref: Record<string, string> = {
        (Stephane 2026-05-24). Cigar 312→359; frame min-height
        340→391 to hold the taller object plus its padding; frame
        max-width 208→239 so the proportionally wider cigar isn't
-       crushed by the column cap. Ghost untouched. Selector
-       generalised to include --volage-2 so the comparison frame
-       tracks Volage on mobile as it does on desktop. */
-    .range__frame--volage .range__media-frame--object,
-    .range__frame--volage-2 .range__media-frame--object {
+       crushed by the column cap. Ghost untouched. */
+    .range__frame--volage .range__media-frame--object {
       min-height: 391px;
       max-width: 239px;
     }
-    .range__frame--volage .range__cigar--object,
-    .range__frame--volage-2 .range__cigar--object {
+    .range__frame--volage .range__cigar--object {
       max-height: 359px;
       max-width: 100%;
     }
