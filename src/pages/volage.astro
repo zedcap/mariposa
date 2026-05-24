@@ -255,10 +255,15 @@ const specsBgImage = `url("${withBase('/specs-bg-header-1.jpg')}")`;
   }
   /* Format line — same eyebrow grammar but cased: text-transform
      dropped so lowercase reads literally. Sits tight under the
-     vitola eyebrow above. */
+     vitola eyebrow above. Weight dropped to 400 (Stephane
+     2026-05-24): the format/dimensions line ("150 mm · 52 ring
+     gauge") reads as a quiet caption beneath the bold vitola
+     line above, not as a second emphasised eyebrow. The vitola
+     line keeps weight 600 from .hero__eyebrow. */
   .hero__eyebrow--cased {
     text-transform: none;
     margin-top: var(--space-2);
+    font-weight: 400;
   }
   /* Gold hairline — sits BELOW the signature and ABOVE the tagline
      (Stephane 2026-05-24). Margins carry both gaps. */
@@ -275,20 +280,25 @@ const specsBgImage = `url("${withBase('/specs-bg-header-1.jpg')}")`;
     transform: scaleX(0);
     transform-origin: left center;
   }
-  /* Signature — Spectral roman, sized as the prior signature
-     treatment (clamp 1.4/2.4vw/1.75rem). Now opens the header
-     block (Stephane 2026-05-24); the gold hairline sits beneath
-     it, then the tagline, then the eyebrow lines. The tagline
-     remains the size-protagonist; the signature is the quiet
-     opener. Margin top zeroed — first element in the column. */
+  /* Signature — Spectral italic display, sized and coloured to
+     mirror the home page's "Volcanic Soul." treatment on
+     .position__line / .position__em (Stephane 2026-05-24,
+     second pass). The signature is now the protagonist of the
+     header; the italic tagline below carries the line. Same
+     clamp shape as .position__line so the cigar name reads at
+     full editorial weight on desktop and steps down fluidly to
+     mobile. Floor (3.4rem ≈ 54.4px) holds on a 320px viewport
+     for both Volage (6 chars) and Caprice (7 chars) — confirmed
+     against the 70/30 mobile hero grid which leaves ~70vw for
+     the type column. Pink = var(--pink) (#d06f98). */
   .hero__signature {
     font-family: var(--font-display);
-    font-style: normal;
+    font-style: italic;
     font-weight: 300;
-    font-size: clamp(1.4rem, 2.4vw, 1.75rem);
+    font-size: clamp(3.4rem, 9vw, 6.5rem);
     line-height: var(--lh-snug);
     letter-spacing: var(--ls-display);
-    color: var(--ink);
+    color: var(--pink);
     margin: 0;
   }
   .hero__tagline {

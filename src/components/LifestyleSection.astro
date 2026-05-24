@@ -160,8 +160,17 @@ const { paragraphs } = Astro.props;
 
   /* ── Mobile ─────────────────────────────────────────────────────
      Strengthen the scrim so the prose stays legible against the
-     larger relative share of the frame the type occupies on phones. */
+     larger relative share of the frame the type occupies on phones.
+     Tighten the section's vertical air (Stephane 2026-05-24): the
+     section has no padding-block — top + bottom space is governed by
+     the 85vh band height + 560px min-height with the prose centred
+     via place-items. Halving both on mobile is the equivalent of
+     halving padding here. Desktop band untouched. */
   @media (max-width: 720px) {
+    .story {
+      height: 42.5vh;
+      min-height: 280px;
+    }
     .story__scrim {
       background: linear-gradient(
         180deg,
