@@ -1,8 +1,17 @@
 ---
 /* Sticky scroll-following contact element.
-   A small fixed pill, bottom-right, on every page. Click/tap expands
-   a small leaf-edged card revealing email + Instagram. No form — direct
-   channels only. Discreet concierge, not a chat-widget bubble.
+
+   Build (Stephane 2026-05-24): icon × rounded × full info. The mix
+   chosen from /contact-mocks:
+     · Button  — Option 4. Small 36px circular ink button with a
+                 white envelope glyph. No text label.
+     · Popup   — Option 2. Generously rounded (24px), softer shadow,
+                 lighter type (eyebrow / label / value each one step
+                 below the live baseline). Light ground.
+     · Content — Option 1. "Get in touch" eyebrow, then EMAIL
+                 label + value and INSTAGRAM label + value. Nothing
+                 stripped.
+
    Pattern modelled on marigold.global's fixed contact element. */
 import { getEntry } from 'astro:content';
 
@@ -13,8 +22,8 @@ const { contact } = global;
 ---
 
 <div class="concierge" data-concierge>
-  <div class="concierge__panel grain" id="concierge-panel" role="group" aria-label="Contact Mariposa" hidden>
-    <p class="concierge__eyebrow eyebrow">Get in touch</p>
+  <div class="concierge__panel" id="concierge-panel" role="group" aria-label="Contact Mariposa" hidden>
+    <p class="concierge__eyebrow">Get in touch</p>
     <a class="concierge__channel" href={`mailto:${contact.email}`}>
       <span class="concierge__channel-label">Email</span>
       <span class="concierge__channel-value">{contact.email}</span>
@@ -29,11 +38,16 @@ const { contact } = global;
     class="concierge__toggle"
     type="button"
     data-concierge-toggle
+    aria-label="Open contact"
     aria-expanded="false"
     aria-controls="concierge-panel"
   >
-    <span class="concierge__toggle-label" data-concierge-open>Contact</span>
-    <span class="concierge__toggle-label concierge__toggle-label--close" data-concierge-close hidden>Close</span>
+    <svg class="concierge__icon concierge__icon--open" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" data-concierge-icon-open>
+      <path d="M3 6.5 12 13l9-6.5M3 6h18v12H3z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" />
+    </svg>
+    <svg class="concierge__icon concierge__icon--close" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" hidden data-concierge-icon-close>
+      <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+    </svg>
   </button>
 </div>
 
@@ -49,17 +63,17 @@ const { contact } = global;
     gap: var(--space-3);
   }
 
+  /* ─── Icon button (Option 4 register) ─────────────────────── */
   .concierge__toggle {
-    font-family: var(--font-body);
-    font-size: var(--fs-small);
-    font-weight: 600;
-    letter-spacing: var(--ls-small);
-    text-transform: lowercase;
-    color: var(--white);
+    width: 36px;
+    height: 36px;
+    border-radius: 9999px;
     background: var(--ink);
+    color: var(--white);
     border: 1px solid var(--ink);
-    border-radius: var(--radius-pill);
-    padding: 12px 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
     box-shadow: var(--shadow-rise);
     transition:
@@ -74,15 +88,24 @@ const { contact } = global;
     transform: translateY(1px);
     box-shadow: var(--shadow-press);
   }
+  .concierge__toggle:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 3px;
+  }
+  .concierge__icon[hidden] {
+    display: none;
+  }
 
+  /* ─── Popup (Option 2 register) ───────────────────────────── */
   .concierge__panel {
     background: var(--pearl);
     border: 1px solid var(--border-gold);
-    border-radius: var(--radius-xs);
-    padding: var(--space-5) var(--space-6);
-    box-shadow: var(--shadow-lift);
-    min-width: 248px;
-    /* enter/exit handled by JS toggling [hidden] + the state class */
+    border-radius: 24px;
+    padding: 20px 22px;
+    box-shadow:
+      0 1px 0 rgba(31, 27, 23, 0.03),
+      0 28px 48px -24px rgba(31, 27, 23, 0.14);
+    min-width: 232px;
   }
   .concierge__panel[hidden] {
     display: none;
@@ -96,8 +119,15 @@ const { contact } = global;
     to   { opacity: 1; transform: translateY(0); }
   }
 
+  /* ─── Content (Option 1 — full, one step lighter per Option 2) */
   .concierge__eyebrow {
-    margin-bottom: var(--space-4);
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 10px;              /* one step under --fs-eyebrow */
+    letter-spacing: var(--ls-section);
+    text-transform: uppercase;
+    color: var(--accent-strong);
+    margin: 0 0 14px;
   }
 
   .concierge__channel {
@@ -105,8 +135,16 @@ const { contact } = global;
     flex-direction: column;
     gap: 1px;
     text-decoration: none;
-    padding-block: var(--space-3);
+    padding-block: 10px;
     border-top: 1px solid var(--hairline);
+  }
+  /* Divider directly under the "Get in touch" eyebrow is pink
+     (Stephane 2026-05-24) — the wink colour, tying the popup to
+     the brand's secondary accent. Subsequent channel dividers
+     stay on --hairline so only the eyebrow-adjacent line carries
+     the accent. */
+  .concierge__channel:first-of-type {
+    border-top-color: var(--pink);
   }
   .concierge__channel:last-child {
     padding-bottom: 0;
@@ -114,23 +152,25 @@ const { contact } = global;
 
   .concierge__channel-label {
     font-family: var(--font-body);
-    font-size: var(--fs-caption);
+    font-size: 11px;              /* one step under --fs-caption */
     letter-spacing: var(--ls-eyebrow);
     text-transform: uppercase;
     color: var(--ash);
   }
   .concierge__channel-value {
     font-family: var(--font-display);
-    font-size: var(--fs-body);
+    font-size: var(--fs-small);   /* one step under --fs-body */
     color: var(--ink);
     transition: color var(--dur-default) var(--ease-paper);
   }
-  .concierge__channel:hover .concierge__channel-value {
+  .concierge__channel:hover .concierge__channel-value,
+  .concierge__channel:focus-visible .concierge__channel-value {
     color: var(--gold-deep);
   }
 
   @media (prefers-reduced-motion: reduce) {
     .concierge--open .concierge__panel { animation: none; }
+    .concierge__toggle { transition: none; }
   }
 </style>
 
@@ -139,16 +179,17 @@ const { contact } = global;
   const root = document.querySelector<HTMLElement>('[data-concierge]');
   const toggle = document.querySelector<HTMLButtonElement>('[data-concierge-toggle]');
   const panel = document.getElementById('concierge-panel');
-  const labelOpen = document.querySelector<HTMLElement>('[data-concierge-open]');
-  const labelClose = document.querySelector<HTMLElement>('[data-concierge-close]');
+  const iconOpen = document.querySelector<HTMLElement>('[data-concierge-icon-open]');
+  const iconClose = document.querySelector<HTMLElement>('[data-concierge-icon-close]');
 
-  if (root && toggle && panel && labelOpen && labelClose) {
+  if (root && toggle && panel && iconOpen && iconClose) {
     const setOpen = (open: boolean) => {
       root.classList.toggle('concierge--open', open);
       toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? 'Close contact' : 'Open contact');
       panel.hidden = !open;
-      labelOpen.hidden = open;
-      labelClose.hidden = !open;
+      iconOpen.hidden = open;
+      iconClose.hidden = !open;
     };
 
     toggle.addEventListener('click', () => {
