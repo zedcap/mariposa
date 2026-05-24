@@ -151,18 +151,30 @@ const { positionPink, positionInk, subline } = Astro.props;
     margin-left: calc(30% - 0.3ch);
   }
   @media (max-width: 480px) {
-    /* Mobile overflow fix (Stephane 2026-05-24): at 375px the floor
-       font-size (~54.4px) made "24-Carat Gold." ~320px wide, and the
-       18% second-half offset pushed it past the viewport right edge.
-       Pulled both halves hard left — first hugs the gutter, second
-       keeps a minimal indent so the cascade still reads as a
-       staircase, not a stack. The 0% / 2% pair preserves the relative
-       diagonal at a viewport too narrow for the desktop stagger. */
+    /* Mobile cascade (Stephane 2026-05-24, second pass): first half
+       hugs the left edge, second half hugs the right edge — a full
+       far-left → far-right diagonal across the narrow viewport, more
+       pronounced than the desktop staircase. The container's
+       --page-pad-m (24px) sets the gutter on both sides; the second
+       half's right edge sits flush against that padding edge.
+
+       Mechanism for the second half: drop the .position__half block
+       to inline-block (so it sizes to its content rather than the
+       full container width), then push it to the right with
+       `margin-left: auto`. white-space: nowrap on the parent rule
+       keeps it on a single line. text-align: right on the .position__line
+       parent would not work alone because the half is display: block
+       and would still left-align inside its full-width block; the
+       margin-left:auto + inline-block pair is the cleanest combo.
+       Earlier 0% / 2% pair pulled both halves hard left — diagonal
+       was barely readable on a narrow viewport. */
     .position__half--first {
       margin-left: calc(0% - 0.3ch);
     }
     .position__half--second {
-      margin-left: calc(2% - 0.3ch);
+      display: block;
+      margin-left: auto;
+      width: fit-content;
     }
   }
   /* Half-level colour spans. `--em` = pink (left half: "Volcanic

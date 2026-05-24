@@ -333,7 +333,15 @@ const specsBgImage = `url("${withBase('/cigars-table.jpg')}")`;
     max-width: 880px;
     margin-inline: auto;
   }
+  /* Section-level eyebrow override (Stephane 2026-05-24): THE CIGAR
+     and Tasting Notes are section titles, not sub-headings inside a
+     section, so they step up from --fs-eyebrow (12px) to a clamp that
+     reads meaningfully larger. Same Hanken-uppercase-tracked grammar
+     as .eyebrow; only the font-size changes. PROFILE / BLEND keep
+     the default eyebrow size — they're sub-headings within this
+     section. The Presentation eyebrow likewise stays at default. */
   .cigar__eyebrow {
+    font-size: clamp(0.95rem, 1.6vw, 1.15rem);
     margin-bottom: var(--space-5);
   }
 

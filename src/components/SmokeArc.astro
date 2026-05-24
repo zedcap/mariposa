@@ -110,7 +110,15 @@ const fullMarks = marks.length >= tasting.length + 1
     max-width: 880px;
     margin-inline: auto;
   }
+  /* Section-level eyebrow override (Stephane 2026-05-24): Tasting
+     Notes is a section title, so it steps up from --fs-eyebrow (12px)
+     to a clamp that reads meaningfully larger — same scale as the
+     volage page's THE CIGAR eyebrow. Same Hanken-uppercase-tracked
+     grammar as .eyebrow; only the font-size changes. The per-third
+     STAGE labels (.smoke__stage) keep the default eyebrow size —
+     they're sub-headings within this section. */
   .smoke__eyebrow {
+    font-size: clamp(0.95rem, 1.6vw, 1.15rem);
     margin-bottom: var(--space-7);
   }
 
