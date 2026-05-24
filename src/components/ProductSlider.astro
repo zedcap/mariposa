@@ -668,51 +668,80 @@ const discoverHref: Record<string, string> = {};
     .range__frame {
       min-height: 0;
     }
+    /* Mobile layering — three stacked layers in the frame (Stephane
+       2026-05-24): ghost letter (back, existing position/opacity/z),
+       cigar (middle, semi-transparent, vertically centred and tall),
+       copy (front, opaque, readable on top). Grid collapses to a
+       single column so the copy flows top-to-bottom in its natural
+       order; the cigar is pulled out of flow with position:absolute
+       and centred against the .range__frame positioning context. The
+       Caprice desktop flip doesn't apply (single column on mobile);
+       both SKUs share this treatment. */
     .range__frame-inner {
       grid-template-columns: 1fr;
       gap: var(--space-6);
       text-align: left;
     }
-    /* Reset the Caprice desktop flip on mobile — single column,
-       image first, copy below, identical to Volage. */
+    /* Reset the Caprice desktop column/row assignments — irrelevant
+       once .range__media is absolutely positioned, but kept defensive
+       so the copy column always behaves as a normal block. */
     .range__frame--caprice .range__media,
     .range__frame--caprice .range__copy {
       grid-column: auto;
       grid-row: auto;
     }
-    /* Mobile — tighten the cigar so it reads as an object above the
-       copy block, not a wall. Frame uses a min-height to hold the
-       row, cigar itself is height-capped. Caprice base mobile
-       bumped ×1.15 (Stephane 2026-05-24): cigar 240→276; frame
-       min-height 260→299, width cap 160→184. */
+    /* Cigar layer — middle. Pulled out of grid flow, anchored to the
+       frame, vertically centred and centred horizontally. Tall and
+       slim: max-height tuned to ~80vh so the cigar reads as a
+       vertical column behind the copy. Lowered opacity (0.4) keeps
+       the copy on top readable without a scrim. z-index 1 sits
+       above the ghost (z 0) and below the copy (z 2). */
+    .range__media {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      z-index: 1;
+      opacity: 0.4;
+      pointer-events: none;
+    }
     .range__media-frame--object {
       aspect-ratio: auto;
-      min-height: 299px;
-      max-width: 184px;
+      min-height: 0;
+      max-width: none;
       margin: 0 auto;
-      padding: var(--space-4) 0;
+      padding: 0;
     }
     .range__cigar--object {
-      max-height: 276px;
-      max-width: 100%;
+      max-height: 80vh;
+      max-width: 60%;
+      width: auto;
+      height: auto;
     }
-    /* Volage mobile — bumped ×1.15 alongside the desktop pass
-       (Stephane 2026-05-24). Cigar 312→359; frame min-height
-       340→391 to hold the taller object plus its padding; frame
-       max-width 208→239 so the proportionally wider cigar isn't
-       crushed by the column cap. Ghost untouched. */
+    /* Volage mobile — same layered treatment, the cigar happens to
+       be proportionally wider so widen the width cap a touch. */
     .range__frame--volage .range__media-frame--object {
-      min-height: 391px;
-      max-width: 239px;
+      min-height: 0;
+      max-width: none;
     }
     .range__frame--volage .range__cigar--object {
-      max-height: 359px;
-      max-width: 100%;
+      max-height: 80vh;
+      max-width: 75%;
     }
     .range__media-frame--scene {
       aspect-ratio: 1 / 1;
       max-width: 300px;
     }
+    /* Copy layer — front. position:relative + z-index 2 so the text
+       block sits clearly above the semi-transparent cigar. Colours,
+       weights and sizes unchanged; no text shadows, no scrim. */
+    .range__copy {
+      position: relative;
+      z-index: 2;
+    }
+    /* Ghost letter — back. Existing position / opacity / z-index 0
+       carried through unchanged; this rule only adjusts the mobile
+       size, as before. */
     .range__ghost {
       font-size: 30rem;
       opacity: 0.05;
