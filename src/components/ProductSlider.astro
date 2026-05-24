@@ -22,8 +22,8 @@
    not decoration) but without the kinetic overshoot. */
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
-import cigarVolage from '../assets/cigar-volage-pink.jpg';
-import cigarCaprice from '../assets/cigar-caprice-terrasse.jpg';
+import cigarVolage from '../assets/cigar-volage.png';
+import cigarCaprice from '../assets/cigar-caprice.png';
 import { withBase } from '../lib/path';
 
 interface ProductFrame {
@@ -43,14 +43,16 @@ const cigarImages: Record<string, ImageMetadata> = {
   caprice: cigarCaprice,
 };
 
-// Per-slug image mode. 'object' = cigar-on-void PNG, floats inside the
-// padded card with drop-shadow. 'scene' = full editorial photograph,
-// fills the frame edge-to-edge. The frame's gold border and pink
-// hairline are preserved in both modes; the inner treatment is what
-// changes. Default is 'object' so adding a new SKU stays predictable.
+// Per-slug image mode. 'object' = cigar-on-void PNG floating in
+// negative space on the section ground, no frame, no border, no
+// hairline; soft drop-shadow gives the floating-object effect
+// (Option 1, "Object on void" — Stephane 2026-05-24). 'scene' = full
+// editorial photograph inside a bounded frame, edge-to-edge; modifier
+// CSS retained for future use but not applied to the current range.
+// Default is 'object' so adding a new SKU stays predictable.
 const imageMode: Record<string, 'object' | 'scene'> = {
-  volage: 'scene',
-  caprice: 'scene',
+  volage: 'object',
+  caprice: 'object',
 };
 ---
 
@@ -81,9 +83,10 @@ const imageMode: Record<string, 'object' | 'scene'> = {
             <div class="range__frame-inner container">
               <div class="range__media" data-range-media>
                 <div class:list={['range__media-frame', `range__media-frame--${imageMode[product.slug] ?? 'object'}`]}>
-                  {/* Pink hairline — the pager wink — drawn in on
-                      activation; a real element so GSAP can scale it. */}
-                  <span class="range__hairline" data-range-hairline aria-hidden="true"></span>
+                  {/* No frame, no border, no hairline in object mode
+                      (Option 1, Stephane 2026-05-24). The cigar PNG
+                      floats on the section ground; the soft
+                      drop-shadow gives the floating-object effect. */}
                   <Image
                     class:list={['range__cigar', `range__cigar--${imageMode[product.slug] ?? 'object'}`]}
                     src={cigarImages[product.slug]}
@@ -243,7 +246,11 @@ const imageMode: Record<string, 'object' | 'scene'> = {
     font-size: clamp(20rem, 42vw, 44rem);
     line-height: 0.7;
     color: var(--gold);
-    opacity: 0.07;
+    /* Opacity stepped 0.07 → 0.05 (Stephane 2026-05-24, Option 1):
+       with the gold frame, border and pink hairline removed the ghost
+       letter is the only depth device left around the cigar; quieter
+       opacity keeps it as a faint backdrop, not a competing element. */
+    opacity: 0.05;
     pointer-events: none;
     user-select: none;
     z-index: 0;
@@ -265,58 +272,58 @@ const imageMode: Record<string, 'object' | 'scene'> = {
     position: relative;
     will-change: transform;
   }
+  /* Media frame — base container only. No background, no border, no
+     aspect-ratio at the base level; visual treatment is owned by the
+     mode modifier (--object or --scene). Object mode (active on the
+     range today) puts a tall portrait box around the cigar PNG so it
+     has vertical room without dominating the column. Scene-mode rules
+     are retained below for future use but no SKU currently flags
+     'scene'. (Stephane 2026-05-24, Option 1 — Object on void.) */
   .range__media-frame {
     position: relative;
+    display: grid;
+    place-items: center;
+    overflow: visible;
+  }
+
+  /* Object mode — Option 1, "Object on void". Tall portrait frame so
+     the slim cigar PNGs have vertical breathing room; no card, no
+     border, no hairline, no grain overlay. The cigar floats on the
+     section's cream ground with a soft directional drop-shadow giving
+     the floating-object effect. (Stephane 2026-05-24.) */
+  .range__media-frame--object {
+    aspect-ratio: 3 / 5;
+    padding: clamp(var(--space-5), 4vw, var(--space-7)) 0;
+  }
+  .range__cigar--object {
+    width: auto;
+    max-width: 70%;
+    max-height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 22px 40px rgba(31, 27, 23, 0.22));
+    will-change: transform;
+  }
+
+  /* Scene mode — defined for future use. Bounded card holding a full
+     editorial photograph edge-to-edge, with gold border, grain overlay
+     and pink hairline. Not currently applied to any SKU; preserved so
+     reactivating scene mode for a future SKU is a one-flag change in
+     the imageMode map. */
+  .range__media-frame--scene {
     background: var(--white);
     border: 1px solid var(--border-gold);
     aspect-ratio: 1 / 1;
-    display: grid;
-    place-items: center;
-    padding: clamp(var(--space-6), 5vw, var(--space-9));
+    padding: 0;
     overflow: hidden;
   }
-  .range__media-frame::before {
+  .range__media-frame--scene::before {
     content: "";
     position: absolute;
     inset: 0;
     background-image: var(--grain-image);
     background-size: 200px 200px;
-    opacity: 0.05;
-    pointer-events: none;
-  }
-  /* The pink hairline — the pager wink — drawn in left-to-right on
-     frame activation. A real element so GSAP can scale it. */
-  .range__hairline {
-    position: absolute;
-    inset: 0 auto auto 0;
-    height: 2px;
-    width: 100%;
-    background: var(--pink);
-    transform-origin: left center;
-    transform: scaleX(1);
-    z-index: 2;
-  }
-  .range__cigar {
-    width: auto;
-    max-height: 86%;
-    object-fit: contain;
-    filter: drop-shadow(0 16px 32px rgba(31, 27, 23, 0.24));
-    will-change: transform;
-  }
-
-  /* Scene mode — the frame holds a full editorial photograph instead of
-     a cigar-on-void PNG. The card padding is collapsed so the image
-     fills the frame edge-to-edge, the drop-shadow is dropped (a
-     rectangular photo doesn't want one), and object-fit becomes cover
-     with object-position favouring the cigar (lower-right in the
-     terrasse shot). The gold border and pink hairline are preserved. */
-  .range__media-frame--scene {
-    padding: 0;
-  }
-  .range__media-frame--scene::before {
-    /* Tone the grain overlay down over a real photograph; the photo
-       carries its own texture. */
     opacity: 0.025;
+    pointer-events: none;
   }
   .range__cigar--scene {
     width: 100%;
@@ -555,7 +562,15 @@ const imageMode: Record<string, 'object' | 'scene'> = {
       grid-column: auto;
       grid-row: auto;
     }
-    .range__media-frame {
+    /* Mobile — keep the object-mode portrait aspect but tighten width
+       so the cigar PNG doesn't dominate a small viewport. */
+    .range__media-frame--object {
+      aspect-ratio: 3 / 5;
+      max-width: 240px;
+      margin: 0 auto;
+      padding: var(--space-4) 0;
+    }
+    .range__media-frame--scene {
       aspect-ratio: 1 / 1;
       max-width: 300px;
     }
@@ -590,20 +605,20 @@ const imageMode: Record<string, 'object' | 'scene'> = {
       );
       const media = frame.querySelector<HTMLElement>('[data-range-media]');
       const ghost = frame.querySelector<HTMLElement>('[data-range-ghost]');
-      const hairline = frame.querySelector<HTMLElement>('[data-range-hairline]');
-      return { frame, copyEls, media, ghost, hairline };
+      return { frame, copyEls, media, ghost };
     });
 
     /* Play one frame's content in — copy cascades, media settles in,
-       ghost letter eases up, the pink hairline draws across. */
+       ghost letter eases up. (Pink hairline removed 2026-05-24 with
+       the Option 1 object-on-void treatment; activation animation now
+       lives in the copy cascade + media settle + ghost ease.) */
     const playFrame = (idx: number) => {
       const s = frameState[idx];
       if (!s) return;
       if (REDUCED) {
         gsap.set(s.copyEls, { opacity: 1, y: 0 });
         if (s.media) gsap.set(s.media, { opacity: 1 });
-        if (s.ghost) gsap.set(s.ghost, { opacity: 0.07 });
-        if (s.hairline) gsap.set(s.hairline, { scaleX: 1 });
+        if (s.ghost) gsap.set(s.ghost, { opacity: 0.05 });
         return;
       }
       gsap.fromTo(
@@ -622,14 +637,7 @@ const imageMode: Record<string, 'object' | 'scene'> = {
         gsap.fromTo(
           s.ghost,
           { opacity: 0, scale: 1.15 },
-          { opacity: 0.07, scale: 1, duration: 1.2, ease: 'power2.out', overwrite: true },
-        );
-      }
-      if (s.hairline) {
-        gsap.fromTo(
-          s.hairline,
-          { scaleX: 0 },
-          { scaleX: 1, duration: 0.9, ease: 'power2.out', delay: 0.15, overwrite: true },
+          { opacity: 0.05, scale: 1, duration: 1.2, ease: 'power2.out', overwrite: true },
         );
       }
     };
@@ -640,7 +648,6 @@ const imageMode: Record<string, 'object' | 'scene'> = {
         gsap.set(s.copyEls, { opacity: 0, y: 26 });
         if (s.media) gsap.set(s.media, { opacity: 0 });
         if (s.ghost) gsap.set(s.ghost, { opacity: 0 });
-        if (s.hairline) gsap.set(s.hairline, { scaleX: 0 });
       });
     }
 
