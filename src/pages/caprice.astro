@@ -292,12 +292,15 @@ const specsBgImage = `url("${withBase('/specs-bg-caprice-gold.jpg')}")`;
     color: var(--ink);
     margin: 0;
   }
+  /* Intro — matches .cigar__para exactly (Stephane 2026-05-24).
+     All three narrative paragraphs share the Hanken body treatment;
+     the prior italic Spectral lede has been retired. */
   .cigar__intro {
-    font-family: var(--font-display);
-    font-style: italic;
+    font-family: var(--font-body);
+    font-style: normal;
     font-weight: 400;
-    font-size: clamp(1.05rem, 1.8vw, 1.25rem);
-    line-height: var(--lh-loose);
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
     color: var(--ink);
     margin: 0;
   }

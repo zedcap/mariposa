@@ -438,22 +438,22 @@ const specsBgImage = `url("${withBase('/specs-bg-volage-gold.jpg')}")`;
     color: var(--ink);
     margin: 0;
   }
-  /* Intro — italic Spectral lede (Stephane 2026-05-24, swapped). Matches
-     the home page lede register and the prior narrative treatment; the
-     Hanken body paragraphs underneath carry the declarative cadence.
-     Size matches .smoke__note so the narrative opens at the same
-     editorial register as the tasting notes. */
+  /* Intro — matches .cigar__para exactly (Stephane 2026-05-24).
+     All three narrative paragraphs share the Hanken body treatment;
+     the prior italic Spectral lede has been retired. Rule kept (not
+     dropped) so the markup class still resolves and the adjacency
+     selector below continues to target it. */
   .cigar__intro {
-    font-family: var(--font-display);
-    font-style: italic;
+    font-family: var(--font-body);
+    font-style: normal;
     font-weight: 400;
-    font-size: clamp(1.05rem, 1.8vw, 1.25rem);
-    line-height: var(--lh-loose);
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
     color: var(--ink);
     margin: 0;
   }
-  /* Shared paragraph rhythm — any narrative paragraph (intro or
-     italic) inherits the same gap from its predecessor. */
+  /* Shared paragraph rhythm — any narrative paragraph inherits the
+     same gap from its predecessor. */
   .cigar__intro + .cigar__para,
   .cigar__para + .cigar__para {
     margin-top: var(--space-5);
