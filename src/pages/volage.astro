@@ -302,14 +302,21 @@ const product = (await getEntry('products', 'volage'))!.data;
      spec row, so the visual order is title → rule → first spec row.
      The rule lives on .cigar__strip (border-top); the title carries
      only the gap (margin-bottom) that separates it from the rule. */
+  /* Font treatment matched to THE CIGAR eyebrow (.eyebrow in base.css)
+     per Stephane 2026-05-24: weight 400→600, letter-spacing --ls-eyebrow
+     →--ls-section, color --gold-deep→--accent-strong. font-family,
+     font-size and text-transform were already aligned. Title→rule gap
+     (margin-bottom: --space-3) preserved — .cigar__eyebrow's --space-7
+     bottom margin governs eyebrow→narrative spacing, a different beat
+     and not mirrored here. */
   .cigar__strip-title {
     margin: clamp(var(--space-7), 6vw, var(--space-8)) 0 var(--space-3) 0;
     font-family: var(--font-body);
     font-size: var(--fs-eyebrow);
-    font-weight: 400;
-    letter-spacing: var(--ls-eyebrow);
+    font-weight: 600;
+    letter-spacing: var(--ls-section);
     text-transform: uppercase;
-    color: var(--gold-deep);
+    color: var(--accent-strong);
   }
   /* Second title — same grammar, smaller top gap so the two blocks
      sit closer together than the first block does to the narrative. */
