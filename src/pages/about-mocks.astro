@@ -32,6 +32,16 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import cigarVolage  from '../assets/cigar-volage.png';
 import cigarCaprice from '../assets/cigar-caprice.png';
 
+/* Option 2 placeholder atmosphere — existing hero stock standing in
+   for commissioned shots, so Stephane can read the full-bleed
+   cinematic composition. Final shots commissioned per brief. */
+import o2Land from '../assets/hero-mp-1.jpg';
+import o2Seed from '../assets/hero-mp-3.jpg';
+import o2Hand from '../assets/hero-mp-5.jpg';
+import o2Time from '../assets/hero-mp-6.jpg';
+
+const o2PlaceholderNote = 'Placeholder atmosphere — final shot to be commissioned per the brief';
+
 /* ─── Origins beat content — verbatim from brand pager,
        partitioned across Pax's four beats ──────────────────────── */
 
@@ -217,12 +227,10 @@ const capTimeB    = 'PLACEHOLDER: escogida fermentation — same leaves, month 2
     </section>
 
     <section class="o2-beat" aria-label="Argopuro — the land">
-      <figure class="o2-beat__frame placeholder placeholder--bleed" aria-label="Argopuro full-bleed placeholder">
-        <span class="placeholder__corner placeholder__corner--tl" aria-hidden="true"></span>
-        <span class="placeholder__corner placeholder__corner--tr" aria-hidden="true"></span>
-        <span class="placeholder__corner placeholder__corner--bl" aria-hidden="true"></span>
-        <span class="placeholder__corner placeholder__corner--br" aria-hidden="true"></span>
-        <figcaption class="placeholder__caption o2-beat__placeholder-caption">{capLand}</figcaption>
+      <figure class="o2-beat__frame" aria-label="Argopuro full-bleed">
+        <Image src={o2Land} alt="Atmospheric placeholder standing in for Argopuro range — final shot to be commissioned." class="o2-beat__img" widths={[1200, 1800, 2400, 3200]} sizes="100vw" />
+        <div class="o2-beat__scrim" aria-hidden="true"></div>
+        <p class="o2-beat__placeholder-note">{o2PlaceholderNote}</p>
         <div class="o2-beat__caption">
           <p class="o2-beat__eyebrow">{beatLandEyebrow}</p>
           <p class="o2-beat__para">{beatLandBody}</p>
@@ -231,12 +239,10 @@ const capTimeB    = 'PLACEHOLDER: escogida fermentation — same leaves, month 2
     </section>
 
     <section class="o2-beat" aria-label="The seed — twenty years">
-      <figure class="o2-beat__frame placeholder placeholder--bleed" aria-label="The seed full-bleed placeholder">
-        <span class="placeholder__corner placeholder__corner--tl" aria-hidden="true"></span>
-        <span class="placeholder__corner placeholder__corner--tr" aria-hidden="true"></span>
-        <span class="placeholder__corner placeholder__corner--bl" aria-hidden="true"></span>
-        <span class="placeholder__corner placeholder__corner--br" aria-hidden="true"></span>
-        <figcaption class="placeholder__caption o2-beat__placeholder-caption">{capSeed}</figcaption>
+      <figure class="o2-beat__frame" aria-label="The seed full-bleed">
+        <Image src={o2Seed} alt="Atmospheric placeholder standing in for the seed nursery — final shot to be commissioned." class="o2-beat__img" widths={[1200, 1800, 2400, 3200]} sizes="100vw" />
+        <div class="o2-beat__scrim" aria-hidden="true"></div>
+        <p class="o2-beat__placeholder-note">{o2PlaceholderNote}</p>
         <div class="o2-beat__caption">
           <p class="o2-beat__eyebrow">{beatSeedEyebrow}</p>
           <p class="o2-beat__para">{beatSeedBody}</p>
@@ -245,12 +251,10 @@ const capTimeB    = 'PLACEHOLDER: escogida fermentation — same leaves, month 2
     </section>
 
     <section class="o2-beat" aria-label="Jember — the workshop">
-      <figure class="o2-beat__frame placeholder placeholder--bleed" aria-label="Jember workshop full-bleed placeholder">
-        <span class="placeholder__corner placeholder__corner--tl" aria-hidden="true"></span>
-        <span class="placeholder__corner placeholder__corner--tr" aria-hidden="true"></span>
-        <span class="placeholder__corner placeholder__corner--bl" aria-hidden="true"></span>
-        <span class="placeholder__corner placeholder__corner--br" aria-hidden="true"></span>
-        <figcaption class="placeholder__caption o2-beat__placeholder-caption">{capHand}</figcaption>
+      <figure class="o2-beat__frame" aria-label="Jember workshop full-bleed">
+        <Image src={o2Hand} alt="Atmospheric placeholder standing in for the Jember rolling room — final shot to be commissioned." class="o2-beat__img" widths={[1200, 1800, 2400, 3200]} sizes="100vw" />
+        <div class="o2-beat__scrim" aria-hidden="true"></div>
+        <p class="o2-beat__placeholder-note">{o2PlaceholderNote}</p>
         <div class="o2-beat__caption">
           <p class="o2-beat__eyebrow">{beatHandEyebrow}</p>
           <p class="o2-beat__para">{beatHandBody}</p>
@@ -259,12 +263,10 @@ const capTimeB    = 'PLACEHOLDER: escogida fermentation — same leaves, month 2
     </section>
 
     <section class="o2-beat" aria-label="Time — three years">
-      <figure class="o2-beat__frame placeholder placeholder--bleed" aria-label="Ageing room full-bleed placeholder">
-        <span class="placeholder__corner placeholder__corner--tl" aria-hidden="true"></span>
-        <span class="placeholder__corner placeholder__corner--tr" aria-hidden="true"></span>
-        <span class="placeholder__corner placeholder__corner--bl" aria-hidden="true"></span>
-        <span class="placeholder__corner placeholder__corner--br" aria-hidden="true"></span>
-        <figcaption class="placeholder__caption o2-beat__placeholder-caption">{capTime}</figcaption>
+      <figure class="o2-beat__frame" aria-label="Ageing room full-bleed">
+        <Image src={o2Time} alt="Atmospheric placeholder standing in for the ageing room — final shot to be commissioned." class="o2-beat__img" widths={[1200, 1800, 2400, 3200]} sizes="100vw" />
+        <div class="o2-beat__scrim" aria-hidden="true"></div>
+        <p class="o2-beat__placeholder-note">{o2PlaceholderNote}</p>
         <div class="o2-beat__caption">
           <p class="o2-beat__eyebrow">{beatTimeEyebrow}</p>
           <p class="o2-beat__para">{beatTimeBody}</p>
@@ -748,31 +750,56 @@ const capTimeB    = 'PLACEHOLDER: escogida fermentation — same leaves, month 2
     width: 100%;
     height: 70vh;
     margin: 0;
-    background: var(--pearl);
+    background: var(--ink);
     padding: 0;
+    overflow: hidden;
   }
-  .o2-beat__placeholder-caption {
+  .o2-beat__img {
     position: absolute;
-    top: 32%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    max-width: 40ch;
-    color: var(--gold-deep);
-    text-align: center;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+  /* Soft dark gradient over the bottom-left third so white type
+     stays legible against arbitrary photographic content. */
+  .o2-beat__scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top right,
+      color-mix(in srgb, var(--ink) 70%, transparent) 0%,
+      color-mix(in srgb, var(--ink) 40%, transparent) 35%,
+      transparent 65%
+    );
+    pointer-events: none;
+  }
+  .o2-beat__placeholder-note {
+    position: absolute;
+    top: clamp(var(--space-4), 3vw, var(--space-6));
+    right: clamp(var(--space-4), 3vw, var(--space-6));
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    letter-spacing: var(--ls-section);
+    text-transform: uppercase;
+    color: var(--gold-leaf);
+    background: color-mix(in srgb, var(--ink) 55%, transparent);
+    padding: 4px 10px;
+    margin: 0;
+    max-width: 32ch;
+    text-align: right;
+    z-index: 2;
   }
   .o2-beat__caption {
     position: absolute;
     bottom: clamp(var(--space-6), 5vw, var(--space-8));
     left: clamp(var(--space-6), 5vw, var(--space-8));
     max-width: 48ch;
-    background: linear-gradient(
-      to right,
-      color-mix(in srgb, var(--ink) 60%, transparent) 0%,
-      color-mix(in srgb, var(--ink) 60%, transparent) 70%,
-      transparent 100%
-    );
-    padding: var(--space-5) var(--space-7) var(--space-5) var(--space-5);
-    border-radius: 2px;
+    padding: 0;
+    z-index: 2;
   }
   .o2-beat__eyebrow {
     font-family: var(--font-body);
@@ -789,6 +816,7 @@ const capTimeB    = 'PLACEHOLDER: escogida fermentation — same leaves, month 2
     line-height: var(--lh-loose);
     color: var(--pearl);
     margin: 0;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.4);
   }
 
   /* ═══════════════════════════════════════════════════════════
