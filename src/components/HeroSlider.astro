@@ -131,22 +131,19 @@ const { slides } = Astro.props;
 
   @media (max-width: 720px) {
     .hero {
-      /* On a phone the band takes a 4:3 portrait-friendly ratio (taller
-         than the 16:9 source), so the image fills the frame and crops
-         horizontally. Anchored right so the mariposa wordmark on the
-         right of each frame stays in view; the left side of the source
-         is what gets sacrificed. No fixed svh height, no min/max. */
+      /* On a phone the band keeps the source's native 16:9 ratio so the
+         full image is visible — no horizontal crop, no wordmark loss.
+         No fixed svh height, no min/max. */
       height: auto;
       min-height: 0;
       max-height: none;
-      aspect-ratio: 4 / 3;
+      aspect-ratio: 16 / 9;
     }
 
-    /* Fill the taller mobile band and crop from the left, keeping the
-       right-anchored wordmark visible. */
+    /* Contain the image inside the 16:9 band so every frame shows
+       end-to-end at its native ratio. */
     .hero__img {
-      object-fit: cover;
-      object-position: right center;
+      object-fit: contain;
     }
   }
 
