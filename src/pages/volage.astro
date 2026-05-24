@@ -36,8 +36,16 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SmokeArc from '../components/SmokeArc.astro';
 import cigarVolage from '../assets/cigar-volage.png';
+import { withBase } from '../lib/path';
 
 const product = (await getEntry('products', 'volage'))!.data;
+
+/* Specs-bleed background photo. Served from /public so CSS url() can
+   resolve it under any Astro `base`. Injected as a CSS custom property
+   on the section element (CSS url() is not rewritten for the base, so
+   the path must be baked in here). The future Caprice page will mirror
+   this with /cigars-table-2.jpg once /caprice exists; not copied yet. */
+const specsBgImage = `url("${withBase('/cigars-table.jpg')}")`;
 ---
 
 <BaseLayout title={`Mariposa • ${product.name}`}>
@@ -110,7 +118,7 @@ const product = (await getEntry('products', 'volage'))!.data;
         unambiguously brown while still dark enough to host
         inverted text at WCAG AA. Declared as --ink-brown locally,
         not promoted to tokens.css until a second surface earns it. */}
-    <div class="cigar__specs-bleed">
+    <div class="cigar__specs-bleed" style={`--specs-bg-image: ${specsBgImage};`}>
       <div class="cigar__inner container">
         {/* Spec list — split into two blocks of six (Stephane review
             2026-05-24). Block 1 = the headline-grade specs (Vitola,
@@ -340,7 +348,22 @@ const product = (await getEntry('products', 'volage'))!.data;
     margin-top: clamp(var(--space-7), 7vw, var(--space-9));
     width: 100vw;
     margin-inline: calc(50% - 50vw);
-    background: var(--ink-brown);
+    /* Stacked background (2026-05-24): cigars-table.jpg as the base
+       layer, 80% --ink-brown wash on top via a flat linear-gradient.
+       Single-element mechanism (no ::before) so the spec children
+       inherit nothing extra and need no z-index. Wash hex must match
+       --ink-brown (#2A1E14); CSS gradients don't accept var() inside
+       rgba(), so the literal is repeated here. Photo shows through at
+       ~20%, enough texture to read as a table surface without
+       compromising legibility of the inverted text. Fallback solid
+       brown preserved for the no-image edge case. */
+    background-color: var(--ink-brown);
+    background-image:
+      linear-gradient(rgba(42, 30, 20, 0.8), rgba(42, 30, 20, 0.8)),
+      var(--specs-bg-image);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     /* Padding split (2026-05-24): top halved so PROFILE sits closer to
        the top edge of the brown bleed; bottom (BLEND→bottom edge)
        preserved at the original clamp value. */
