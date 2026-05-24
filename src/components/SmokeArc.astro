@@ -21,9 +21,11 @@
    sits at the top of the rail, the last at the bottom, intermediate
    ticks at the seams between thirds. Tick top% follows
    `i / (N-1) * 100%` so a 4-mark set lands at 0 / 33 / 66 / 100.
-   Active-tick logic still maps 1:1 with thirds (tick N activates as
-   third N enters); the closing tick is a passive end-marker and
-   never carries the active state.
+   Active-tick logic maps third index N to tick N+1 (each third's
+   copy reads as "the smoke has reached this minute mark", so the
+   tick at the END of that third lights up). Tick 0 is the start
+   marker and stays active on initial load; the closing tick lights
+   when the final third enters the centre band.
 
    Per-page values come from the consumer via the `marks` prop:
      · Volage  → ["0", "20", "40", "60"]  (60-min smoke, 20-min beats)
@@ -52,9 +54,10 @@ const {
 
 /* Marks length is N = tasting.length + 1 (three thirds → four ticks:
    0, third-1/2 seam, third-2/3 seam, end). Trim or pad to that target
-   so the caller can't accidentally desynchronise the rail. The first
-   three ticks map 1:1 to thirds for active-state highlighting; the
-   fourth is a passive end-marker. */
+   so the caller can't accidentally desynchronise the rail. Active-
+   state mapping: third index i lights tick i+1 (third 0 → tick 1,
+   third 1 → tick 2, third 2 → tick 3). Tick 0 is the start marker
+   and is lit on initial load. */
 const targetMarkCount = tasting.length + 1;
 const fullMarks = marks.length >= targetMarkCount
   ? marks.slice(0, targetMarkCount)
@@ -373,13 +376,13 @@ const fullMarks = marks.length >= targetMarkCount
     thirds.forEach((t) => t.classList.add('is-revealed'));
   }
 
-  // Tick activation — the tick at index N lights when third N is
-  // the most-centred third in the viewport. The same enter also
-  // reveals third N (and is sticky thereafter). With 4 ticks against
-  // 3 thirds (2026-05-24, reverted to minute marks), ticks 0-2 map
-  // 1:1 to thirds; tick 3 is the closing end-marker and is never
-  // activated by the observer — it sits at full rail height as a
-  // passive terminator.
+  // Tick activation. Third index i lights tick i+1 (each third's
+  // copy reads as "the smoke has reached this minute mark", so the
+  // tick at the END of that third lights up). With 4 ticks against
+  // 3 thirds (2026-05-24, reverted to minute marks): third 0 lights
+  // tick 1, third 1 lights tick 2, third 2 lights tick 3. Tick 0 is
+  // the start marker, lit on initial load. The same enter also
+  // reveals third i (and is sticky thereafter).
   if (thirds.length && ticks.length) {
     const setActive = (i: number) => {
       ticks.forEach((t) => t.classList.remove('is-active'));
@@ -411,7 +414,11 @@ const fullMarks = marks.length >= targetMarkCount
         }
         if (bestEntry) {
           const idx = Number((bestEntry.target as HTMLElement).dataset.thirdIndex);
-          setActive(idx);
+          // Third i lights tick i+1; tick 0 is the start marker (lit
+          // on initial load below). Clamp defensively in case the
+          // caller passes a marks array shorter than thirds+1.
+          const tickIdx = Math.min(idx + 1, ticks.length - 1);
+          setActive(tickIdx);
         }
       },
       {

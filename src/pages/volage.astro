@@ -483,10 +483,11 @@ const specsBgImage = `url("${withBase('/specs-bg-volage-gold.jpg')}")`;
   }
   /* Second title — same grammar, smaller top gap so the two blocks
      sit closer together than the first block does to the narrative.
-     Gap grown 50% (Stephane 2026-05-24) via calc(... * 1.5) on each
-     clamp arg; preserves the same fluid shape, just scaled. */
+     Gap grown a further 50% (Stephane 2026-05-24, compound +50%) via
+     calc(... * 2.25) on the floor/ceiling and 6.75vw on the middle stop;
+     preserves the same fluid shape, just scaled. */
   .cigar__strip-title--second {
-    margin-top: clamp(calc(var(--space-5) * 1.5), 4.5vw, calc(var(--space-6) * 1.5));
+    margin-top: clamp(calc(var(--space-5) * 2.25), 6.75vw, calc(var(--space-6) * 2.25));
   }
   .cigar__strip {
     margin: 0;
