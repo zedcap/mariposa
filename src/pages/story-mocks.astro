@@ -1,0 +1,423 @@
+---
+/* Story section — comparison mocks.
+   ------------------------------------------------------------------
+   2026-05-24. Comparison surface for Stephane: three story-section
+   patterns (Options A, B, C per Pax's `story-section-research.md`
+   Part 3) stacked vertically at full scale so they can be reviewed
+   side by side before committing.
+
+   Direct-URL only. NOT linked from the nav. The live home page
+   (`/`, `LifestyleSection.astro`) is untouched.
+
+   Each option uses the existing story prose verbatim from
+   `src/content/site/home.json`. Per Stephane's "Keep together"
+   answer on Pax's open question, both ideas (butterfly-ginger
+   legend + gold-leaf signature) stay in one section for every
+   variant.
+
+   Photo placeholders use `cigar-volage-pink.jpg` (the most
+   atmospheric existing asset). Final commissioned shots needed
+   before production. */
+
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import volagePink from '../assets/cigar-volage-pink.jpg';
+import wordmarkWhite from '../assets/mariposa-logo-white.png';
+import wordmarkBlack from '../assets/mariposa-logo-black.png';
+
+const paragraphs = [
+  "The story goes that during Cuba's wars of independence, women slipped secret messages to the guerrilleros into the petals of the Mariposa flower, the white butterfly ginger that became the nation's flower in 1936.",
+  "Every Mariposa carries a secret of its own. In place of a printed band, a 24-carat gold leaf is laid onto the wrapper by hand. A quiet reminder that life isn't just to be lived. It is meant to be celebrated every day.",
+];
+---
+
+<BaseLayout title="Mariposa — Story section comparison mocks">
+  <section class="intro">
+    <div class="container">
+      <p class="intro__eyebrow">Internal — comparison surface</p>
+      <h1 class="intro__title">Story section &mdash; comparison mocks</h1>
+      <p class="intro__lede">
+        Three patterns for the homepage story moment stacked below at
+        full scale. Scroll through to compare. Source: Pax&rsquo;s
+        <em>story-section-research.md</em>, Part 3. The live home
+        (<code>/</code>) is unchanged.
+      </p>
+    </div>
+  </section>
+
+  {/* ─── Option A label ─────────────────────────────────────── */}
+  <section class="label">
+    <div class="container">
+      <p class="label__eyebrow">Option A &mdash; Full-bleed room</p>
+      <p class="label__desc">
+        Photographic ground, prose over it, wordmark signature at foot.
+        Needs one commissioned shot &mdash; using <code>cigar-volage-pink.jpg</code>
+        as placeholder.
+      </p>
+    </div>
+  </section>
+
+  {/* ─── Option A ─────────────────────────────────────────── */}
+  <section class="opt-a" aria-labelledby="opt-a-heading">
+    <h2 class="visually-hidden" id="opt-a-heading">Option A &mdash; Full-bleed room</h2>
+    <Image
+      class="opt-a__bg"
+      src={volagePink}
+      alt=""
+      aria-hidden="true"
+      widths={[960, 1440, 1920, 2560]}
+      sizes="100vw"
+      loading="lazy"
+    />
+    <div class="opt-a__scrim" aria-hidden="true"></div>
+    <div class="opt-a__inner">
+      <p class="opt-a__eyebrow">Mariposa &mdash; a small story</p>
+      <div class="opt-a__prose">
+        {paragraphs.map((para) => <p>{para}</p>)}
+      </div>
+      <Image
+        class="opt-a__wordmark"
+        src={wordmarkWhite}
+        alt="Mariposa"
+        widths={[260, 420]}
+        sizes="220px"
+        loading="lazy"
+      />
+    </div>
+  </section>
+
+  {/* ─── Option B label ─────────────────────────────────────── */}
+  <section class="label">
+    <div class="container">
+      <p class="label__eyebrow">Option B &mdash; Typographic pause</p>
+      <p class="label__desc">
+        No card, no image, prose on pearl with breathing room and a thin
+        gold hairline. Aesop-direction.
+      </p>
+    </div>
+  </section>
+
+  {/* ─── Option B ─────────────────────────────────────────── */}
+  <section class="opt-b" aria-labelledby="opt-b-heading">
+    <h2 class="visually-hidden" id="opt-b-heading">Option B &mdash; Typographic pause</h2>
+    <div class="opt-b__inner">
+      <span class="opt-b__rule" aria-hidden="true"></span>
+      <div class="opt-b__prose">
+        {paragraphs.map((para) => <p>{para}</p>)}
+      </div>
+      <Image
+        class="opt-b__wordmark"
+        src={wordmarkBlack}
+        alt="Mariposa"
+        widths={[260, 420]}
+        sizes="200px"
+        loading="lazy"
+      />
+    </div>
+  </section>
+
+  {/* ─── Option C label ─────────────────────────────────────── */}
+  <section class="label">
+    <div class="container">
+      <p class="label__eyebrow">Option C &mdash; Dark room</p>
+      <p class="label__desc">
+        Ink ground, gold accents, small macro shot beside prose. Using
+        <code>cigar-volage-pink.jpg</code> as placeholder for the macro.
+      </p>
+    </div>
+  </section>
+
+  {/* ─── Option C ─────────────────────────────────────────── */}
+  <section class="opt-c" aria-labelledby="opt-c-heading">
+    <h2 class="visually-hidden" id="opt-c-heading">Option C &mdash; Dark room</h2>
+    <div class="opt-c__inner">
+      <figure class="opt-c__figure">
+        <Image
+          src={volagePink}
+          alt="Macro placeholder &mdash; commissioned gold-leaf or butterfly-ginger shot to replace."
+          widths={[420, 640, 840]}
+          sizes="(max-width: 720px) 80vw, 32vw"
+          loading="lazy"
+        />
+      </figure>
+      <div class="opt-c__text">
+        <p class="opt-c__eyebrow">Mariposa &mdash; a small story</p>
+        <div class="opt-c__prose">
+          {paragraphs.map((para) => <p>{para}</p>)}
+        </div>
+        <Image
+          class="opt-c__wordmark"
+          src={wordmarkWhite}
+          alt="Mariposa"
+          widths={[260, 420]}
+          sizes="200px"
+          loading="lazy"
+        />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* ─── Intro ──────────────────────────────────────────────── */
+  .intro {
+    padding-block: var(--space-9) var(--space-7);
+    background: var(--white);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .intro__eyebrow {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: var(--ls-section);
+    color: var(--gold-deep);
+    margin-bottom: var(--space-4);
+  }
+  .intro__title {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(2rem, 4.4vw, 3.25rem);
+    line-height: var(--lh-snug);
+    color: var(--ink);
+    margin-bottom: var(--space-5);
+  }
+  .intro__lede {
+    font-family: var(--font-body);
+    font-size: var(--fs-lede);
+    line-height: var(--lh-body);
+    color: var(--ink-soft);
+    max-width: 60ch;
+  }
+  .intro__lede code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.92em;
+    color: var(--ink);
+  }
+
+  /* ─── Option labels (banner above each mock) ─────────────── */
+  .label {
+    background: var(--ink);
+    color: var(--white);
+    padding-block: var(--space-6);
+  }
+  .label__eyebrow {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: var(--ls-section);
+    color: var(--gold-leaf);
+    margin-bottom: var(--space-3);
+  }
+  .label__desc {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--pearl);
+    max-width: 72ch;
+  }
+  .label__desc code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.92em;
+    color: var(--gold-soft);
+  }
+
+  /* ─── Option A — Full-bleed room ─────────────────────────── */
+  .opt-a {
+    position: relative;
+    height: 85vh;
+    min-height: 560px;
+    width: 100%;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    isolation: isolate;
+  }
+  .opt-a__bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 40%;
+    z-index: 0;
+  }
+  .opt-a__scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(31, 27, 23, 0.18) 0%,
+      rgba(31, 27, 23, 0.42) 50%,
+      rgba(31, 27, 23, 0.28) 100%
+    );
+    z-index: 1;
+  }
+  .opt-a__inner {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding-inline: var(--page-pad-m);
+    max-inline-size: 52ch;
+    margin-inline: auto;
+  }
+  .opt-a__eyebrow {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: var(--ls-section);
+    color: var(--white);
+    margin-bottom: var(--space-6);
+  }
+  .opt-a__prose p {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.1rem, 1.8vw, 1.4rem);
+    line-height: var(--lh-loose);
+    color: var(--white);
+  }
+  .opt-a__prose p + p {
+    margin-top: var(--space-5);
+  }
+  .opt-a__wordmark {
+    display: block;
+    height: clamp(1rem, 1.6vw, 1.3rem);
+    width: auto;
+    margin: var(--space-7) auto 0;
+  }
+  @media (max-width: 720px) {
+    .opt-a__scrim {
+      background: linear-gradient(
+        180deg,
+        rgba(31, 27, 23, 0.28) 0%,
+        rgba(31, 27, 23, 0.55) 50%,
+        rgba(31, 27, 23, 0.38) 100%
+      );
+    }
+  }
+
+  /* ─── Option B — Typographic pause ───────────────────────── */
+  .opt-b {
+    background: var(--pearl);
+    padding-block: var(--space-10);
+  }
+  .opt-b__inner {
+    max-inline-size: 56ch;
+    margin-inline: auto;
+    padding-inline: var(--page-pad-m);
+    text-align: center;
+  }
+  .opt-b__rule {
+    display: block;
+    width: 80px;
+    height: 1px;
+    background: var(--gold-deep);
+    margin: 0 auto var(--space-7);
+  }
+  .opt-b__prose p {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.2rem, 2vw, 1.5rem);
+    line-height: var(--lh-loose);
+    color: var(--ink);
+  }
+  .opt-b__prose p + p {
+    margin-top: var(--space-6);
+  }
+  .opt-b__wordmark {
+    display: block;
+    height: clamp(0.95rem, 1.4vw, 1.2rem);
+    width: auto;
+    margin: var(--space-8) auto 0;
+  }
+  @media (max-width: 720px) {
+    .opt-b {
+      padding-block: var(--space-9);
+    }
+  }
+
+  /* ─── Option C — Dark room ───────────────────────────────── */
+  .opt-c {
+    background: var(--ink);
+    min-height: 75vh;
+    display: grid;
+    place-items: center;
+    padding-block: var(--space-9);
+  }
+  .opt-c__inner {
+    width: 100%;
+    max-width: var(--content);
+    margin-inline: auto;
+    padding-inline: var(--page-pad-d);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+    gap: clamp(var(--space-7), 6vw, var(--space-9));
+    align-items: center;
+  }
+  .opt-c__figure {
+    margin: 0;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: #000;
+  }
+  .opt-c__figure img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+  .opt-c__text {
+    max-inline-size: 48ch;
+  }
+  .opt-c__eyebrow {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: var(--ls-section);
+    color: var(--gold-leaf);
+    margin-bottom: var(--space-6);
+  }
+  .opt-c__prose p {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.1rem, 1.8vw, 1.4rem);
+    line-height: var(--lh-loose);
+    color: var(--pearl);
+  }
+  .opt-c__prose p + p {
+    margin-top: var(--space-5);
+  }
+  .opt-c__wordmark {
+    display: block;
+    height: clamp(0.95rem, 1.4vw, 1.2rem);
+    width: auto;
+    margin-top: var(--space-7);
+    /* Tint the white-PNG wordmark toward gold-leaf without swapping
+       the source asset. Keeps a single mark file across the page. */
+    filter: brightness(0) saturate(100%)
+            invert(72%) sepia(45%) saturate(540%)
+            hue-rotate(0deg) brightness(92%) contrast(88%);
+  }
+  @media (max-width: 720px) {
+    .opt-c__inner {
+      grid-template-columns: 1fr;
+      padding-inline: var(--page-pad-m);
+      gap: var(--space-7);
+    }
+    .opt-c__figure {
+      max-width: 80vw;
+      margin-inline: auto;
+      aspect-ratio: 1 / 1;
+    }
+    .opt-c__text {
+      margin-inline: auto;
+      text-align: left;
+    }
+  }
+</style>
