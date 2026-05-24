@@ -298,15 +298,12 @@ const product = (await getEntry('products', 'volage'))!.data;
 
   /* Spec list — two columns at desktop, stacked on mobile. Split
      into two blocks of six (Stephane 2026-05-24); each block carries
-     its own full-width gold top rule, so the second block sits
-     tighter to the first than the first does to the narrative above.
-     Per-block titles (Profile / Blend) added 2026-05-24 — the gold
-     rule now lives on the title, so the visual order is rule → title
-     → first spec row. The <dl> itself no longer carries border-top. */
+     its own full-width gold rule between the title and the first
+     spec row, so the visual order is title → rule → first spec row.
+     The rule lives on .cigar__strip (border-top); the title carries
+     only the gap (margin-bottom) that separates it from the rule. */
   .cigar__strip-title {
-    margin: clamp(var(--space-7), 6vw, var(--space-8)) 0 var(--space-5) 0;
-    padding-top: var(--space-5);
-    border-top: 1px solid var(--border-gold);
+    margin: clamp(var(--space-7), 6vw, var(--space-8)) 0 var(--space-3) 0;
     font-family: var(--font-body);
     font-size: var(--fs-eyebrow);
     font-weight: 400;
@@ -321,6 +318,8 @@ const product = (await getEntry('products', 'volage'))!.data;
   }
   .cigar__strip {
     margin: 0;
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--border-gold);
     display: grid;
     grid-template-columns: 1fr 1fr;
     column-gap: clamp(var(--space-6), 5vw, var(--space-9));
