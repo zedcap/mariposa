@@ -204,7 +204,11 @@ const product = (await getEntry('products', 'volage'))!.data;
     min-height: 88vh;
     display: flex;
     align-items: center;
-    padding-block: clamp(var(--space-8), 10vw, var(--space-10));
+    /* Padding split (2026-05-24): top retains the original clamp; bottom
+       halved so the cigar narrative sits closer to the foot of the hero.
+       The pearl→white gradient fade above is untouched. */
+    padding-top: clamp(var(--space-8), 10vw, var(--space-10));
+    padding-bottom: clamp(calc(var(--space-8) / 2), 5vw, calc(var(--space-10) / 2));
   }
   .hero__inner {
     display: grid;
@@ -310,8 +314,12 @@ const product = (await getEntry('products', 'volage'))!.data;
     /* Zero the section's bottom padding — the dark bleed band carries
        its own generous block padding, so the inherited section rhythm
        would only create a white sliver between the brown band and
-       the smoke arc below. Top padding stays via section rhythm. */
+       the smoke arc below. */
     padding-bottom: 0;
+    /* Top padding halved (2026-05-24) from the inherited section rhythm
+       so the cigar narrative sits closer to the foot of the hero above.
+       Was clamp(var(--space-7), 7vw, var(--space-9)) via section rule. */
+    padding-top: clamp(calc(var(--space-7) / 2), 3.5vw, calc(var(--space-9) / 2));
   }
   .cigar__inner {
     max-width: 880px;
@@ -333,7 +341,11 @@ const product = (await getEntry('products', 'volage'))!.data;
     width: 100vw;
     margin-inline: calc(50% - 50vw);
     background: var(--ink-brown);
-    padding-block: clamp(var(--space-9), 10vw, var(--space-10));
+    /* Padding split (2026-05-24): top halved so PROFILE sits closer to
+       the top edge of the brown bleed; bottom (BLEND→bottom edge)
+       preserved at the original clamp value. */
+    padding-top: clamp(calc(var(--space-9) / 2), 5vw, calc(var(--space-10) / 2));
+    padding-bottom: clamp(var(--space-9), 10vw, var(--space-10));
   }
   .cigar__narrative {
     max-width: 720px;

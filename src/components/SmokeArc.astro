@@ -93,7 +93,11 @@ const fullMarks = marks.length >= tasting.length + 1
 
 <style>
   .smoke {
-    padding-block: clamp(var(--space-8), 9vw, var(--space-10));
+    /* Padding split (2026-05-24): top halved so Tasting Notes sits
+       closer to the foot of the dark-brown bleed band above; bottom
+       preserved at the original clamp value. */
+    padding-top: clamp(calc(var(--space-8) / 2), 4.5vw, calc(var(--space-10) / 2));
+    padding-bottom: clamp(var(--space-8), 9vw, var(--space-10));
   }
 
   /* Inner column locked to the same measure as the cigar section's
@@ -139,9 +143,13 @@ const fullMarks = marks.length >= tasting.length + 1
     position: absolute;
     top: 0;
     bottom: 0;
-    right: 100%;
+    /* Rail moved to the right-hand gutter (2026-05-24): sits outside
+       the notes column on the right rather than the left. Rail line
+       lives on the rail's right edge (see .smoke__line / .smoke__tick)
+       so the minute labels extend leftward toward the notes column. */
+    left: 100%;
     width: clamp(80px, 10vw, 120px);
-    margin-right: var(--space-5);
+    margin-left: var(--space-5);
     pointer-events: none;
   }
   /* Below ~1080px the viewport no longer has comfortable gutter room
@@ -182,7 +190,10 @@ const fullMarks = marks.length >= tasting.length + 1
   }
   .smoke__line {
     position: absolute;
-    left: 0;
+    /* Line anchored to the rail's right edge (2026-05-24) so the rail
+       sits as far from the notes column as possible within the right
+       gutter, and minute labels extend leftward toward the notes. */
+    right: 0;
     top: 0;
     bottom: 0;
     width: 1px;
@@ -191,9 +202,13 @@ const fullMarks = marks.length >= tasting.length + 1
   }
   .smoke__tick {
     position: absolute;
-    left: -6px;
+    /* Anchored to the rail's right edge to sit on the line (2026-05-24).
+       Source order is dot → label; row-reverse flips them visually so
+       the label reads to the left of the dot, toward the notes column. */
+    right: -6px;
     transform: translateY(-50%);
     display: flex;
+    flex-direction: row-reverse;
     align-items: center;
     gap: var(--space-4);
     transition: opacity var(--dur-default) var(--ease-paper);
