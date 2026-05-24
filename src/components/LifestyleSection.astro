@@ -126,15 +126,22 @@ const { paragraphs } = Astro.props;
   }
 
   /* ── Prose column ───────────────────────────────────────────────
-     Centred, ~52ch measure, white italic Spectral. Wordmark at top,
-     prose immediately below — there is no closing mark; the prose
-     is the close. */
+     Centred, white italic Spectral. Wordmark at top, prose
+     immediately below — there is no closing mark; the prose is the
+     close.
+
+     Width (Stephane 2026-05-24): widened from 52ch to 800px (~8/12
+     of the 1200px design container). The narrower 52ch measure read
+     as a text box centred in the photo; 800px gives the prose enough
+     horizontal real estate to sit as a full editorial column over
+     the photographic ground. Mobile is unaffected — the column there
+     is bound by the viewport gutters, not the max. */
   .story__inner {
     position: relative;
     z-index: 2;
     text-align: center;
     padding-inline: var(--page-pad-m);
-    max-inline-size: 52ch;
+    max-inline-size: 800px;
     margin-inline: auto;
   }
 
@@ -175,9 +182,18 @@ const { paragraphs } = Astro.props;
      section is full-bleed and has no container, so margin-block on
      the section element itself is the right insertion point. */
   @media (max-width: 720px) {
+    /* Internal vertical space (Stephane 2026-05-24, pass 4): the
+       85vh / 560px-min band centring the content via place-items
+       produced ~110-140px of void above the wordmark and below the
+       last paragraph. Spec: halve that. Mechanism: drop the fixed
+       band height entirely, let content + explicit padding-block
+       define the section height. clamp(--space-7, 12vw, --space-8)
+       = 48-64px (48px floor, ~48px at 400vw, 64px at 720vw), ~half
+       of the prior centring void. External margin-block unchanged. */
     .story {
-      height: 85vh;
-      min-height: 560px;
+      height: auto;
+      min-height: 0;
+      padding-block: clamp(var(--space-7), 12vw, var(--space-8));
       margin-block: clamp(var(--space-7), 8vw, var(--space-9));
     }
     .story__scrim {
