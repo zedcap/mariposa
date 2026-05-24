@@ -1,0 +1,466 @@
+---
+/* ════════════════════════════════════════════════════════════════
+   TermsModal — Mariposa House Rules
+
+   Renders site-wide via BaseLayout. Hidden by default. Opens when
+   any element on the page dispatches the custom event
+       window.dispatchEvent(new CustomEvent('mariposa:open-terms'))
+   The footer's "Terms & Conditions." button is the primary opener.
+
+   Pattern: native <dialog> for free focus trap, ESC-to-close, and
+   backdrop semantics. The element is shown with .showModal() so
+   the browser handles inertness of the rest of the page. Backdrop
+   click and the corner X also close it. Focus returns to the
+   opener element on close.
+
+   Copy is verbatim Stephane (2026-05-24). Twelve sections live as
+   structured data in this file: the set is finite, the conventions
+   overlay wins on typography, and externalising to markdown would
+   buy nothing the dialog needs.
+
+   Typography rules honour the Mariposa design system + conventions
+   overlay: Hanken eyebrows in uppercase, Spectral display title,
+   gold-deep accents, gold disc bullet markers.
+   ════════════════════════════════════════════════════════════════ */
+
+interface Section {
+  heading: string;
+  /* Each entry is either a paragraph (string) or a bullet list (array).
+     Inline strong is supported via the {{strong:phrase}} convention,
+     resolved in the template below. Keeps the source data plain. */
+  blocks: Array<string | string[]>;
+}
+
+const introHeading = 'MARIPOSA HOUSE RULES';
+const introSubtitle = 'Terms & Conditions';
+const intro =
+  'Welcome to Mariposa. By entering this site, browsing our collection, or purchasing our goods, you agree to the following terms. If you do not agree, we kindly ask that you close this tab. No hard feelings.';
+
+const sections: Section[] = [
+  {
+    heading: '1. AGE REQUIREMENT • HONOR THE LAW',
+    blocks: [
+      'You must be of legal smoking age in your jurisdiction to browse this site or purchase our products. By using this site, you confirm that you meet these legal requirements. We reserve the right to verify your age or request identification at any point during the purchasing process to ensure compliance with local tobacco laws.',
+    ],
+  },
+  {
+    heading: '2. THE GOODS & PRICING • THE PREMIUM STANDARD',
+    blocks: [
+      'We offer premium, hand-rolled cigars and curated accessories.',
+      [
+        '{{strong:Artisanal Variations:}} Because our cigars are entirely hand-rolled from natural, volcanic soil-grown tobacco, minor variations in color and texture are a celebrated part of the artisanal product.',
+        '{{strong:Pricing:}} Prices are subject to change without notice. Secure your selection today to guarantee current pricing.',
+        '{{strong:Availability:}} To maintain our strict quality standards, we produce in limited quantities. We reserve the right to limit order amounts or discontinue products at any time.',
+        '{{strong:Errors:}} We are human. In the event of a clear typographical error regarding pricing or availability, we reserve the right to correct the mistake and cancel any orders placed under the incorrect information.',
+      ],
+    ],
+  },
+  {
+    heading: '3. REFUSAL OF SERVICE • MAINTAINING STANDARDS',
+    blocks: [
+      'We pride ourselves on mutual respect. We reserve the right to refuse service, limit quantities, or cancel accounts at our sole discretion if a transaction or interaction compromises our brand integrity or community standards.',
+    ],
+  },
+  {
+    heading: '4. RETURNS & REFUNDS • CLIMATE CONTROL INTEGRITY',
+    blocks: [
+      [
+        '{{strong:The Cigars:}} Because premium cigars require strict climate and humidity control to protect their quality, {{strong:all tobacco sales are final}}. Once our cigars leave our controlled environment, we cannot accept returns unless the shipment arrives physically damaged (in which case, please provide photographic evidence immediately upon delivery).',
+        '{{strong:The Accessories & Swag:}} If an accessory or non-tobacco item does not meet your expectations, unused items in their original, pristine packaging may be returned within 3 days of delivery. Buyers are responsible for return shipping costs unless the incorrect item was sent by us.',
+      ],
+    ],
+  },
+  {
+    heading: '5. YOUR PRIVACY • SECURE AND DISCREET',
+    blocks: [
+      'Your trust is paramount. We collect basic information (name, shipping address, email, and secure payment details) solely to fulfill your orders and elevate your experience with Mariposa.',
+      [
+        '{{strong:No Data Selling:}} We do not sell your personal data.',
+        '{{strong:Trusted Partners:}} We utilize secure, industry-leading platforms and payment gateways to handle your transactions. By purchasing from us, you also agree to their secure data handling practices.',
+        '{{strong:Communication:}} By providing your email address, you agree to receive order updates and occasional insights into new releases. You may opt out of marketing communications at any time.',
+      ],
+    ],
+  },
+  {
+    heading: '6. INTELLECTUAL PROPERTY • OUR LEGACY',
+    blocks: [
+      'Everything displayed on this website, including the Mariposa name, logo, images, tasting notes, brand stories, and custom design elements, is protected under intellectual property laws. You may not copy, reproduce, resell, or exploit any portion of our content or assets without our express, written consent.',
+    ],
+  },
+  {
+    heading: '7. THIRD-PARTY TOOLS • EXTERNAL TECH',
+    blocks: [
+      'We rely on third-party infrastructure (such as e-commerce platforms and secure payment processors) to keep our digital lounge running seamlessly. We are not responsible for third-party service interruptions, technical downtime, or the policies of external websites linked from our pages.',
+    ],
+  },
+  {
+    heading: "8. PROHIBITED USES • DON'T BE THAT GUY",
+    blocks: [
+      'You agree to use our site strictly for lawful, personal purposes. Spamming, phishing, uploading malicious code, or attempting to breach our security infrastructure is strictly prohibited.',
+    ],
+  },
+  {
+    heading: '9. LIMITATION OF LIABILITY • AT YOUR OWN RISK',
+    blocks: [
+      'Your use of this service and our products is at your own risk. Mariposa, our team, and our partners shall not be held liable for any direct, indirect, incidental, or consequential damages resulting from the use or enjoyment of our products.',
+    ],
+  },
+  {
+    heading: '10. GOVERNING LAW • HK RULES',
+    blocks: [
+      'These Terms & Conditions are governed by and construed in accordance with the laws of Hong Kong. Any disputes arising from the use of this website or our products will be resolved within the courts of Hong Kong.',
+    ],
+  },
+  {
+    heading: '11. CHANGES TO THESE RULES • THINGS CHANGE',
+    blocks: [
+      'As our brand evolves, these terms may change. We reserve the right to update or replace any part of these House Rules by posting updates directly to this page. It remains your responsibility to check back periodically.',
+    ],
+  },
+  {
+    heading: '12. CONTACT US',
+    blocks: [
+      'If you have any questions, clarifications, or feedback regarding our House Rules, please reach out to us at: {{strong:hello@mariposacigars.com}}. By all means, we will sort it out.',
+    ],
+  },
+];
+
+/* Split a {{strong:...}} string into a token stream the template can render
+   as alternating text + <strong> nodes. Astro renders arrays of mixed
+   strings and elements inline without extra wrappers. */
+function tokenise(raw: string): Array<{ kind: 'text' | 'strong'; value: string }> {
+  const out: Array<{ kind: 'text' | 'strong'; value: string }> = [];
+  const re = /\{\{strong:([^}]+)\}\}/g;
+  let last = 0;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(raw)) !== null) {
+    if (m.index > last) out.push({ kind: 'text', value: raw.slice(last, m.index) });
+    out.push({ kind: 'strong', value: m[1] });
+    last = m.index + m[0].length;
+  }
+  if (last < raw.length) out.push({ kind: 'text', value: raw.slice(last) });
+  return out;
+}
+---
+
+<dialog
+  class="terms-modal"
+  data-terms-modal
+  aria-labelledby="terms-modal-title"
+  aria-modal="true"
+>
+  <div class="terms-modal__frame">
+    <header class="terms-modal__bar">
+      <div class="terms-modal__bar-titles">
+        <h2 class="terms-modal__title" id="terms-modal-title">{introHeading}</h2>
+        <p class="terms-modal__subtitle">{introSubtitle}</p>
+      </div>
+      <button
+        class="terms-modal__close"
+        type="button"
+        data-terms-close
+        aria-label="Close Terms"
+      >
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+          <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+        </svg>
+      </button>
+    </header>
+
+    <div class="terms-modal__body" tabindex="0">
+      <p class="terms-modal__intro">{intro}</p>
+
+      {sections.map((s) => (
+        <section class="terms-modal__section">
+          <h3 class="terms-modal__heading">{s.heading}</h3>
+          {s.blocks.map((block) =>
+            Array.isArray(block) ? (
+              <ul class="terms-modal__list">
+                {block.map((item) => (
+                  <li class="terms-modal__item">
+                    {tokenise(item).map((t) =>
+                      t.kind === 'strong' ? <strong>{t.value}</strong> : t.value
+                    )}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p class="terms-modal__p">
+                {tokenise(block).map((t) =>
+                  t.kind === 'strong' ? <strong>{t.value}</strong> : t.value
+                )}
+              </p>
+            )
+          )}
+        </section>
+      ))}
+    </div>
+  </div>
+</dialog>
+
+<style>
+  /* ─── Dialog shell ────────────────────────────────────────── */
+  /* The native <dialog> element opens via .showModal(); the browser
+     supplies the ::backdrop pseudo-element. We style both so the
+     ink-dim sits behind a centred white card. */
+  .terms-modal {
+    /* Reset UA defaults */
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: var(--ink);
+
+    /* Sizing — ~680px wide, never taller than 80vh */
+    width: min(680px, calc(100vw - 2 * var(--page-pad-m)));
+    max-height: 80vh;
+
+    /* Centre via margins (works with native dialog positioning) */
+    margin: auto;
+
+    overflow: visible; /* internal scroll lives on .terms-modal__body */
+  }
+
+  .terms-modal::backdrop {
+    background: rgba(31, 27, 23, 0.62); /* --ink at 62% */
+    backdrop-filter: blur(2px);
+  }
+
+  /* The actual card lives one level in so we can clip and round. */
+  .terms-modal__frame {
+    display: flex;
+    flex-direction: column;
+    max-height: 80vh;
+    background: var(--white);
+    border: 1px solid var(--border-gold);
+    border-radius: 8px;
+    box-shadow: var(--shadow-lift);
+    overflow: hidden; /* clip sticky bar + scroller corners */
+  }
+
+  /* ─── Sticky title bar ────────────────────────────────────── */
+  .terms-modal__bar {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-5);
+    padding: var(--space-5) var(--space-6);
+    background: var(--pearl);
+    border-bottom: 1px solid var(--border-gold);
+  }
+
+  .terms-modal__bar-titles {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .terms-modal__title {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: var(--fs-caption);
+    letter-spacing: var(--ls-section);
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    margin: 0;
+  }
+
+  .terms-modal__subtitle {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: var(--fs-h5);
+    line-height: var(--lh-snug);
+    color: var(--ink);
+    margin: 0;
+  }
+
+  .terms-modal__close {
+    flex: 0 0 auto;
+    width: 32px;
+    height: 32px;
+    border-radius: 9999px;
+    background: transparent;
+    border: 1px solid var(--border-gold);
+    color: var(--ink-soft);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition:
+      color var(--dur-default) var(--ease-paper),
+      background-color var(--dur-default) var(--ease-paper),
+      border-color var(--dur-default) var(--ease-paper);
+  }
+  .terms-modal__close:hover,
+  .terms-modal__close:focus-visible {
+    color: var(--ink);
+    background: var(--white);
+    border-color: var(--gold);
+    outline: none;
+  }
+
+  /* ─── Scrollable body ─────────────────────────────────────── */
+  .terms-modal__body {
+    overflow-y: auto;
+    padding: var(--space-6) var(--space-6) var(--space-7);
+    scrollbar-gutter: stable;
+  }
+  .terms-modal__body:focus-visible {
+    outline: none;
+  }
+
+  .terms-modal__intro {
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--ink-soft);
+    margin: 0 0 var(--space-7);
+  }
+
+  .terms-modal__section + .terms-modal__section {
+    margin-top: var(--space-6);
+  }
+
+  .terms-modal__heading {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: var(--fs-eyebrow);
+    letter-spacing: var(--ls-section);
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    margin: 0 0 var(--space-4);
+  }
+
+  .terms-modal__p {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--ink-soft);
+    margin: 0 0 var(--space-3);
+  }
+  .terms-modal__p:last-child {
+    margin-bottom: 0;
+  }
+
+  .terms-modal__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .terms-modal__item {
+    position: relative;
+    padding-left: var(--space-5);
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--ink-soft);
+  }
+  .terms-modal__item + .terms-modal__item {
+    margin-top: var(--space-3);
+  }
+  /* Gold disc marker — small, low-contrast, sits on the first text line. */
+  .terms-modal__item::before {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 0.62em;
+    width: 5px;
+    height: 5px;
+    border-radius: 9999px;
+    background: var(--gold);
+  }
+
+  .terms-modal__p strong,
+  .terms-modal__item strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  /* ─── Mobile ──────────────────────────────────────────────── */
+  @media (max-width: 540px) {
+    .terms-modal {
+      width: calc(100vw - 2 * var(--space-4));
+      max-height: 86vh;
+    }
+    .terms-modal__frame {
+      max-height: 86vh;
+    }
+    .terms-modal__bar {
+      padding: var(--space-4) var(--space-5);
+    }
+    .terms-modal__body {
+      padding: var(--space-5) var(--space-5) var(--space-6);
+    }
+  }
+
+  /* ─── Motion ──────────────────────────────────────────────── */
+  @media (prefers-reduced-motion: no-preference) {
+    .terms-modal[open] .terms-modal__frame {
+      animation: terms-rise var(--dur-default) var(--ease-paper);
+    }
+    .terms-modal[open]::backdrop {
+      animation: terms-fade var(--dur-default) var(--ease-paper);
+    }
+  }
+  @keyframes terms-rise {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes terms-fade {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+</style>
+
+<script>
+  /* TermsModal behaviour.
+     - Opens on the `mariposa:open-terms` custom event.
+     - Closes on backdrop click, X button, and ESC (native).
+     - Locks body scroll while open (reuses the gate-locked class).
+     - Returns focus to the opener element on close. */
+  const dialog = document.querySelector<HTMLDialogElement>('[data-terms-modal]');
+  const closeBtn = document.querySelector<HTMLButtonElement>('[data-terms-close]');
+
+  if (dialog) {
+    let opener: HTMLElement | null = null;
+
+    const open = (evt: Event) => {
+      const detail = (evt as CustomEvent).detail as { opener?: HTMLElement } | undefined;
+      opener = detail?.opener ?? (document.activeElement as HTMLElement | null);
+      if (typeof dialog.showModal === 'function') {
+        dialog.showModal();
+      } else {
+        dialog.setAttribute('open', '');
+      }
+      document.body.classList.add('gate-locked');
+    };
+
+    const close = () => {
+      if (dialog.open) dialog.close();
+    };
+
+    window.addEventListener('mariposa:open-terms', open as EventListener);
+
+    closeBtn?.addEventListener('click', close);
+
+    /* Backdrop click — when the user clicks the <dialog> element itself
+       (not its inner frame), the click originated on the backdrop. */
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog) close();
+    });
+
+    /* Native ESC fires a 'cancel' event before close — let it proceed. */
+    dialog.addEventListener('close', () => {
+      document.body.classList.remove('gate-locked');
+      if (opener && typeof opener.focus === 'function') {
+        opener.focus();
+      }
+      opener = null;
+    });
+  }
+</script>

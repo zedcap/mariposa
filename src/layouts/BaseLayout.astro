@@ -21,6 +21,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import StickyContact from '../components/StickyContact.astro';
 import AgeGate from '../components/AgeGate.astro';
+import TermsModal from '../components/TermsModal.astro';
 import { withBase } from '../lib/path';
 
 interface Props {
@@ -80,6 +81,7 @@ const bgTexture  = `url("${withBase('/texture.jpg')}")`;
 
     <Footer />
     <StickyContact />
+    <TermsModal />
 
     <style>
       .skip-link {
