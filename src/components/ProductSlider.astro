@@ -741,15 +741,27 @@ const discoverHref: Record<string, string> = {};
       width: auto;
       height: auto;
     }
-    /* Volage mobile — same layered treatment, the cigar happens to
-       be proportionally wider so widen the width cap a touch. */
+    /* Volage mobile — same layered treatment. Sizing pass (Stephane
+       2026-05-25, follow-up): the prior 80vh/75% combo made width bind
+       first on phone widths (75% of 375px = 281px), which against the
+       ~1:4 PNG yielded an intrinsic height ~1124px — far taller than
+       the copy column. With `.range__media { inset: 0 }` bound to
+       `.range__frame` (collapsed to copy height on mobile) and the
+       viewport's `overflow: hidden`, the cigar's cap was clipped at
+       the frame's top edge (the same horizontal line where the
+       eyebrow began). Both caps reduced so the cigar's bounding box
+       fits inside the frame: max-height switches to 60vh as the
+       primary binder; max-width drops 75% → 55% as a defensive belt
+       (rarely binds at this height on phones, but keeps the cigar
+       from creeping wide on a wider mobile). Cap and foot both
+       visible, vertical-column read preserved. */
     .range__frame--volage .range__media-frame--object {
       min-height: 0;
       max-width: none;
     }
     .range__frame--volage .range__cigar--object {
-      max-height: 80vh;
-      max-width: 75%;
+      max-height: 60vh;
+      max-width: 55%;
     }
     .range__media-frame--scene {
       aspect-ratio: 1 / 1;
