@@ -161,9 +161,14 @@ const imageMode: Record<string, 'object' | 'scene'> = {
        clamp(--space-7, 6vw, --space-9) collapsed further to the
        controls' own top-gap token. Doubled (Stephane 2026-05-24):
        each clamp stop stepped up one token / 2× the vw so the
-       controls-to-next-section gap doubles. .range__controls
-       margin-top intentionally left unchanged. */
-    padding-bottom: clamp(var(--space-6), 4vw, var(--space-8));
+       controls-to-next-section gap doubles. Lift pass (Stephane
+       2026-05-24): the slider needs to sit higher. The controls'
+       margin-top is roughly halved AND this padding-bottom is stepped
+       up — net effect is the whole slider block shifts up, with the
+       gap below the controls now meaningfully larger than the gap
+       above so the controls clearly belong to the image, not to the
+       story below. */
+    padding-bottom: clamp(var(--space-8), 5vw, var(--space-9));
     overflow: hidden;
   }
 
@@ -454,7 +459,12 @@ const imageMode: Record<string, 'object' | 'scene'> = {
     align-items: center;
     justify-content: center;
     gap: var(--space-6);
-    margin-top: clamp(var(--space-4), 2vw, var(--space-6));
+    /* Halved (Stephane 2026-05-24) from clamp(--space-4, 2vw, --space-6)
+       to bring the controls closer to the image — they should clearly
+       belong to the image above, not float midway between the image
+       and the story below. .range padding-bottom stepped up in the
+       same pass so the controls→story gap remains meaningful. */
+    margin-top: clamp(var(--space-2), 1vw, var(--space-4));
   }
   /* Step buttons — bare arrow glyphs. Stephane review 2026-05-23:
      the circle/border treatment read too button-like for a sub-control;

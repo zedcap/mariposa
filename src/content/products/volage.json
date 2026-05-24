@@ -38,17 +38,17 @@
   ],
   "specs": [
     { "label": "Vitola", "value": "Canonazo" },
+    { "label": "Strength", "value": "Full body" },
     { "label": "Format", "value": "150 mm · 52 ring gauge" },
+    { "label": "Origin", "value": "East Java, Indonesia" },
+    { "label": "Smoke time", "value": "~45 minutes" },
+    { "label": "Release", "value": "Limited release" },
     { "label": "Wrapper", "value": "Criollo 98 · 2021 · Seco priming · Colorado grade" },
     { "label": "Binder", "value": "Criollo 98 · 2021 · Viso priming" },
     { "label": "Filler", "value": "Criollo 98 · 2021 · Long-filler · 50% Viso, 50% Ligero" },
     { "label": "Construction", "value": "Three-part · entubado bunching · Cuban triple cap" },
-    { "label": "Origin", "value": "Jember, East Java, Indonesia" },
     { "label": "Fermentation", "value": "24 months" },
-    { "label": "Ageing", "value": "12 months" },
-    { "label": "Smoke time", "value": "~45 minutes" },
-    { "label": "Strength", "value": "Full body" },
-    { "label": "Release", "value": "Limited release" }
+    { "label": "Ageing", "value": "12 months" }
   ],
   "condensedSpecKeys": ["Vitola", "Format", "Wrapper", "Origin", "Strength", "Release"],
   "tasting": [

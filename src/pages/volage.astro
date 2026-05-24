@@ -116,12 +116,25 @@ const product = (await getEntry('products', 'volage'))!.data;
         ))}
       </div>
 
-      {/* Full 12-row spec list — single definition-list, two columns
-          at desktop, stacked at mobile. The earlier condensed-strip
-          + <details> pattern was dropped on 2026-05-23: all rows
-          render in source order. */}
+      {/* Spec list — split into two blocks of six (Stephane review
+          2026-05-24). Block 1 = the headline-grade specs (Vitola,
+          Strength, Format, Origin, Smoke time, Release). Block 2 =
+          the leaf/build/time specs (Wrapper, Binder, Filler,
+          Construction, Fermentation, Ageing). Each block gets its
+          own full-width gold rule on top via the .cigar__strip
+          border-top; per-row bottom rules are kept for readability.
+          JSON order is row-by-row interleaved (left then right per
+          row) to match CSS Grid's default auto-flow:row fill. */}
       <dl class="cigar__strip" data-reveal-strip>
-        {product.specs.map((row) => (
+        {product.specs.slice(0, 6).map((row) => (
+          <div class="cigar__strip-row">
+            <dt class="cigar__strip-label">{row.label}</dt>
+            <dd class="cigar__strip-value">{row.value}</dd>
+          </div>
+        ))}
+      </dl>
+      <dl class="cigar__strip cigar__strip--second" data-reveal-strip>
+        {product.specs.slice(6).map((row) => (
           <div class="cigar__strip-row">
             <dt class="cigar__strip-label">{row.label}</dt>
             <dd class="cigar__strip-value">{row.value}</dd>
@@ -281,9 +294,10 @@ const product = (await getEntry('products', 'volage'))!.data;
     margin-top: var(--space-5);
   }
 
-  /* Full 12-row spec list — two columns at desktop, stacked on
-     mobile. Same definition-list grammar the earlier condensed
-     strip used; just rendering all rows now. */
+  /* Spec list — two columns at desktop, stacked on mobile. Split
+     into two blocks of six (Stephane 2026-05-24); each block carries
+     its own full-width gold top rule, so the second block sits
+     tighter to the first than the first does to the narrative above. */
   .cigar__strip {
     margin: clamp(var(--space-7), 6vw, var(--space-8)) 0 0 0;
     display: grid;
@@ -291,6 +305,13 @@ const product = (await getEntry('products', 'volage'))!.data;
     column-gap: clamp(var(--space-6), 5vw, var(--space-9));
     row-gap: 0;
     border-top: 1px solid var(--border-gold);
+  }
+  /* Second block — same grammar, smaller top gap. The first block's
+     bottom-row hairline already separates the two; this margin only
+     opens enough air for the second block's own full-width rule to
+     read as a deliberate divider, not a duplicate. */
+  .cigar__strip--second {
+    margin-top: clamp(var(--space-5), 3vw, var(--space-6));
   }
   .cigar__strip-row {
     display: grid;
@@ -479,11 +500,12 @@ const product = (await getEntry('products', 'volage'))!.data;
   if (heroMedia) reveal(heroMedia, { y: 32, duration: 1,   start: 'top 88%' });
   if (heroCopy)  reveal(heroCopy,  { y: 26, duration: 0.9, delay: 0.12, start: 'top 88%' });
 
-  // Section 4 — narrative paragraphs cascade, spec strip lifts in.
+  // Section 4 — narrative paragraphs cascade, spec strips lift in
+  // (two blocks of six since 2026-05-24; both share the same reveal).
   const cigarParas = document.querySelectorAll('.cigar [data-reveal-para]');
-  const cigarStrip = document.querySelector<HTMLElement>('.cigar [data-reveal-strip]');
+  const cigarStrips = document.querySelectorAll<HTMLElement>('.cigar [data-reveal-strip]');
   if (cigarParas.length) reveal(cigarParas, { y: 22, duration: 0.9, stagger: 0.14, start: 'top 82%' });
-  if (cigarStrip) reveal(cigarStrip, { y: 24, duration: 0.9, start: 'top 82%' });
+  if (cigarStrips.length) reveal(cigarStrips, { y: 24, duration: 0.9, stagger: 0.1, start: 'top 82%' });
 
   // Section 6 — packaging slots fade in as a block.
   const packs = document.querySelectorAll('.packaging [data-reveal-pack]');
