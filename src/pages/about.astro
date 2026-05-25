@@ -18,7 +18,6 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { withBase } from '../lib/path';
 
-import beat1Atmosphere from '../assets/hero-mp-1.jpg';
 import szSmoking from '../assets/sz_smoking_2.jpg';
 
 /* ─── Origins copy — verbatim, body unchanged from mock ────── */
@@ -53,8 +52,6 @@ const closingQuote =
 
 const founderStandfirst =
   "What began as a founder's personal journey into the tobacco fields of East Java evolved into an exclusive blend made for close friends. Today, Mariposa brings that private reserve spirit with global friends around the world.";
-
-const placeholderNote = 'Placeholder atmosphere — final shot to be commissioned';
 ---
 
 <BaseLayout title="Mariposa • About">
@@ -69,21 +66,18 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
       <span class="about-ed__masthead-rule" aria-hidden="true"></span>
     </header>
 
-    {/* ── Beat 1 — A Singular Pursuit. Column-width landscape. ── */}
-    <section class="about-ed__beat" aria-label="A Singular Pursuit" data-reveal>
+    {/* ── Beat 1 — A Singular Pursuit. Half-column 4:3 inset photograph, floated left. ── */}
+    <section class="about-ed__beat about-ed__beat--inset" aria-label="A Singular Pursuit" data-reveal>
       <h2 class="about-ed__beat-title">{beat1Title}</h2>
-      <p class="about-ed__body about-ed__body--dropcap">{beat1Body}</p>
-      <figure class="about-ed__figure about-ed__figure--column">
-        <Image
-          src={beat1Atmosphere}
-          alt="Atmospheric placeholder standing in for the Argopuro range, East Java — final shot to be commissioned."
-          class="about-ed__img"
-          widths={[720, 1080, 1440, 1800]}
-          sizes="(max-width: 720px) 100vw, 720px"
+      <figure class="about-ed__figure about-ed__figure--inset about-ed__figure--inset-left">
+        <img
+          src={withBase('/origins-volcanic.jpg')}
+          alt="Tobacco nursery under shade tents, East Java."
+          class="about-ed__figure-inset-img"
           loading="eager"
         />
-        <p class="about-ed__placeholder-note">{placeholderNote}</p>
       </figure>
+      <p class="about-ed__body about-ed__body--dropcap">{beat1Body}</p>
     </section>
 
     {/* ── Beat 2 — Volcanic Terroir. Half-column 4:3 inset photograph, floated right. ── */}
@@ -324,18 +318,7 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
   .about-ed__figure {
     margin: var(--space-7) 0 0 0;
   }
-  .about-ed__figure--column {
-    position: relative;
-  }
-  .about-ed__figure--column .about-ed__img {
-    width: 100%;
-    height: auto;
-    display: block;
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
-    background: var(--pearl);
-  }
-  /* Inset figure — beats 2, 3, and 4. Half-column width, 4:3 landscape.
+  /* Inset figure — beats 1, 2, 3, and 4. Half-column width, 4:3 landscape.
      Float side set by the directional modifier so beats alternate
      (right / left / right). 1px pink hairline frame as the editorial
      slot frame for real photographs. */
@@ -397,24 +380,6 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
     float: none;
     margin: 0;
     width: 100%;
-  }
-
-  /* Placeholder note overlay. */
-  .about-ed__placeholder-note {
-    position: absolute;
-    top: clamp(var(--space-3), 2vw, var(--space-4));
-    left: clamp(var(--space-3), 2vw, var(--space-4));
-    font-family: var(--font-body);
-    font-size: var(--fs-eyebrow);
-    font-weight: 600;
-    letter-spacing: var(--ls-section);
-    text-transform: uppercase;
-    color: var(--gold-leaf);
-    background: color-mix(in srgb, var(--ink) 55%, transparent);
-    padding: 4px 10px;
-    margin: 0;
-    max-width: 28ch;
-    z-index: 2;
   }
 
   /* ═══════════════════════════════════════════════════════════
