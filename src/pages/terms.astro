@@ -1,0 +1,230 @@
+---
+/* Terms & Conditions — standalone, indexable, sharable.
+   ------------------------------------------------------------------
+   Extracted from the inline TermsModal body so the 12 sections of
+   legal copy no longer ship on every route. The modal shell remains
+   in BaseLayout for the age-gate "T&C" trigger (which fetches this
+   page and injects [data-terms-content] into the dialog so the
+   visitor doesn't navigate away mid-decision). The footer link is
+   now a direct <a href> to this canonical URL.
+
+   Copy is verbatim Stephane (2026-05-24) — the same data the modal
+   used to inline. Typography follows the design system: Hanken
+   eyebrows in uppercase, Spectral display subtitle, gold-deep
+   accents, gold disc bullet markers. */
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+interface Section {
+  heading: string;
+  blocks: Array<string | string[]>;
+}
+
+const introHeading = 'MARIPOSA HOUSE RULES';
+const introSubtitle = 'Terms & Conditions';
+const intro =
+  'Welcome to Mariposa. By entering this site, browsing our collection, or purchasing our goods, you agree to the following terms. If you do not agree, we kindly ask that you close this tab. No hard feelings.';
+
+const sections: Section[] = [
+  {
+    heading: '1. AGE REQUIREMENT',
+    blocks: [
+      'You must be of legal smoking age in your jurisdiction to browse this site or purchase our products. By using this site, you confirm that you meet these legal requirements. We reserve the right to verify your age or request identification at any point during the purchasing process to ensure compliance with local tobacco laws.',
+    ],
+  },
+  {
+    heading: '2. THE GOODS & PRICING',
+    blocks: [
+      'We offer premium, hand-rolled cigars and curated accessories.',
+      [
+        '{{strong:Artisanal Variations:}} Because our cigars are entirely hand-rolled from natural, volcanic soil-grown tobacco, minor variations in color and texture are a celebrated part of the artisanal product.',
+        '{{strong:Pricing:}} Prices are subject to change without notice. Secure your selection today to guarantee current pricing.',
+        '{{strong:Availability:}} To maintain our strict quality standards, we produce in limited quantities. We reserve the right to limit order amounts or discontinue products at any time.',
+        '{{strong:Errors:}} We are human. In the event of a clear typographical error regarding pricing or availability, we reserve the right to correct the mistake and cancel any orders placed under the incorrect information.',
+      ],
+    ],
+  },
+  {
+    heading: '3. REFUSAL OF SERVICE',
+    blocks: [
+      'We pride ourselves on mutual respect. We reserve the right to refuse service, limit quantities, or cancel accounts at our sole discretion if a transaction or interaction compromises our brand integrity or community standards.',
+    ],
+  },
+  {
+    heading: '4. RETURNS & REFUNDS',
+    blocks: [
+      [
+        '{{strong:The Cigars:}} Because premium cigars require strict climate and humidity control to protect their quality, {{strong:all tobacco sales are final}}. Once our cigars leave our controlled environment, we cannot accept returns unless the shipment arrives physically damaged (in which case, please provide photographic evidence immediately upon delivery).',
+        '{{strong:The Accessories & Swag:}} If an accessory or non-tobacco item does not meet your expectations, unused items in their original, pristine packaging may be returned within 3 days of delivery. Buyers are responsible for return shipping costs unless the incorrect item was sent by us.',
+      ],
+    ],
+  },
+  {
+    heading: '5. YOUR PRIVACY',
+    blocks: [
+      'Your trust is paramount. We collect basic information (name, shipping address, email, and secure payment details) solely to fulfill your orders and elevate your experience with Mariposa.',
+      [
+        '{{strong:No Data Selling:}} We do not sell your personal data.',
+        '{{strong:Trusted Partners:}} We utilize secure, industry-leading platforms and payment gateways to handle your transactions. By purchasing from us, you also agree to their secure data handling practices.',
+        '{{strong:Communication:}} By providing your email address, you agree to receive order updates and occasional insights into new releases. You may opt out of marketing communications at any time.',
+      ],
+    ],
+  },
+  {
+    heading: '6. INTELLECTUAL PROPERTY',
+    blocks: [
+      'Everything displayed on this website, including the Mariposa name, logo, images, tasting notes, brand stories, and custom design elements, is protected under intellectual property laws. You may not copy, reproduce, resell, or exploit any portion of our content or assets without our express, written consent.',
+    ],
+  },
+  {
+    heading: '7. THIRD-PARTY TOOLS',
+    blocks: [
+      'We rely on third-party infrastructure (such as e-commerce platforms and secure payment processors) to keep our digital lounge running seamlessly. We are not responsible for third-party service interruptions, technical downtime, or the policies of external websites linked from our pages.',
+    ],
+  },
+  {
+    heading: '8. PROHIBITED USES',
+    blocks: [
+      'You agree to use our site strictly for lawful, personal purposes. Spamming, phishing, uploading malicious code, or attempting to breach our security infrastructure is strictly prohibited.',
+    ],
+  },
+  {
+    heading: '9. LIMITATION OF LIABILITY',
+    blocks: [
+      'Your use of this service and our products is at your own risk. Mariposa, our team, and our partners shall not be held liable for any direct, indirect, incidental, or consequential damages resulting from the use or enjoyment of our products.',
+    ],
+  },
+  {
+    heading: '10. GOVERNING LAW',
+    blocks: [
+      'These Terms & Conditions are governed by and construed in accordance with the laws of Hong Kong. Any disputes arising from the use of this website or our products will be resolved within the courts of Hong Kong.',
+    ],
+  },
+  {
+    heading: '11. CHANGES TO THESE RULES',
+    blocks: [
+      'As our brand evolves, these terms may change. We reserve the right to update or replace any part of these House Rules by posting updates directly to this page. It remains your responsibility to check back periodically.',
+    ],
+  },
+  {
+    heading: '12. CONTACT US',
+    blocks: [
+      'If you have any questions, clarifications, or feedback regarding our House Rules, please reach out to us at: {{strong:hello@mariposacigars.com}}. By all means, we will sort it out.',
+    ],
+  },
+];
+
+/* Same {{strong:...}} resolver the modal used. Kept locally — the
+   modal source has been stripped; this is now the single owner of
+   the data + rendering logic. */
+function tokenise(raw: string): Array<{ kind: 'text' | 'strong'; value: string }> {
+  const out: Array<{ kind: 'text' | 'strong'; value: string }> = [];
+  const re = /\{\{strong:([^}]+)\}\}/g;
+  let last = 0;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(raw)) !== null) {
+    if (m.index > last) out.push({ kind: 'text', value: raw.slice(last, m.index) });
+    out.push({ kind: 'strong', value: m[1] });
+    last = m.index + m[0].length;
+  }
+  if (last < raw.length) out.push({ kind: 'text', value: raw.slice(last) });
+  return out;
+}
+---
+
+<BaseLayout title="Mariposa • Terms & Conditions" description="Mariposa House Rules — Terms & Conditions governing use of the site and purchase of our goods.">
+  <article class="terms-page">
+    {/* data-terms-content is the selector the TermsModal fetches and
+        injects when the age-gate disclaimer fires open-terms. The
+        article element above gets the standalone page chrome; this
+        inner wrapper carries only the body content. */}
+    <div class="terms-page__inner" data-terms-content>
+      <header class="terms-page__header">
+        <h1 class="terms-page__title">{introHeading}</h1>
+        <p class="terms-page__subtitle">{introSubtitle}</p>
+      </header>
+
+      <p class="terms-page__intro">{intro}</p>
+
+      {sections.map((s) => (
+        <section class="terms-page__section">
+          <h2 class="terms-page__heading">{s.heading}</h2>
+          {s.blocks.map((block) =>
+            Array.isArray(block) ? (
+              <ul class="terms-page__list">
+                {block.map((item) => (
+                  <li class="terms-page__item">
+                    {tokenise(item).map((t) =>
+                      t.kind === 'strong' ? <strong>{t.value}</strong> : t.value
+                    )}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p class="terms-page__p">
+                {tokenise(block).map((t) =>
+                  t.kind === 'strong' ? <strong>{t.value}</strong> : t.value
+                )}
+              </p>
+            )
+          )}
+        </section>
+      ))}
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  /* Page chrome — standalone-page only. Body typography
+     (.terms-page__heading, __p, __list, __item, gold disc bullet,
+     intro, section rhythm, strong colour) now lives in
+     src/styles/base.css so the TermsModal — which fetches this
+     page and injects [data-terms-content] into the dialog — picks
+     up the same register wherever it's triggered. Only the
+     standalone-page surround stays here: background, page padding,
+     centred narrow measure, and the masthead block the modal
+     hides via display: none. */
+  .terms-page {
+    background: var(--white);
+    padding-block: var(--space-9, var(--space-8));
+    padding-inline: var(--page-pad-m);
+  }
+
+  .terms-page__inner {
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .terms-page__header {
+    margin-bottom: var(--space-7);
+    padding-bottom: var(--space-5);
+    border-bottom: 1px solid var(--border-gold);
+  }
+
+  .terms-page__title {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: var(--fs-caption);
+    letter-spacing: var(--ls-section);
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    margin: 0 0 var(--space-2);
+  }
+
+  .terms-page__subtitle {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: var(--fs-h3);
+    line-height: var(--lh-snug);
+    color: var(--ink);
+    margin: 0;
+  }
+
+  @media (max-width: 540px) {
+    .terms-page {
+      padding-inline: var(--space-5);
+      padding-block: var(--space-7);
+    }
+  }
+</style>

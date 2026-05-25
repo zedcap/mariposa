@@ -1,17 +1,19 @@
 ---
-/* Shared footer. Wordmark, brand line, copyright + Terms trigger.
+/* Shared footer. Wordmark, brand line, copyright + Terms link.
    Contact channels handled by the sticky contact element.
    21+ requirement handled by the age gate at entry.
    No legal-entity line (resolved decision 5).
 
    The copyright reads as one continuous sentence: a static lead
-   ("© 2026 Mariposa.") followed by a trigger phrase ("Terms &
-   Conditions.") that opens the TermsModal via the
-   `mariposa:open-terms` custom event. The trigger is a
-   <button> styled to read as inline text — same register as the
+   ("© 2026 Mariposa.") followed by a "Terms & Conditions." link
+   that NAVIGATES to the canonical /terms/ page. (The site-wide
+   TermsModal is reserved for the age-gate disclaimer, where
+   firing a navigation mid-decision would be jarring.) The link
+   is styled to read as inline text — same register as the
    surrounding copyright, only the hover underline marks it as
-   interactive. The modal is rendered site-wide by BaseLayout. */
+   interactive. */
 import { getEntry } from 'astro:content';
+import { withBase } from '../lib/path';
 
 const global = (await getEntry('site', 'global'))!.data as {
   footer: { brandLine: string; copyrightLead: string; termsLabel: string };
@@ -29,7 +31,7 @@ const { footer } = global;
       <span class="wordmark site-footer__mark">mariposa</span>
       <p class="site-footer__copyright">
         {footer.copyrightLead}{' '}
-        <button class="site-footer__terms" type="button" data-terms-open>{footer.termsLabel}</button>
+        <a class="site-footer__terms" href={withBase('/terms/')}>{footer.termsLabel}</a>
       </p>
     </div>
   </div>
@@ -103,21 +105,18 @@ const { footer } = global;
     text-align: right;
   }
 
-  /* Inline Terms trigger — same register as the copyright text, no
+  /* Inline Terms link — same register as the copyright text, no
      decoration at rest; hover lifts colour and reveals a hairline
      underline. The phrase "Terms & Conditions." sits inside the
-     copyright sentence as the inline trigger. <button> is reset
-     to read as text so the sentence flows uninterrupted. */
+     copyright sentence as the inline link. <a> is reset to read
+     as text so the sentence flows uninterrupted. */
   .site-footer__terms {
-    appearance: none;
-    -webkit-appearance: none;
     background: transparent;
-    border: none;
     padding: 0 0 1px;
     margin: 0;
     font: inherit;
     color: inherit;
-    cursor: pointer;
+    text-decoration: none;
     border-bottom: 1px solid transparent;
     transition:
       color var(--dur-default) var(--ease-paper),
@@ -171,12 +170,5 @@ const { footer } = global;
   const brandline = document.querySelector('[data-footer-brandline]');
   if (brandline) reveal(brandline, { y: 22, duration: 0.9, start: 'top 92%' });
 
-  /* Open TermsModal on click. The modal returns focus to the opener
-     element on close, so we pass `this` through the event detail. */
-  const termsBtn = document.querySelector<HTMLButtonElement>('[data-terms-open]');
-  termsBtn?.addEventListener('click', () => {
-    window.dispatchEvent(
-      new CustomEvent('mariposa:open-terms', { detail: { opener: termsBtn } })
-    );
-  });
+  /* Terms link navigates to /terms/ via real <a href>. No JS needed. */
 </script>
