@@ -66,10 +66,14 @@ const founderStandfirst =
       <span class="about-ed__masthead-rule" aria-hidden="true"></span>
     </header>
 
-    {/* ── Beat 1 — A Singular Pursuit. Half-column 4:3 inset photograph, floated left. ── */}
-    <section class="about-ed__beat about-ed__beat--inset" aria-label="A Singular Pursuit" data-reveal>
+    {/* ── Beat 1 — A Singular Pursuit. Single column: body full-width
+           across the column measure, landscape photograph below at
+           full column width. 1px pink hairline frame to match the
+           other beats' editorial "live photo" treatment. ── */}
+    <section class="about-ed__beat about-ed__beat--column" aria-label="A Singular Pursuit" data-reveal>
       <h2 class="about-ed__beat-title">{beat1Title}</h2>
-      <figure class="about-ed__figure about-ed__figure--inset about-ed__figure--inset-left">
+      <p class="about-ed__body about-ed__body--dropcap">{beat1Body}</p>
+      <figure class="about-ed__figure about-ed__figure--column">
         <img
           src={withBase('/origins-volcanic.jpg')}
           alt="Tobacco nursery under shade tents, East Java."
@@ -77,7 +81,6 @@ const founderStandfirst =
           loading="eager"
         />
       </figure>
-      <p class="about-ed__body about-ed__body--dropcap">{beat1Body}</p>
     </section>
 
     {/* ── Beat 2 — Volcanic Terroir. Half-column 4:3 inset photograph, floated right. ── */}
@@ -345,6 +348,20 @@ const founderStandfirst =
   .about-ed__figure--inset-left {
     float: left;
     margin: var(--space-2) var(--space-6) var(--space-5) 0;
+  }
+  /* Column figure — beat 1 only. Sits below body copy at full
+     article-column width. 3:2 landscape suits a wide opening shot
+     better than 4:3 (more cinematic) or 16:9 (too letterboxed at
+     this measure). 1px pink hairline frame for consistency with
+     the inset figures' "live photo" language. */
+  .about-ed__figure--column {
+    clear: both;
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    border: 1px solid var(--pink);
+    box-sizing: border-box;
+    overflow: hidden;
+    margin: var(--space-7) 0 0 0;
   }
   /* Beat 4 (Uncompromising Craftsmanship) — body copy is just long
      enough that, after wrapping past the floated-right inset, the
