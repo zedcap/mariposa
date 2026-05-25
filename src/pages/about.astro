@@ -19,7 +19,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { withBase } from '../lib/path';
 
 import beat1Atmosphere from '../assets/hero-mp-1.jpg';
-import beat3Atmosphere from '../assets/hero-mp-3.jpg';
 import szSmoking from '../assets/sz_smoking_2.jpg';
 
 /* ─── Origins copy — verbatim, body unchanged from mock ────── */
@@ -55,12 +54,6 @@ const closingQuote =
 const founderStandfirst =
   "What began as a founder's personal journey into the tobacco fields of East Java evolved into an exclusive blend made for close friends. Today, Mariposa brings that private reserve spirit with global friends around the world.";
 
-/* ─── Placeholder captions (un-commissioned beats) ─────────── */
-const capBeat2 =
-  'PLACEHOLDER: Havana-seed nursery — leaf detail or tobacco on volcanic soil. Landscape 4:3, half-column inset, floated right.';
-const capBeat4 =
-  'PLACEHOLDER: Jember rolling room — torcedoras at work, hands and leaf. Landscape 4:3, half-column inset, floated left.';
-
 const placeholderNote = 'Placeholder atmosphere — final shot to be commissioned';
 ---
 
@@ -90,7 +83,6 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
           loading="eager"
         />
         <p class="about-ed__placeholder-note">{placeholderNote}</p>
-        <figcaption class="about-ed__caption">Argopuro range, East Java.</figcaption>
       </figure>
     </section>
 
@@ -106,24 +98,20 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
         />
       </figure>
       <p class="about-ed__body about-ed__body--dropcap">{beat2Body}</p>
-      <p class="about-ed__caption about-ed__caption--inset">Havana-seed leaf, Jember nursery.</p>
     </section>
 
-    {/* ── Beat 3 — A Three-Year Journey. Column-width 3:2 landscape. ── */}
-    <section class="about-ed__beat" aria-label="A Three-Year Journey" data-reveal>
+    {/* ── Beat 3 — A Three-Year Journey. Half-column 4:3 inset photograph, floated left. ── */}
+    <section class="about-ed__beat about-ed__beat--inset" aria-label="A Three-Year Journey" data-reveal>
       <h2 class="about-ed__beat-title">{beat3Title}</h2>
-      <p class="about-ed__body about-ed__body--dropcap">{beat3Body}</p>
-      <figure class="about-ed__figure about-ed__figure--column">
-        <Image
-          src={beat3Atmosphere}
-          alt="Atmospheric placeholder standing in for the escogida / ageing-room shot — final shot to be commissioned."
-          class="about-ed__img"
-          widths={[720, 1080, 1440, 1800]}
-          sizes="(max-width: 720px) 100vw, 720px"
+      <figure class="about-ed__figure about-ed__figure--inset about-ed__figure--inset-left">
+        <img
+          src={withBase('/origins-ageing.jpg')}
+          alt="Cured tobacco leaves ageing in an East Java curing barn."
+          class="about-ed__figure-inset-img"
+          loading="lazy"
         />
-        <p class="about-ed__placeholder-note">{placeholderNote}</p>
-        <figcaption class="about-ed__caption">Escogida fermentation &mdash; month 4 / month 22.</figcaption>
       </figure>
+      <p class="about-ed__body about-ed__body--dropcap">{beat3Body}</p>
     </section>
 
     {/* ── Beat 4 — Uncompromising Craftsmanship. Half-column 4:3 inset placeholder, floated left (mirror of beat 2). ── */}
@@ -134,10 +122,8 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
         <span class="placeholder__corner placeholder__corner--tr" aria-hidden="true"></span>
         <span class="placeholder__corner placeholder__corner--bl" aria-hidden="true"></span>
         <span class="placeholder__corner placeholder__corner--br" aria-hidden="true"></span>
-        <figcaption class="placeholder__caption">{capBeat4}</figcaption>
       </figure>
       <p class="about-ed__body about-ed__body--dropcap">{beat4Body}</p>
-      <p class="about-ed__caption about-ed__caption--inset">Photograph: [Name] &mdash; Jember rolling room, 2026.</p>
     </section>
 
     {/* ── Origins → Founder transition. Bridge quote panel
@@ -165,9 +151,6 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
           sizes="(max-width: 720px) 100vw, 320px"
           loading="lazy"
         />
-        <figcaption class="about-ed__caption about-ed__caption--feature">
-          Stephane Zermatten &middot; Jember, East Java.
-        </figcaption>
       </figure>
 
       <p class="about-ed__feature-body">{storyParas[0]}</p>
@@ -329,7 +312,7 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
        --column      : sits at article-column width below the body.
        --inset       : half-column, 4:3, floated. Side via the
                        --inset-right / --inset-left modifier.
-                       Used at beats 2 and 4.
+                       Used at beats 2, 3, and 4.
      ═══════════════════════════════════════════════════════════ */
   .about-ed__figure {
     margin: var(--space-7) 0 0 0;
@@ -345,12 +328,7 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
     object-fit: cover;
     background: var(--pearl);
   }
-  /* Beat 3 leans slightly taller — 3:2. */
-  .about-ed__beat:nth-of-type(3) .about-ed__figure--column .about-ed__img {
-    aspect-ratio: 3 / 2;
-  }
-
-  /* Inset figure — beats 2 and 4. Half-column width, 4:3 landscape.
+  /* Inset figure — beats 2, 3, and 4. Half-column width, 4:3 landscape.
      Float side set by the directional modifier so beats 2 and 4
      alternate (right / left). 1px pink hairline frame as the
      editorial slot frame for real photographs. Placeholders keep
@@ -388,21 +366,6 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
   .about-ed__figure--inset-left {
     float: left;
     margin: var(--space-2) var(--space-6) var(--space-5) 0;
-  }
-  .about-ed__caption--inset {
-    clear: both;
-    margin-top: var(--space-4);
-    text-align: right;
-  }
-
-  /* Captions — italic Hanken, gold-deep, small. */
-  .about-ed__caption {
-    font-family: var(--font-body);
-    font-size: var(--fs-small);
-    font-style: italic;
-    letter-spacing: var(--ls-small);
-    color: var(--gold-deep);
-    margin: var(--space-3) 0 0 0;
   }
 
   /* Placeholder note overlay. */
@@ -506,10 +469,6 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
     object-position: center;
     display: block;
   }
-  .about-ed__caption--feature {
-    margin-top: var(--space-3);
-    text-align: left;
-  }
   .about-ed__feature-body {
     font-family: var(--font-body);
     font-size: var(--fs-body);
@@ -553,16 +512,6 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
     padding: clamp(var(--space-5), 4vw, var(--space-7));
   }
   .placeholder--4x3 { aspect-ratio: 4 / 3; }
-  .placeholder__caption {
-    font-family: var(--font-body);
-    font-size: var(--fs-small);
-    line-height: var(--lh-snug);
-    letter-spacing: 0.02em;
-    color: var(--gold-deep);
-    text-align: center;
-    max-width: 32ch;
-    margin: 0;
-  }
   .placeholder__corner {
     position: absolute;
     width: 12px;
@@ -602,7 +551,7 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
     .about-ed__body--dropcap::first-letter {
       padding-right: var(--space-2);
     }
-    /* Inset figures (beats 2 and 4) stack above the body paragraph. */
+    /* Inset figures (beats 2, 3, 4) stack above the body paragraph. */
     .about-ed__figure--inset,
     .about-ed__figure--inset-right,
     .about-ed__figure--inset-left {
@@ -611,18 +560,12 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
       max-width: 320px;
       margin: var(--space-5) auto;
     }
-    .about-ed__caption--inset {
-      text-align: center;
-    }
     /* Founder portrait stacks too. Max-width scaled 0.75× to match desktop. */
     .about-ed__feature-figure {
       float: none;
       width: 100%;
       max-width: 240px;
       margin: 0 auto var(--space-6) auto;
-    }
-    .about-ed__caption--feature {
-      text-align: center;
     }
   }
 </style>
