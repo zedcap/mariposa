@@ -358,6 +358,23 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
     float: left;
     margin: var(--space-2) var(--space-6) var(--space-5) 0;
   }
+  /* Beat 4 (Uncompromising Craftsmanship) — body copy is just long
+     enough that, after wrapping past the floated-right inset, the
+     tail of the last sentence reflows below the figure as a
+     stranded fragment ("second column" effect). Resolve by dropping
+     the float on beat 4 only: figure stacks above the body as a
+     block, body reads as a single coherent column top-to-bottom.
+     Beats 2 and 3 keep their floated wrap; L/R alternation simply
+     ends at beat 3 rather than forcing a third oscillation.
+     Stack treatment mirrors the existing mobile rule for inset
+     figures — same width / centred margin so the figure reads as
+     an intentional editorial block, not a stranded half-column. */
+  .about-ed__beat:nth-of-type(4) .about-ed__figure--inset-right {
+    float: none;
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto var(--space-6) auto;
+  }
 
   /* Placeholder note overlay. */
   .about-ed__placeholder-note {
@@ -383,7 +400,7 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
   .about-ed__transition {
     text-align: center;
     /* Top gap reduced 25% twice (Stephane) — 0.75 × 0.75 = 0.5625. Bottom halved twice (Stephane) — pairs with .about-ed__feature padding-top halving to quarter the eyebrow → standfirst gap. */
-    padding-top: clamp(calc(var(--space-8) * 0.45), 4.5vw, calc(var(--space-9) * 0.45));
+    padding-top: clamp(calc(var(--space-8) * 0.36), 3.6vw, calc(var(--space-9) * 0.36));
     padding-bottom: clamp(calc(var(--space-8) * 0.25), 2.5vw, calc(var(--space-9) * 0.25));
   }
   /* Bridge quote panel — Treatment 3 from /about-quote-mocks
@@ -395,7 +412,7 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
      (identical clamp) so the panel stays symmetric if tokens change. */
   .about-ed__bridge-panel {
     clear: both;
-    margin: 0 0 clamp(calc(var(--space-8) * 1.6875), 16.875vw, calc(var(--space-9) * 1.6875)) 0;
+    margin: 0 0 clamp(calc(var(--space-8) * 1.35), 13.5vw, calc(var(--space-9) * 1.35)) 0;
     background: transparent;
     border-top: 1px solid var(--pink);
     border-bottom: 1px solid var(--gold-deep);
@@ -428,7 +445,7 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
      ═══════════════════════════════════════════════════════════ */
   .about-ed__feature {
     /* Bottom gap below pull quote reduced 50% (Stephane). Top halved twice (Stephane) — 0.5 × 0.5 = 0.25 — pairs with .about-ed__transition padding-bottom (now 0.25) to halve the eyebrow → standfirst gap again. */
-    padding-block: clamp(calc(var(--space-7) * 0.25), 2vw, calc(var(--space-9) * 0.25)) clamp(calc(var(--space-9) * 0.5), 6vw, calc(var(--space-10) * 0.5));
+    padding-block: clamp(calc(var(--space-7) * 0.25), 2vw, calc(var(--space-9) * 0.25)) clamp(calc(var(--space-9) * 0.75), 9vw, calc(var(--space-10) * 0.75));
   }
   .about-ed__feature-standfirst {
     font-family: var(--font-display);
