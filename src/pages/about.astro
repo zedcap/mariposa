@@ -538,33 +538,63 @@ const founderStandfirst =
     .about-ed__body--dropcap::first-letter {
       padding-right: var(--space-2);
     }
-    /* Inset figures (beats 2, 3, 4) stack above the body paragraph. */
+    /* Beat 1 — figure ABOVE body on mobile (desktop keeps body above).
+       Source order is title → body → figure. Use flex column with
+       explicit orders so title stays first, figure jumps to second,
+       body falls to third. Aspect ratio and frame inherited from
+       .about-ed__figure--column (16:9 + pink hairline). */
+    .about-ed__beat--column {
+      display: flex;
+      flex-direction: column;
+    }
+    .about-ed__beat--column .about-ed__beat-title {
+      order: -2;
+    }
+    .about-ed__beat--column .about-ed__figure--column {
+      order: -1;
+      /* Tighten the gap above the figure on mobile — desktop margin
+         (var(--space-7)) was sized for figure-below-body. Now the
+         figure sits directly under the title, so match the title's
+         margin-bottom rhythm. */
+      margin-top: var(--space-6);
+    }
+    .about-ed__beat--column .about-ed__body {
+      /* Add breathing room between figure and body on mobile. */
+      margin-top: var(--space-6);
+    }
+    /* Inset figures (beats 2, 3, 4) — full-width 16:9 on mobile. */
     .about-ed__figure--inset,
     .about-ed__figure--inset-right,
     .about-ed__figure--inset-left {
       float: none;
       width: 100%;
-      max-width: 320px;
-      margin: var(--space-5) auto;
+      max-width: none;
+      aspect-ratio: 16 / 9;
+      margin: var(--space-5) 0;
     }
     /* Beat 4 collapses its desktop 2-column grid to a single column.
        Copy leads on mobile — figure stacks BELOW body via source
-       order override (title 1, body 2, figure 3). Figure width
-       capped and centred to match the other inset stacks. */
+       order. Override desktop grid-set width:100% already matches
+       new full-width treatment; clear the centred max-width too. */
     .about-ed__beat:nth-of-type(4) {
       display: block;
     }
     .about-ed__beat:nth-of-type(4) .about-ed__figure--inset-right {
       width: 100%;
-      max-width: 320px;
-      margin: var(--space-5) auto;
+      max-width: none;
+      aspect-ratio: 16 / 9;
+      margin: var(--space-5) 0;
     }
-    /* Founder portrait stacks too. Max-width scaled 0.75× then 0.8× to match desktop. */
+    /* Founder portrait — full-width on mobile, ~240px visible height.
+       Drop the 4/5 aspect-ratio (replaced by explicit height), drop
+       float and centring margins; pink hairline + cover stay. */
     .about-ed__feature-figure {
       float: none;
       width: 100%;
-      max-width: 192px;
-      margin: 0 auto var(--space-6) auto;
+      max-width: none;
+      height: 15rem;
+      aspect-ratio: auto;
+      margin: 0 0 var(--space-6) 0;
     }
   }
 </style>
