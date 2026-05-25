@@ -114,9 +114,15 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
       <p class="about-ed__body about-ed__body--dropcap">{beat3Body}</p>
     </section>
 
-    {/* ── Beat 4 — Uncompromising Craftsmanship. Half-column 4:3 inset photograph, floated right (restores L/R alternation: beat 2 right, beat 3 left, beat 4 right). ── */}
+    {/* ── Beat 4 — Uncompromising Craftsmanship. Desktop: 2-column
+           grid (body left, figure pinned top-right). Body holds its
+           column to its natural end — does not reflow below the
+           figure once the image's vertical bottom is passed. Mobile:
+           grid collapses to block flow; source order is body first
+           so copy leads with the figure stacked below. ── */}
     <section class="about-ed__beat about-ed__beat--inset" aria-label="Uncompromising Craftsmanship" data-reveal>
       <h2 class="about-ed__beat-title">{beat4Title}</h2>
+      <p class="about-ed__body about-ed__body--dropcap">{beat4Body}</p>
       <figure class="about-ed__figure about-ed__figure--inset about-ed__figure--inset-right">
         <img
           src={withBase('/origins-craftsmanship.jpg')}
@@ -125,7 +131,6 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
           loading="lazy"
         />
       </figure>
-      <p class="about-ed__body about-ed__body--dropcap">{beat4Body}</p>
     </section>
 
     {/* ── Origins → Founder transition. Bridge quote panel
@@ -361,19 +366,37 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
   /* Beat 4 (Uncompromising Craftsmanship) — body copy is just long
      enough that, after wrapping past the floated-right inset, the
      tail of the last sentence reflows below the figure as a
-     stranded fragment ("second column" effect). Resolve by dropping
-     the float on beat 4 only: figure stacks above the body as a
-     block, body reads as a single coherent column top-to-bottom.
-     Beats 2 and 3 keep their floated wrap; L/R alternation simply
-     ends at beat 3 rather than forcing a third oscillation.
-     Stack treatment mirrors the existing mobile rule for inset
-     figures — same width / centred margin so the figure reads as
-     an intentional editorial block, not a stranded half-column. */
+     stranded fragment ("second column" effect). A float can't fix
+     this: by definition text wraps under the float once the image's
+     bottom edge is passed. Resolve by switching beat 4 to a 2-column
+     CSS grid — body locked into a left column, figure anchored to a
+     fixed-width right column. Body reads to its natural end in its
+     own column; the area below the (shorter) figure stays empty.
+     Column widths mirror the float treatment: figure capped at
+     min(40%, 320px), body takes the rest. Beats 2 and 3 keep their
+     floated wrap. */
+  .about-ed__beat:nth-of-type(4) {
+    display: grid;
+    grid-template-columns: 1fr min(40%, 320px);
+    column-gap: var(--space-6);
+    align-items: start;
+  }
+  /* Beat title spans both columns so it reads above the grid. */
+  .about-ed__beat:nth-of-type(4) .about-ed__beat-title {
+    grid-column: 1 / -1;
+  }
+  /* Body locked to left column; remove any float side-effects. */
+  .about-ed__beat:nth-of-type(4) .about-ed__body {
+    grid-column: 1;
+    min-width: 0;
+  }
+  /* Figure pinned to right column, top-aligned; cancel the float
+     and the float-margin from .about-ed__figure--inset-right. */
   .about-ed__beat:nth-of-type(4) .about-ed__figure--inset-right {
+    grid-column: 2;
     float: none;
+    margin: 0;
     width: 100%;
-    max-width: 320px;
-    margin: 0 auto var(--space-6) auto;
   }
 
   /* Placeholder note overlay. */
@@ -501,7 +524,7 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
     font-size: clamp(1.1rem, 1.7vw, 1.35rem);
     line-height: var(--lh-snug);
     color: var(--gold-deep);
-    text-align: center;
+    text-align: left;
     margin: var(--space-6) 0 0 0;
   }
 
@@ -537,6 +560,18 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
     .about-ed__figure--inset-right,
     .about-ed__figure--inset-left {
       float: none;
+      width: 100%;
+      max-width: 320px;
+      margin: var(--space-5) auto;
+    }
+    /* Beat 4 collapses its desktop 2-column grid to a single column.
+       Copy leads on mobile — figure stacks BELOW body via source
+       order override (title 1, body 2, figure 3). Figure width
+       capped and centred to match the other inset stacks. */
+    .about-ed__beat:nth-of-type(4) {
+      display: block;
+    }
+    .about-ed__beat:nth-of-type(4) .about-ed__figure--inset-right {
       width: 100%;
       max-width: 320px;
       margin: var(--space-5) auto;
