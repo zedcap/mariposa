@@ -56,9 +56,9 @@ const founderStandfirst =
 
 /* ─── Placeholder captions (un-commissioned beats) ─────────── */
 const capBeat2 =
-  'PLACEHOLDER: Havana-seed nursery — leaf detail or tobacco on volcanic soil. Square, ~1:1, half-column inset.';
+  'PLACEHOLDER: Havana-seed nursery — leaf detail or tobacco on volcanic soil. Landscape 4:3, half-column inset, floated right.';
 const capBeat4 =
-  'PLACEHOLDER: Jember rolling room — torcedoras at work, hands and leaf. Landscape, full-bleed ~70vh. The credibility shot, saved for the close.';
+  'PLACEHOLDER: Jember rolling room — torcedoras at work, hands and leaf. Landscape 4:3, half-column inset, floated left.';
 
 const placeholderNote = 'Placeholder atmosphere — final shot to be commissioned';
 ---
@@ -93,10 +93,10 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
       </figure>
     </section>
 
-    {/* ── Beat 2 — Volcanic Terroir. Half-column inset placeholder. ── */}
+    {/* ── Beat 2 — Volcanic Terroir. Half-column 4:3 inset placeholder, floated right. ── */}
     <section class="about-ed__beat about-ed__beat--inset" aria-label="Volcanic Terroir" data-reveal>
       <h2 class="about-ed__beat-title">{beat2Title}</h2>
-      <figure class="about-ed__figure about-ed__figure--inset placeholder placeholder--1x1" aria-label="Volcanic-earth / seed placeholder">
+      <figure class="about-ed__figure about-ed__figure--inset about-ed__figure--inset-right placeholder placeholder--4x3" aria-label="Volcanic-earth / seed placeholder">
         <span class="placeholder__corner placeholder__corner--tl" aria-hidden="true"></span>
         <span class="placeholder__corner placeholder__corner--tr" aria-hidden="true"></span>
         <span class="placeholder__corner placeholder__corner--bl" aria-hidden="true"></span>
@@ -124,18 +124,18 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
       </figure>
     </section>
 
-    {/* ── Beat 4 — Uncompromising Craftsmanship. Full-bleed ~70vh. ── */}
-    <section class="about-ed__beat about-ed__beat--bleed" aria-label="Uncompromising Craftsmanship" data-reveal>
+    {/* ── Beat 4 — Uncompromising Craftsmanship. Half-column 4:3 inset placeholder, floated left (mirror of beat 2). ── */}
+    <section class="about-ed__beat about-ed__beat--inset" aria-label="Uncompromising Craftsmanship" data-reveal>
       <h2 class="about-ed__beat-title">{beat4Title}</h2>
-      <p class="about-ed__body about-ed__body--dropcap">{beat4Body}</p>
-      <figure class="about-ed__figure--bleed placeholder placeholder--bleed" aria-label="Jember rolling-room placeholder (full-bleed)">
+      <figure class="about-ed__figure about-ed__figure--inset about-ed__figure--inset-left placeholder placeholder--4x3" aria-label="Jember rolling-room placeholder">
         <span class="placeholder__corner placeholder__corner--tl" aria-hidden="true"></span>
         <span class="placeholder__corner placeholder__corner--tr" aria-hidden="true"></span>
         <span class="placeholder__corner placeholder__corner--bl" aria-hidden="true"></span>
         <span class="placeholder__corner placeholder__corner--br" aria-hidden="true"></span>
         <figcaption class="placeholder__caption">{capBeat4}</figcaption>
       </figure>
-      <p class="about-ed__caption about-ed__caption--bleed">Photograph: [Name] &mdash; Jember rolling room, 2026.</p>
+      <p class="about-ed__body about-ed__body--dropcap">{beat4Body}</p>
+      <p class="about-ed__caption about-ed__caption--inset">Photograph: [Name] &mdash; Jember rolling room, 2026.</p>
     </section>
 
     {/* ── Origins → Founder transition. Quiet hairline + eyebrow. ── */}
@@ -214,7 +214,8 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
      ═══════════════════════════════════════════════════════════ */
   .about-ed__masthead {
     text-align: center;
-    padding-block: clamp(var(--space-9), 12vw, var(--space-10));
+    padding-top: clamp(calc(var(--space-9) * 0.8), 9.6vw, calc(var(--space-10) * 0.8));
+    padding-bottom: clamp(calc(var(--space-9) * 0.75), 9vw, calc(var(--space-10) * 0.75));
   }
   .about-ed__masthead-eyebrow {
     font-family: var(--font-body);
@@ -262,6 +263,19 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
   .about-ed__beat {
     padding-block: clamp(var(--space-8), 9vw, var(--space-9));
   }
+  /* First beat — tighten gap above by 25% (paired with the
+     masthead's reduced padding-bottom). Hard-coded value approved
+     by Stephane; unchanged when subsequent beats' top space was
+     halved. */
+  .about-ed__beat:first-of-type {
+    padding-top: clamp(calc(var(--space-8) * 0.75), 6.75vw, calc(var(--space-9) * 0.75));
+  }
+  /* Beats 2-4 — halve the space above to tighten the article's
+     mid-cadence. padding-bottom inherited from the base rule
+     keeps the trailing inter-beat rhythm untouched. */
+  .about-ed__beat:not(:first-of-type) {
+    padding-top: clamp(calc(var(--space-8) * 0.5), 4.5vw, calc(var(--space-9) * 0.5));
+  }
   /* Section title — Spectral italic, gold-deep family removed in
      favour of ink for legibility against the gold drop cap;
      consistent typography across all four beats. */
@@ -294,7 +308,7 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
     font-style: italic;
     font-weight: 400;
     color: var(--gold-deep);
-    font-size: clamp(4.5rem, 7vw, 5.5rem);
+    font-size: clamp(5.85rem, 9.1vw, 7.15rem);
     line-height: 0.82;
     float: left;
     padding-right: var(--space-3);
@@ -303,10 +317,10 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
 
   /* ═══════════════════════════════════════════════════════════
      Figures.
-       --column : sits at article-column width below the body.
-       --inset  : half-column, floated right, lives inside beat 2.
-       --bleed  : full-bleed ~70vh, used at beat 4 (the article's
-                  photographic peak).
+       --column      : sits at article-column width below the body.
+       --inset       : half-column, 4:3, floated. Side via the
+                       --inset-right / --inset-left modifier.
+                       Used at beats 2 and 4.
      ═══════════════════════════════════════════════════════════ */
   .about-ed__figure {
     margin: var(--space-7) 0 0 0;
@@ -327,13 +341,20 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
     aspect-ratio: 3 / 2;
   }
 
-  /* Inset figure — beat 2. Half-column width, floated right of
-     the body paragraph. */
+  /* Inset figure — beats 2 and 4. Half-column width, 4:3 landscape.
+     Float side set by the directional modifier so beats 2 and 4
+     alternate (right / left). */
   .about-ed__figure--inset {
-    float: right;
     width: min(48%, 320px);
+    aspect-ratio: 4 / 3;
+  }
+  .about-ed__figure--inset-right {
+    float: right;
     margin: var(--space-2) 0 var(--space-5) var(--space-6);
-    aspect-ratio: 1 / 1;
+  }
+  .about-ed__figure--inset-left {
+    float: left;
+    margin: var(--space-2) var(--space-6) var(--space-5) 0;
   }
   .about-ed__caption--inset {
     clear: both;
@@ -370,31 +391,13 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
   }
 
   /* ═══════════════════════════════════════════════════════════
-     Beat 4 — full-bleed ~70vh placeholder.
-     ═══════════════════════════════════════════════════════════ */
-  .about-ed__figure--bleed {
-    width: 100vw;
-    position: relative;
-    margin-left: calc(50% - 50vw);
-    margin-right: calc(50% - 50vw);
-    margin-top: var(--space-7);
-    margin-bottom: 0;
-    height: 70vh;
-    min-height: 480px;
-    aspect-ratio: auto;
-    padding: clamp(var(--space-6), 5vw, var(--space-8));
-  }
-  .about-ed__caption--bleed {
-    margin-top: var(--space-4);
-    text-align: center;
-  }
-
-  /* ═══════════════════════════════════════════════════════════
      Origins → Founder transition.
      ═══════════════════════════════════════════════════════════ */
   .about-ed__transition {
     text-align: center;
-    padding-block: clamp(var(--space-8), 10vw, var(--space-9));
+    /* Top gap reduced 25% (Stephane). Bottom unchanged. */
+    padding-top: clamp(calc(var(--space-8) * 0.75), 7.5vw, calc(var(--space-9) * 0.75));
+    padding-bottom: clamp(var(--space-8), 10vw, var(--space-9));
   }
   .about-ed__transition-rule {
     display: block;
@@ -417,7 +420,8 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
      Founder feature.
      ═══════════════════════════════════════════════════════════ */
   .about-ed__feature {
-    padding-block: clamp(var(--space-7), 8vw, var(--space-9)) clamp(var(--space-9), 12vw, var(--space-10));
+    /* Bottom gap below pull quote reduced 50% (Stephane). Top unchanged. */
+    padding-block: clamp(var(--space-7), 8vw, var(--space-9)) clamp(calc(var(--space-9) * 0.5), 6vw, calc(var(--space-10) * 0.5));
   }
   .about-ed__feature-headline {
     font-family: var(--font-display);
@@ -506,8 +510,7 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
     justify-content: center;
     padding: clamp(var(--space-5), 4vw, var(--space-7));
   }
-  .placeholder--1x1 { aspect-ratio: 1 / 1; }
-  .placeholder--bleed { aspect-ratio: auto; }
+  .placeholder--4x3 { aspect-ratio: 4 / 3; }
   .placeholder__caption {
     font-family: var(--font-body);
     font-size: var(--fs-small);
@@ -548,7 +551,8 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
       padding-inline: var(--page-pad-m);
     }
     .about-ed__masthead {
-      padding-block: clamp(var(--space-8), 14vw, var(--space-9));
+      padding-top: clamp(calc(var(--space-8) * 0.8), 11.2vw, calc(var(--space-9) * 0.8));
+      padding-bottom: clamp(calc(var(--space-8) * 0.75), 10.5vw, calc(var(--space-9) * 0.75));
     }
     /* Drop cap scales down via the existing clamp; tighten the
        right padding slightly so the body wrap doesn't strand a
@@ -556,8 +560,10 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
     .about-ed__body--dropcap::first-letter {
       padding-right: var(--space-2);
     }
-    /* Inset figure (beat 2) stacks above the body paragraph. */
-    .about-ed__figure--inset {
+    /* Inset figures (beats 2 and 4) stack above the body paragraph. */
+    .about-ed__figure--inset,
+    .about-ed__figure--inset-right,
+    .about-ed__figure--inset-left {
       float: none;
       width: 100%;
       max-width: 320px;
@@ -575,12 +581,6 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
     }
     .about-ed__caption--feature {
       text-align: center;
-    }
-    /* Bleed beat 4 — tall portrait moment ~60-65vh. */
-    .about-ed__figure--bleed {
-      height: 60vh;
-      min-height: 420px;
-      padding: var(--space-5);
     }
     .about-ed__pullquote {
       margin-top: var(--space-7);
