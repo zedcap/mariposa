@@ -1,232 +1,183 @@
 ---
-/* About — Origins (Option 4: asymmetric editorial) + Story.
+/* About — live editorial page.
    ------------------------------------------------------------------
-   Replaces the prior OriginArc placeholder. Two sections:
-
-     Origins   — four beats, each with a different image treatment
-                 per Pax's recommendation in
-                 `about-origins-image-research.md` Part 3, Option 4.
-                 Copy is the four Origins paragraphs from
-                 `mariposa cigars copy.docx`, verbatim, mapped to
-                 beats 1→4 in document order.
-     Story     — three founder paragraphs + closing tagline from
-                 the same docx. Image-left (sz_smoking.jpg) / prose-
-                 right on desktop, stacked on mobile. Gold hairline
-                 rule above the kicker.
-
-   Option 4 beat composition (locked):
-     Beat 1 — full-bleed landscape ~70vh, type bottom-left,
-              place credit top-right.
-     Beat 2 — prose-led 60/40, small square inset image-right,
-              caption beneath.
-     Beat 3 — asymmetric editorial spread, image breaks the column
-              ~6vw past the right boundary. Single editorial
-              caption beneath.
-     Beat 4 — diptych: two 4:5 portraits flush, timing caption
-              beneath, prose centred below.
-
-   Placeholder vs real-image strategy:
-     Beat 1 — REAL atmosphere (hero-mp-1.jpg) so the cinematic
-              full-bleed reads with a real image.
-     Beat 2 — DASHED placeholder. The terroir/20-years beat is
-              content-led; an atmosphere stand-in would mislead.
-     Beat 3 — REAL atmosphere (hero-mp-3.jpg). Shows the
-              column-break composition with a real image.
-     Beat 4 — DASHED placeholders (both halves). The workshop is
-              the credibility shot; no hero substitute earns it. */
+   Promoted from src/pages/about-editorial-mocks.astro (Option A:
+   issue masthead with four beats and one pull quote, founder as the
+   closing feature) on 2026-05-25 with Stephane's amends:
+     · Masthead copy rewritten (Mariposa · Origins / A Cuban Heritage
+       Reborn in Volcanic Earth / Havana-seed standfirst).
+     · Roman numerals dropped — section titles are the only anchor.
+     · Drop cap on every Origins beat, sized to span ~3 lines.
+     · Beat titles replaced: A Singular Pursuit, Volcanic Terroir,
+       A Three-Year Journey, Uncompromising Craftsmanship.
+     · Mock ribbon removed.
+   Origins body copy and founder paragraphs remain verbatim from
+   `mariposa cigars copy.docx`. */
 
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-/* Beat 1 (full-bleed) + beat 3 (asymmetric column-break) get
-   real atmosphere shots so the compositions read. Beats 2 and 4
-   stay as dashed placeholders so the missing-photography is
-   visible at a glance. */
 import beat1Atmosphere from '../assets/hero-mp-1.jpg';
 import beat3Atmosphere from '../assets/hero-mp-3.jpg';
 import szSmoking from '../assets/sz_smoking_2.jpg';
 
-const placeholderNote = 'Placeholder atmosphere — final shot to be commissioned';
+/* ─── Origins copy — verbatim, body unchanged from mock ────── */
 
-/* ─── Origins copy — verbatim, docx paragraph order ─────────── */
-
-const beat1Eyebrow = 'Argopuro · Jember, East Java';
+const beat1Title = 'A Singular Pursuit';
 const beat1Body =
-  'Mariposa is hand-rolled in Jember, East Java. A region whose rich cigar-making heritage dates back to 1859. It is also home to Pak Abdul Kahar Muzakir, a cigar aficionado and industry veteran who has dedicated his life to a singular pursuit: capturing the essence of Cuban tradition by cultivating Havana seeds in Indonesian soil.';
+  "Mariposa is hand-rolled in Jember, East Java. A region whose rich cigar-making heritage dates back to 1859. It is also home to Pak Abdul Kahar Muzakir, a cigar aficionado and industry veteran who has dedicated his life to a singular pursuit: capturing the essence of Cuban tradition by cultivating Havana seeds in Indonesian soil.";
 
-const beat2Eyebrow = 'Twenty years · Volcanic earth';
+const beat2Title = 'Volcanic Terroir';
 const beat2Body =
-  'The wrapper, binder, and filler are all born from Havana-seed tobacco that has spent nearly two decades acclimatizing to Jember’s volcanic earth. The result is a perfect marriage of flavor profiles, blending the distinct spice and oiliness of Cuban genetics with Java’s native earthy sweetness.';
+  "The wrapper, binder, and filler are all born from Havana-seed tobacco that has spent nearly two decades acclimatizing to Jember's volcanic earth. The result is a perfect marriage of flavor profiles, blending the distinct spice and oiliness of Cuban genetics with Java's native earthy sweetness.";
 
-const beat3Eyebrow = 'Patience · Three years';
+const beat3Title = 'A Three-Year Journey';
 const beat3Body =
-  'Patience is central to the craft. In keeping with the strict standards of Cuba’s escogida, each leaf type is meticulously sorted and fermented for 24 months, then rested for another twelve. That is nearly three years from leaf to finished cigar, a slow maturation that yields rich flavors and an undeniably smooth smoke.';
+  "Patience is central to the craft. In keeping with the strict standards of Cuba's escogida, each leaf type is meticulously sorted and fermented for 24 months, then rested for another twelve. That is nearly three years from leaf to finished cigar, a slow maturation that yields rich flavors and an undeniably smooth smoke.";
 
-const beat4Eyebrow = 'The workshop · By hand';
+const beat4Title = 'Uncompromising Craftsmanship';
 const beat4Body =
-  'Mariposa cigars are entirely hand-rolled by a dedicated team of female rollers, mirroring Cuba’s revered torcedoras, many of whom come from families that have worked tobacco for generations. Using premium long-filler, three-part construction, and entubado bunching for a perfectly even draw, each cigar is finished with a classic Cuban triple cap. Every single stick is draw-tested and inspected by hand before it leaves the workshop, guaranteeing a flawless smoking experience.';
+  "Mariposa cigars are entirely hand-rolled by a dedicated team of female rollers, mirroring Cuba's revered torcedoras, many of whom come from families that have worked tobacco for generations. Using premium long-filler, three-part construction, and entubado bunching for a perfectly even draw, each cigar is finished with a classic Cuban triple cap. Every single stick is draw-tested and inspected by hand before it leaves the workshop, guaranteeing a flawless smoking experience.";
 
-/* ─── Story copy — verbatim, docx Founder section ───────────── */
+/* ─── Founder copy — verbatim. Three uniform paragraphs.
+       The Havana-seed sentence is LIFTED from paragraph 3 of the
+       original copy and rendered as the closing pull quote. */
 
 const storyParas = [
-  'Mariposa’s story begins with a journey. Driven by a lifelong taste for cigars, founder Stephane Zermatten followed his curiosity to the tobacco fields of East Java.',
-  'What he discovered inspired him to craft a blend for his own humidor and closest friends. Yet, as word spread and a wider circle grew curious, he knew it couldn’t remain a private reserve. The brand was born to bring this unique cigar to a growing community in Bali and beyond.',
-  'Today, Mariposa captures the rich, multi-cultural soul of cigars, giving friends around the world the perfect excuse to light up, slow down, and share a good conversation. Whatever the hour.',
+  "Mariposa's story begins with a journey. Driven by a lifelong taste for cigars, founder Stephane Zermatten followed his curiosity to the tobacco fields of East Java.",
+  "What he discovered inspired him to craft a blend for his own humidor and closest friends. Yet, as word spread and a wider circle grew curious, he knew it couldn't remain a private reserve. The brand was born to bring this unique cigar to a growing community in Bali and beyond.",
+  "Today, Mariposa captures the rich, multi-cultural soul of cigars, giving friends around the world the perfect excuse to light up, slow down, and share a good conversation. Whatever the hour.",
 ];
-const storyKicker =
-  'A Havana-seed smoke, adorned in gold leaf, for the people who don’t wait for special occasions, but create them.';
+const pullQuote =
+  "A Havana-seed smoke, adorned in gold leaf, for the people who don't wait for special occasions, but create them.";
 
-/* ─── Placeholder captions for the un-commissioned beats ──── */
+const founderStandfirst =
+  'The founder of Mariposa, on the curiosity that became a humidor and then a brand.';
+
+/* ─── Placeholder captions (un-commissioned beats) ─────────── */
 const capBeat2 =
-  'PLACEHOLDER: Havana-seed nursery — leaf detail or tobacco field on volcanic soil. Tight, near-square, ~1:1.';
-const capBeat4A =
-  'PLACEHOLDER: Jember rolling room — torcedora at work, hands and leaf. Portrait, 4:5.';
-const capBeat4B =
-  'PLACEHOLDER: Triple-cap detail or finished cigar in hand — companion to the rolling shot. Portrait, 4:5.';
+  'PLACEHOLDER: Havana-seed nursery — leaf detail or tobacco on volcanic soil. Square, ~1:1, half-column inset.';
+const capBeat4 =
+  'PLACEHOLDER: Jember rolling room — torcedoras at work, hands and leaf. Landscape, full-bleed ~70vh. The credibility shot, saved for the close.';
+
+const placeholderNote = 'Placeholder atmosphere — final shot to be commissioned';
 ---
 
 <BaseLayout title="Mariposa • About">
 
-  {/* ════════════════════════════════════════════════════════════
-      ORIGINS — Option 4, asymmetric editorial per beat
-      ════════════════════════════════════════════════════════════ */}
+  <article class="about-ed">
 
-  <section class="o-head" aria-label="Origins — opening">
-    <div class="o-head__inner container" data-reveal>
-      <p class="o-head__eyebrow">Origins</p>
-      <p class="o-head__line">Where Indonesia learned to roll cigars.</p>
+    {/* ── Issue masthead ─────────────────────────────────────── */}
+    <header class="about-ed__masthead" data-reveal>
+      <p class="about-ed__masthead-eyebrow">Mariposa &middot; Origins</p>
+      <h1 class="about-ed__masthead-headline">A Cuban Heritage Reborn in Volcanic Earth</h1>
+      <p class="about-ed__masthead-standfirst">Cultivated from Havana seeds nurtured for two decades in East Java, Mariposa is rooted in classic craftsmanship. Hand-rolled by female rollers, each cigar blends the rich complexity of Cuban heritage with the sweet depth of volcanic soil.</p>
+      <span class="about-ed__masthead-rule" aria-hidden="true"></span>
+    </header>
+
+    {/* ── Beat 1 — A Singular Pursuit. Column-width landscape. ── */}
+    <section class="about-ed__beat" aria-label="A Singular Pursuit" data-reveal>
+      <h2 class="about-ed__beat-title">{beat1Title}</h2>
+      <p class="about-ed__body about-ed__body--dropcap">{beat1Body}</p>
+      <figure class="about-ed__figure about-ed__figure--column">
+        <Image
+          src={beat1Atmosphere}
+          alt="Atmospheric placeholder standing in for the Argopuro range, East Java — final shot to be commissioned."
+          class="about-ed__img"
+          widths={[720, 1080, 1440, 1800]}
+          sizes="(max-width: 720px) 100vw, 720px"
+          loading="eager"
+        />
+        <p class="about-ed__placeholder-note">{placeholderNote}</p>
+        <figcaption class="about-ed__caption">Argopuro range, East Java.</figcaption>
+      </figure>
+    </section>
+
+    {/* ── Beat 2 — Volcanic Terroir. Half-column inset placeholder. ── */}
+    <section class="about-ed__beat about-ed__beat--inset" aria-label="Volcanic Terroir" data-reveal>
+      <h2 class="about-ed__beat-title">{beat2Title}</h2>
+      <figure class="about-ed__figure about-ed__figure--inset placeholder placeholder--1x1" aria-label="Volcanic-earth / seed placeholder">
+        <span class="placeholder__corner placeholder__corner--tl" aria-hidden="true"></span>
+        <span class="placeholder__corner placeholder__corner--tr" aria-hidden="true"></span>
+        <span class="placeholder__corner placeholder__corner--bl" aria-hidden="true"></span>
+        <span class="placeholder__corner placeholder__corner--br" aria-hidden="true"></span>
+        <figcaption class="placeholder__caption">{capBeat2}</figcaption>
+      </figure>
+      <p class="about-ed__body about-ed__body--dropcap">{beat2Body}</p>
+      <p class="about-ed__caption about-ed__caption--inset">Havana-seed leaf, Jember nursery.</p>
+    </section>
+
+    {/* ── Beat 3 — A Three-Year Journey. Column-width 3:2 landscape. ── */}
+    <section class="about-ed__beat" aria-label="A Three-Year Journey" data-reveal>
+      <h2 class="about-ed__beat-title">{beat3Title}</h2>
+      <p class="about-ed__body about-ed__body--dropcap">{beat3Body}</p>
+      <figure class="about-ed__figure about-ed__figure--column">
+        <Image
+          src={beat3Atmosphere}
+          alt="Atmospheric placeholder standing in for the escogida / ageing-room shot — final shot to be commissioned."
+          class="about-ed__img"
+          widths={[720, 1080, 1440, 1800]}
+          sizes="(max-width: 720px) 100vw, 720px"
+        />
+        <p class="about-ed__placeholder-note">{placeholderNote}</p>
+        <figcaption class="about-ed__caption">Escogida fermentation &mdash; month 4 / month 22.</figcaption>
+      </figure>
+    </section>
+
+    {/* ── Beat 4 — Uncompromising Craftsmanship. Full-bleed ~70vh. ── */}
+    <section class="about-ed__beat about-ed__beat--bleed" aria-label="Uncompromising Craftsmanship" data-reveal>
+      <h2 class="about-ed__beat-title">{beat4Title}</h2>
+      <p class="about-ed__body about-ed__body--dropcap">{beat4Body}</p>
+      <figure class="about-ed__figure--bleed placeholder placeholder--bleed" aria-label="Jember rolling-room placeholder (full-bleed)">
+        <span class="placeholder__corner placeholder__corner--tl" aria-hidden="true"></span>
+        <span class="placeholder__corner placeholder__corner--tr" aria-hidden="true"></span>
+        <span class="placeholder__corner placeholder__corner--bl" aria-hidden="true"></span>
+        <span class="placeholder__corner placeholder__corner--br" aria-hidden="true"></span>
+        <figcaption class="placeholder__caption">{capBeat4}</figcaption>
+      </figure>
+      <p class="about-ed__caption about-ed__caption--bleed">Photograph: [Name] &mdash; Jember rolling room, 2026.</p>
+    </section>
+
+    {/* ── Origins → Founder transition. Quiet hairline + eyebrow. ── */}
+    <div class="about-ed__transition" data-reveal>
+      <span class="about-ed__transition-rule" aria-hidden="true"></span>
+      <p class="about-ed__transition-eyebrow">The Founder &middot; A Feature</p>
     </div>
-  </section>
 
-  {/* Beat 1 — full-bleed landscape, ~70vh, type bottom-left,
-      place credit top-right. */}
-  <section class="beat-land" aria-label="Argopuro — the land">
-    <figure class="beat-land__frame">
-      <Image
-        src={beat1Atmosphere}
-        alt="Atmospheric placeholder standing in for the Jember / Argopuro establishing shot — final shot to be commissioned."
-        class="beat-land__img"
-        widths={[1200, 1800, 2400, 3200]}
-        sizes="100vw"
-        loading="eager"
-      />
-      <div class="beat-land__scrim" aria-hidden="true"></div>
-      <p class="beat-land__placeholder-note">{placeholderNote}</p>
-      <p class="beat-land__credit">Argopuro range, East Java</p>
-      <div class="beat-land__caption" data-reveal>
-        <span class="beat-land__rule" aria-hidden="true"></span>
-        <p class="beat-land__eyebrow">{beat1Eyebrow}</p>
-        <p class="beat-land__para">{beat1Body}</p>
-      </div>
-    </figure>
-  </section>
+    {/* ── Founder feature. Three uniform paragraphs, half-column
+           portrait before paragraph 1, pull quote at the close. ── */}
+    <section class="about-ed__feature" aria-label="The Founder" data-reveal>
+      <h2 class="about-ed__feature-headline">Stephane Zermatten.</h2>
+      <p class="about-ed__feature-standfirst">{founderStandfirst}</p>
 
-  {/* Beat 2 — prose-led 60/40, small square inset image-right. */}
-  <section class="beat-seed" aria-label="Twenty years — volcanic earth">
-    <div class="beat-seed__inner container" data-reveal>
-      <div class="beat-seed__copy">
-        <p class="beat-seed__eyebrow">{beat2Eyebrow}</p>
-        <p class="beat-seed__para">{beat2Body}</p>
-      </div>
-      <div class="beat-seed__media">
-        <figure class="placeholder placeholder--1x1" aria-label="Volcanic-earth / seed placeholder">
-          <span class="placeholder__corner placeholder__corner--tl" aria-hidden="true"></span>
-          <span class="placeholder__corner placeholder__corner--tr" aria-hidden="true"></span>
-          <span class="placeholder__corner placeholder__corner--bl" aria-hidden="true"></span>
-          <span class="placeholder__corner placeholder__corner--br" aria-hidden="true"></span>
-          <figcaption class="placeholder__caption">{capBeat2}</figcaption>
-        </figure>
-        <p class="beat-seed__caption">Havana-seed leaf, Jember nursery</p>
-      </div>
-    </div>
-  </section>
-
-  {/* Beat 3 — asymmetric editorial spread, image breaks the
-      column on the right ~6vw past the boundary. */}
-  <section class="beat-time" aria-label="Patience — three years">
-    <div class="beat-time__inner container" data-reveal>
-      <div class="beat-time__copy">
-        <p class="beat-time__eyebrow">{beat3Eyebrow}</p>
-        <p class="beat-time__para">{beat3Body}</p>
-      </div>
-      <div class="beat-time__media">
-        <figure class="beat-time__frame">
-          <Image
-            src={beat3Atmosphere}
-            alt="Atmospheric placeholder standing in for the escogida / ageing-room shot — final shot to be commissioned."
-            class="beat-time__img"
-            widths={[800, 1200, 1600, 2200]}
-            sizes="(max-width: 720px) 100vw, 58vw"
-          />
-          <p class="beat-time__placeholder-note">{placeholderNote}</p>
-        </figure>
-        <p class="beat-time__caption">Escogida fermentation — month 4 / month 22</p>
-      </div>
-    </div>
-  </section>
-
-  {/* Beat 4 — diptych: two portrait images flush, timing caption
-      beneath, prose centred below. */}
-  <section class="beat-hand" aria-label="The workshop — by hand">
-    <div class="beat-hand__inner container" data-reveal>
-      <div class="beat-hand__diptych">
-        <figure class="placeholder placeholder--4x5" aria-label="Jember rolling-room placeholder (left)">
-          <span class="placeholder__corner placeholder__corner--tl" aria-hidden="true"></span>
-          <span class="placeholder__corner placeholder__corner--tr" aria-hidden="true"></span>
-          <span class="placeholder__corner placeholder__corner--bl" aria-hidden="true"></span>
-          <span class="placeholder__corner placeholder__corner--br" aria-hidden="true"></span>
-          <figcaption class="placeholder__caption">{capBeat4A}</figcaption>
-        </figure>
-        <figure class="placeholder placeholder--4x5" aria-label="Triple-cap detail placeholder (right)">
-          <span class="placeholder__corner placeholder__corner--tl" aria-hidden="true"></span>
-          <span class="placeholder__corner placeholder__corner--tr" aria-hidden="true"></span>
-          <span class="placeholder__corner placeholder__corner--bl" aria-hidden="true"></span>
-          <span class="placeholder__corner placeholder__corner--br" aria-hidden="true"></span>
-          <figcaption class="placeholder__caption">{capBeat4B}</figcaption>
-        </figure>
-      </div>
-      <p class="beat-hand__caption">Photograph: [Name] — Jember rolling room, 2026</p>
-      <div class="beat-hand__copy">
-        <p class="beat-hand__eyebrow">{beat4Eyebrow}</p>
-        <p class="beat-hand__para">{beat4Body}</p>
-      </div>
-    </div>
-  </section>
-
-  {/* ════════════════════════════════════════════════════════════
-      STORY — image-left portrait, prose-right, gold hairline +
-      italic kicker as the final tagline.
-      ════════════════════════════════════════════════════════════ */}
-
-  <section class="story" aria-label="Story">
-    <div class="story__inner container" data-reveal>
-      <div class="story__media">
+      <figure class="about-ed__feature-figure">
         <Image
           src={szSmoking}
-          alt="Portrait of founder Stephane Zermatten lighting a Mariposa cigar, the 24-carat gold leaf visible on the band."
-          class="story__portrait"
-          widths={[480, 720, 1080, 1440]}
-          sizes="(max-width: 720px) 100vw, 44vw"
+          alt="Portrait of founder Stephane Zermatten lighting a Mariposa cigar."
+          class="about-ed__feature-img"
+          widths={[360, 540, 720, 960]}
+          sizes="(max-width: 720px) 100vw, 320px"
           loading="lazy"
         />
-      </div>
-      <div class="story__copy">
-        <p class="story__eyebrow">Story</p>
-        <p class="story__lede">{storyParas[0]}</p>
-        <p class="story__para">{storyParas[1]}</p>
-        <p class="story__para">{storyParas[2]}</p>
-        <span class="story__rule" aria-hidden="true"></span>
-        <p class="story__kicker">{storyKicker}</p>
-      </div>
-    </div>
-  </section>
+        <figcaption class="about-ed__caption about-ed__caption--feature">
+          Stephane Zermatten &middot; Jember, East Java.
+        </figcaption>
+      </figure>
+
+      <p class="about-ed__feature-body">{storyParas[0]}</p>
+      <p class="about-ed__feature-body">{storyParas[1]}</p>
+      <p class="about-ed__feature-body">{storyParas[2]}</p>
+
+      <blockquote class="about-ed__pullquote" data-reveal>
+        <p>{pullQuote}</p>
+      </blockquote>
+    </section>
+
+  </article>
 
 </BaseLayout>
 
 <script>
-  /* Reveal-on-enter for every block tagged data-reveal. Mirrors the
-     pattern used elsewhere on the site (volage, etc.) and respects
-     prefers-reduced-motion via the shared helper. */
   import { reveal, refreshOnLoad } from '../lib/motion';
   const blocks = document.querySelectorAll('[data-reveal]');
   blocks.forEach((b) => reveal(b));
@@ -234,237 +185,177 @@ const capBeat4B =
 </script>
 
 <style>
-  /* ─── Shared Origins opener ─────────────────────────────── */
-  .o-head {
+  /* ═══════════════════════════════════════════════════════════
+     Article shell. White ground throughout — uniformity of
+     ground is part of the editorial logic.
+     ═══════════════════════════════════════════════════════════ */
+  .about-ed {
     background: var(--white);
-    padding-block: clamp(var(--space-8), 10vw, var(--space-10));
-    border-bottom: 1px solid var(--hairline);
+    color: var(--ink);
+    /* Single centred article column. Masthead, transition, and
+       full-bleed figures break out wider; everything else lives
+       at this measure. */
+    --col: 720px;
   }
-  .o-head__inner {
-    text-align: center;
-    max-width: 720px;
+  .about-ed > .about-ed__masthead,
+  .about-ed > .about-ed__beat,
+  .about-ed > .about-ed__transition,
+  .about-ed > .about-ed__feature {
+    width: 100%;
+    max-width: var(--col);
     margin-inline: auto;
+    padding-inline: var(--page-pad-d);
+    box-sizing: content-box;
   }
-  .o-head__eyebrow {
+
+  /* ═══════════════════════════════════════════════════════════
+     Masthead — issue eyebrow, display headline, standfirst,
+     gold-leaf hairline.
+     ═══════════════════════════════════════════════════════════ */
+  .about-ed__masthead {
+    text-align: center;
+    padding-block: clamp(var(--space-9), 12vw, var(--space-10));
+  }
+  .about-ed__masthead-eyebrow {
     font-family: var(--font-body);
     font-size: clamp(0.95rem, 1.6vw, 1.15rem);
     font-weight: 600;
-    letter-spacing: var(--ls-section);
     text-transform: uppercase;
+    letter-spacing: var(--ls-section);
     color: var(--gold-deep);
     margin: 0 0 var(--space-6) 0;
   }
-  .o-head__line {
+  .about-ed__masthead-headline {
     font-family: var(--font-display);
     font-style: italic;
     font-weight: 400;
-    font-size: clamp(2rem, 4vw, 3rem);
-    line-height: var(--lh-snug);
+    font-size: clamp(3rem, 7vw, 5.5rem);
+    line-height: var(--lh-tight);
     color: var(--ink);
-    margin: 0 auto;
-    max-width: 24ch;
+    margin: 0 auto var(--space-6) auto;
+    max-width: 18ch;
+    letter-spacing: var(--ls-display);
   }
-
-  /* ═══════════════════════════════════════════════════════════
-     BEAT 1 — full-bleed landscape, type bottom-left
-     ═══════════════════════════════════════════════════════════ */
-  .beat-land {
-    width: 100vw;
-    margin-inline: calc(50% - 50vw);
-    padding: 0;
-  }
-  .beat-land__frame {
-    position: relative;
-    width: 100%;
-    height: 70vh;
-    min-height: 480px;
-    margin: 0;
-    background: var(--ink);
-    padding: 0;
-    overflow: hidden;
-  }
-  .beat-land__img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    display: block;
-  }
-  .beat-land__scrim {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      to top right,
-      color-mix(in srgb, var(--ink) 70%, transparent) 0%,
-      color-mix(in srgb, var(--ink) 40%, transparent) 35%,
-      transparent 65%
-    );
-    pointer-events: none;
-  }
-  .beat-land__placeholder-note {
-    position: absolute;
-    top: clamp(var(--space-4), 3vw, var(--space-6));
-    left: clamp(var(--space-4), 3vw, var(--space-6));
-    font-family: var(--font-body);
-    font-size: var(--fs-eyebrow);
-    font-weight: 600;
-    letter-spacing: var(--ls-section);
-    text-transform: uppercase;
-    color: var(--gold-leaf);
-    background: color-mix(in srgb, var(--ink) 55%, transparent);
-    padding: 4px 10px;
-    margin: 0;
-    max-width: 32ch;
-    z-index: 2;
-  }
-  .beat-land__credit {
-    position: absolute;
-    top: clamp(var(--space-5), 4vw, var(--space-7));
-    right: clamp(var(--space-5), 4vw, var(--space-7));
-    font-family: var(--font-body);
-    font-size: var(--fs-small);
+  .about-ed__masthead-standfirst {
+    font-family: var(--font-display);
     font-style: italic;
-    color: var(--gold-leaf);
-    margin: 0;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.35);
-    z-index: 2;
+    font-weight: 400;
+    font-size: clamp(1.2rem, 2vw, 1.5rem);
+    line-height: var(--lh-snug);
+    color: var(--ink-soft);
+    margin: 0 auto var(--space-7) auto;
+    max-width: 56ch;
   }
-  .beat-land__caption {
-    position: absolute;
-    bottom: clamp(var(--space-7), 6vw, var(--space-9));
-    left: clamp(var(--space-7), 6vw, var(--space-9));
-    max-width: 52ch;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-    z-index: 2;
-  }
-  .beat-land__rule {
+  .about-ed__masthead-rule {
     display: block;
-    width: 60px;
+    width: 80px;
     height: 1px;
     background: var(--gold-leaf);
-  }
-  .beat-land__eyebrow {
-    font-family: var(--font-body);
-    font-size: clamp(0.95rem, 1.6vw, 1.15rem);
-    font-weight: 600;
-    letter-spacing: var(--ls-section);
-    text-transform: uppercase;
-    color: var(--gold-leaf);
-    margin: 0;
-  }
-  .beat-land__para {
-    font-family: var(--font-body);
-    font-size: var(--fs-body);
-    line-height: var(--lh-loose);
-    color: var(--pearl);
-    margin: 0;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+    margin: 0 auto;
   }
 
   /* ═══════════════════════════════════════════════════════════
-     BEAT 2 — prose-led 60/40, small square inset image-right
+     Beats — single centred article column. Each beat opens with
+     a section title (no roman numerals; title is the only
+     structural anchor). Then body + figure per beat's variant.
      ═══════════════════════════════════════════════════════════ */
-  .beat-seed {
-    background: var(--pearl);
-    padding-block: clamp(var(--space-9), 11vw, var(--space-10));
+  .about-ed__beat {
+    padding-block: clamp(var(--space-8), 9vw, var(--space-9));
   }
-  .beat-seed__inner {
-    display: grid;
-    grid-template-columns: 60fr 36fr;
-    gap: clamp(var(--space-7), 7vw, var(--space-10));
-    align-items: center;
-  }
-  .beat-seed__copy { max-width: 56ch; }
-  .beat-seed__eyebrow {
-    font-family: var(--font-body);
-    font-size: clamp(0.95rem, 1.6vw, 1.15rem);
-    font-weight: 600;
-    letter-spacing: var(--ls-section);
-    text-transform: uppercase;
-    color: var(--gold-deep);
+  /* Section title — Spectral italic, gold-deep family removed in
+     favour of ink for legibility against the gold drop cap;
+     consistent typography across all four beats. */
+  .about-ed__beat-title {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    line-height: var(--lh-tight);
+    color: var(--ink);
     margin: 0 0 var(--space-6) 0;
+    letter-spacing: var(--ls-display);
   }
-  .beat-seed__para {
+  .about-ed__body {
     font-family: var(--font-body);
     font-size: var(--fs-body);
     line-height: var(--lh-loose);
     color: var(--ink);
     margin: 0;
   }
-  .beat-seed__media {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
+  /* Drop cap — applied to every Origins beat. Spectral italic,
+     gold-deep, sized to span ~3 lines of body text.
+     Math: body line-height is var(--lh-loose) ≈ 1.75 × var(--fs-body)
+     (= ~1.75rem). Three lines ≈ 5.25rem. Setting font-size at
+     5rem (clamp upper bound) with line-height 0.82 yields a glyph
+     box roughly 3× the body line, so the float wraps 3 lines to
+     the right before resuming full-width on line 4. */
+  .about-ed__body--dropcap::first-letter {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--gold-deep);
+    font-size: clamp(4.5rem, 7vw, 5.5rem);
+    line-height: 0.82;
+    float: left;
+    padding-right: var(--space-3);
+    padding-top: 0.06em;
   }
-  .beat-seed__caption {
+
+  /* ═══════════════════════════════════════════════════════════
+     Figures.
+       --column : sits at article-column width below the body.
+       --inset  : half-column, floated right, lives inside beat 2.
+       --bleed  : full-bleed ~70vh, used at beat 4 (the article's
+                  photographic peak).
+     ═══════════════════════════════════════════════════════════ */
+  .about-ed__figure {
+    margin: var(--space-7) 0 0 0;
+  }
+  .about-ed__figure--column {
+    position: relative;
+  }
+  .about-ed__figure--column .about-ed__img {
+    width: 100%;
+    height: auto;
+    display: block;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    background: var(--pearl);
+  }
+  /* Beat 3 leans slightly taller — 3:2. */
+  .about-ed__beat:nth-of-type(3) .about-ed__figure--column .about-ed__img {
+    aspect-ratio: 3 / 2;
+  }
+
+  /* Inset figure — beat 2. Half-column width, floated right of
+     the body paragraph. */
+  .about-ed__figure--inset {
+    float: right;
+    width: min(48%, 320px);
+    margin: var(--space-2) 0 var(--space-5) var(--space-6);
+    aspect-ratio: 1 / 1;
+  }
+  .about-ed__caption--inset {
+    clear: both;
+    margin-top: var(--space-4);
+    text-align: right;
+  }
+
+  /* Captions — italic Hanken, gold-deep, small. */
+  .about-ed__caption {
     font-family: var(--font-body);
     font-size: var(--fs-small);
+    font-style: italic;
     letter-spacing: var(--ls-small);
     color: var(--gold-deep);
-    font-style: italic;
-    margin: 0;
+    margin: var(--space-3) 0 0 0;
   }
 
-  /* ═══════════════════════════════════════════════════════════
-     BEAT 3 — asymmetric editorial spread, image breaks column
-     ═══════════════════════════════════════════════════════════ */
-  .beat-time {
-    background: var(--white);
-    padding-block: clamp(var(--space-9), 11vw, var(--space-10));
-    overflow: hidden; /* contain the break-out without page scroll */
-  }
-  .beat-time__inner {
-    display: grid;
-    grid-template-columns: 42fr 58fr;
-    gap: clamp(var(--space-7), 6vw, var(--space-9));
-    align-items: center;
-  }
-  .beat-time__copy { max-width: 50ch; }
-  .beat-time__eyebrow {
-    font-family: var(--font-body);
-    font-size: clamp(0.95rem, 1.6vw, 1.15rem);
-    font-weight: 600;
-    letter-spacing: var(--ls-section);
-    text-transform: uppercase;
-    color: var(--gold-deep);
-    margin: 0 0 var(--space-6) 0;
-  }
-  .beat-time__para {
-    font-family: var(--font-body);
-    font-size: var(--fs-body);
-    line-height: var(--lh-loose);
-    color: var(--ink);
-    margin: 0;
-  }
-  .beat-time__media {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-    /* extend the image ~6vw past the column on the right */
-    margin-right: clamp(-80px, -6vw, -32px);
-  }
-  .beat-time__frame {
-    position: relative;
-    margin: 0;
-    aspect-ratio: 3 / 2;
-    overflow: hidden;
-    background: var(--pearl);
-  }
-  .beat-time__img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    display: block;
-  }
-  .beat-time__placeholder-note {
+  /* Placeholder note overlay. */
+  .about-ed__placeholder-note {
     position: absolute;
-    top: var(--space-4);
-    left: var(--space-4);
+    top: clamp(var(--space-3), 2vw, var(--space-4));
+    left: clamp(var(--space-3), 2vw, var(--space-4));
     font-family: var(--font-body);
     font-size: var(--fs-eyebrow);
     font-weight: 600;
@@ -475,140 +366,136 @@ const capBeat4B =
     padding: 4px 10px;
     margin: 0;
     max-width: 28ch;
-  }
-  .beat-time__caption {
-    font-family: var(--font-body);
-    font-size: var(--fs-small);
-    letter-spacing: var(--ls-small);
-    color: var(--gold-deep);
-    font-style: italic;
-    margin: 0;
+    z-index: 2;
   }
 
   /* ═══════════════════════════════════════════════════════════
-     BEAT 4 — diptych: two 4:5 portraits flush, prose centred below
+     Beat 4 — full-bleed ~70vh placeholder.
      ═══════════════════════════════════════════════════════════ */
-  .beat-hand {
-    background: var(--pearl);
-    padding-block: clamp(var(--space-9), 11vw, var(--space-10));
+  .about-ed__figure--bleed {
+    width: 100vw;
+    position: relative;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    margin-top: var(--space-7);
+    margin-bottom: 0;
+    height: 70vh;
+    min-height: 480px;
+    aspect-ratio: auto;
+    padding: clamp(var(--space-6), 5vw, var(--space-8));
   }
-  .beat-hand__inner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--space-5);
-  }
-  .beat-hand__diptych {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0;
-    width: min(880px, 96%);
-  }
-  .beat-hand__caption {
-    font-family: var(--font-body);
-    font-size: var(--fs-small);
-    letter-spacing: var(--ls-small);
-    color: var(--gold-deep);
-    font-style: italic;
-    margin: 0;
+  .about-ed__caption--bleed {
+    margin-top: var(--space-4);
     text-align: center;
-  }
-  .beat-hand__copy {
-    max-width: 56ch;
-    margin-top: var(--space-5);
-    text-align: center;
-  }
-  .beat-hand__eyebrow {
-    font-family: var(--font-body);
-    font-size: clamp(0.95rem, 1.6vw, 1.15rem);
-    font-weight: 600;
-    letter-spacing: var(--ls-section);
-    text-transform: uppercase;
-    color: var(--gold-deep);
-    margin: 0 0 var(--space-6) 0;
-  }
-  .beat-hand__para {
-    font-family: var(--font-body);
-    font-size: var(--fs-body);
-    line-height: var(--lh-loose);
-    color: var(--ink);
-    margin: 0;
-    text-align: left;
   }
 
   /* ═══════════════════════════════════════════════════════════
-     STORY — image-left portrait / prose-right
+     Origins → Founder transition.
      ═══════════════════════════════════════════════════════════ */
-  .story {
-    background: var(--white);
-    padding-block: clamp(var(--space-9), 13vw, var(--space-10));
-    border-top: 1px solid var(--hairline);
+  .about-ed__transition {
+    text-align: center;
+    padding-block: clamp(var(--space-8), 10vw, var(--space-9));
   }
-  .story__inner {
-    display: grid;
-    grid-template-columns: 44fr 52fr;
-    gap: clamp(var(--space-7), 7vw, var(--space-10));
-    align-items: center;
-  }
-  .story__media {
-    margin: 0;
-  }
-  .story__portrait {
-    width: 100%;
-    height: auto;
+  .about-ed__transition-rule {
     display: block;
-    aspect-ratio: 4 / 5;
-    object-fit: cover;
-    object-position: center center;
+    width: 100px;
+    height: 1px;
+    background: var(--hairline);
+    margin: 0 auto var(--space-6) auto;
   }
-  .story__copy {
-    max-width: 56ch;
-  }
-  .story__eyebrow {
+  .about-ed__transition-eyebrow {
     font-family: var(--font-body);
     font-size: clamp(0.95rem, 1.6vw, 1.15rem);
     font-weight: 600;
-    letter-spacing: var(--ls-section);
     text-transform: uppercase;
+    letter-spacing: var(--ls-section);
     color: var(--gold-deep);
-    margin: 0 0 var(--space-6) 0;
+    margin: 0;
   }
-  .story__lede {
+
+  /* ═══════════════════════════════════════════════════════════
+     Founder feature.
+     ═══════════════════════════════════════════════════════════ */
+  .about-ed__feature {
+    padding-block: clamp(var(--space-7), 8vw, var(--space-9)) clamp(var(--space-9), 12vw, var(--space-10));
+  }
+  .about-ed__feature-headline {
     font-family: var(--font-display);
     font-style: italic;
     font-weight: 400;
-    font-size: clamp(1.5rem, 2.4vw, 1.85rem);
-    line-height: var(--lh-snug);
+    font-size: clamp(2.4rem, 5vw, 3.6rem);
+    line-height: var(--lh-tight);
     color: var(--ink);
-    margin: 0 0 var(--space-6) 0;
-    max-width: 32ch;
+    margin: 0 0 var(--space-5) 0;
+    letter-spacing: var(--ls-display);
   }
-  .story__para {
+  .about-ed__feature-standfirst {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.2rem, 2vw, 1.5rem);
+    line-height: var(--lh-snug);
+    color: var(--ink-soft);
+    margin: 0 0 var(--space-7) 0;
+    max-width: 56ch;
+  }
+  .about-ed__feature-figure {
+    float: right;
+    width: min(48%, 320px);
+    margin: var(--space-1) 0 var(--space-5) var(--space-6);
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+  }
+  .about-ed__feature-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+  .about-ed__caption--feature {
+    margin-top: var(--space-3);
+    text-align: left;
+  }
+  .about-ed__feature-body {
     font-family: var(--font-body);
     font-size: var(--fs-body);
     line-height: var(--lh-loose);
     color: var(--ink);
     margin: 0 0 var(--space-5) 0;
   }
-  .story__rule {
-    display: block;
-    width: 80px;
-    height: 1px;
-    background: var(--gold-leaf);
-    margin: var(--space-6) 0 var(--space-6) 0;
+  .about-ed__feature-body:last-of-type {
+    margin-bottom: 0;
   }
-  .story__kicker {
+
+  /* ═══════════════════════════════════════════════════════════
+     Pull quote — Spectral italic, gold-deep, centred, gold-leaf
+     hairlines top and bottom.
+     ═══════════════════════════════════════════════════════════ */
+  .about-ed__pullquote {
+    clear: both;
+    margin: var(--space-8) auto 0 auto;
+    max-width: 840px;
+    padding: var(--space-7) 0;
+    border-top: 1px solid var(--gold-leaf);
+    border-bottom: 1px solid var(--gold-leaf);
+    text-align: center;
+  }
+  .about-ed__pullquote p {
     font-family: var(--font-display);
     font-style: italic;
     font-weight: 400;
-    font-size: clamp(1.4rem, 2.4vw, 1.85rem);
+    font-size: clamp(1.8rem, 3.6vw, 2.6rem);
     line-height: var(--lh-snug);
     color: var(--gold-deep);
-    margin: 0;
-    max-width: 36ch;
+    margin: 0 auto;
+    max-width: 32ch;
   }
 
-  /* ─── Placeholder grammar (shared) ───────────────────────── */
+  /* ═══════════════════════════════════════════════════════════
+     Placeholder grammar — same dashed-gold convention as the
+     rest of the site.
+     ═══════════════════════════════════════════════════════════ */
   .placeholder {
     position: relative;
     margin: 0;
@@ -620,7 +507,7 @@ const capBeat4B =
     padding: clamp(var(--space-5), 4vw, var(--space-7));
   }
   .placeholder--1x1 { aspect-ratio: 1 / 1; }
-  .placeholder--4x5 { aspect-ratio: 4 / 5; }
+  .placeholder--bleed { aspect-ratio: auto; }
   .placeholder__caption {
     font-family: var(--font-body);
     font-size: var(--fs-small);
@@ -643,50 +530,61 @@ const capBeat4B =
   .placeholder__corner--bl { bottom: -1px; left: -1px;  border-right: 0; border-top: 0; }
   .placeholder__corner--br { bottom: -1px; right: -1px; border-left: 0;  border-top: 0; }
 
-  /* ─── Mobile ─────────────────────────────────────────────── */
+  /* ═══════════════════════════════════════════════════════════
+     Mobile — ≤720px. Drop cap kept on mobile: at clamp lower
+     bound (4.5rem with line-height 0.82) it still spans ~3
+     body lines at the narrower measure, and the float wraps
+     cleanly because the body remains a single column. Keeping
+     the cap rather than removing it because the typographic
+     consistency reads better across breakpoints; the alternative
+     (cap on desktop, none on mobile) creates a visual fork
+     between the two experiences of the same page.
+     ═══════════════════════════════════════════════════════════ */
   @media (max-width: 720px) {
-    .beat-seed__inner,
-    .beat-time__inner,
-    .story__inner {
-      grid-template-columns: 1fr;
-      gap: var(--space-7);
+    .about-ed > .about-ed__masthead,
+    .about-ed > .about-ed__beat,
+    .about-ed > .about-ed__transition,
+    .about-ed > .about-ed__feature {
+      padding-inline: var(--page-pad-m);
     }
-    .beat-seed__copy,
-    .beat-time__copy,
-    .story__copy {
-      max-width: none;
+    .about-ed__masthead {
+      padding-block: clamp(var(--space-8), 14vw, var(--space-9));
     }
-    /* Beat 1 — full-bleed shorter on mobile, type centred. */
-    .beat-land__frame {
+    /* Drop cap scales down via the existing clamp; tighten the
+       right padding slightly so the body wrap doesn't strand a
+       single word against the cap on narrow viewports. */
+    .about-ed__body--dropcap::first-letter {
+      padding-right: var(--space-2);
+    }
+    /* Inset figure (beat 2) stacks above the body paragraph. */
+    .about-ed__figure--inset {
+      float: none;
+      width: 100%;
+      max-width: 320px;
+      margin: var(--space-5) auto;
+    }
+    .about-ed__caption--inset {
+      text-align: center;
+    }
+    /* Founder portrait stacks too. */
+    .about-ed__feature-figure {
+      float: none;
+      width: 100%;
+      max-width: 320px;
+      margin: 0 auto var(--space-6) auto;
+    }
+    .about-ed__caption--feature {
+      text-align: center;
+    }
+    /* Bleed beat 4 — tall portrait moment ~60-65vh. */
+    .about-ed__figure--bleed {
       height: 60vh;
       min-height: 420px;
+      padding: var(--space-5);
     }
-    .beat-land__caption {
-      bottom: var(--space-5);
-      left: var(--space-5);
-      right: var(--space-5);
-      max-width: none;
-    }
-    .beat-land__credit {
-      top: var(--space-4);
-      right: var(--space-4);
-    }
-    /* Beat 3 — drop the column break-out on mobile. */
-    .beat-time__media {
-      margin-right: 0;
-    }
-    /* Beat 4 — diptych narrows but stays paired. */
-    .beat-hand__diptych {
-      width: 100%;
-    }
-    .beat-hand__copy {
-      text-align: left;
-    }
-    /* Story — portrait stays above prose. */
-    .story__portrait {
-      aspect-ratio: 4 / 5;
-      max-height: 70vh;
-      object-fit: cover;
+    .about-ed__pullquote {
+      margin-top: var(--space-7);
+      padding: var(--space-6) 0;
     }
   }
 </style>
