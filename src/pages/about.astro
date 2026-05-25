@@ -93,15 +93,16 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
       </figure>
     </section>
 
-    {/* ── Beat 2 — Volcanic Terroir. Half-column 4:3 inset placeholder, floated right. ── */}
+    {/* ── Beat 2 — Volcanic Terroir. Half-column 4:3 inset photograph, floated right. ── */}
     <section class="about-ed__beat about-ed__beat--inset" aria-label="Volcanic Terroir" data-reveal>
       <h2 class="about-ed__beat-title">{beat2Title}</h2>
-      <figure class="about-ed__figure about-ed__figure--inset about-ed__figure--inset-right placeholder placeholder--4x3" aria-label="Volcanic-earth / seed placeholder">
-        <span class="placeholder__corner placeholder__corner--tl" aria-hidden="true"></span>
-        <span class="placeholder__corner placeholder__corner--tr" aria-hidden="true"></span>
-        <span class="placeholder__corner placeholder__corner--bl" aria-hidden="true"></span>
-        <span class="placeholder__corner placeholder__corner--br" aria-hidden="true"></span>
-        <figcaption class="placeholder__caption">{capBeat2}</figcaption>
+      <figure class="about-ed__figure about-ed__figure--inset about-ed__figure--inset-right">
+        <img
+          src="/origins-volcanic.jpg"
+          alt="Young tobacco plants growing under shade tents in East Java."
+          class="about-ed__figure-inset-img"
+          loading="lazy"
+        />
       </figure>
       <p class="about-ed__body about-ed__body--dropcap">{beat2Body}</p>
       <p class="about-ed__caption about-ed__caption--inset">Havana-seed leaf, Jember nursery.</p>
@@ -343,10 +344,34 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
 
   /* Inset figure — beats 2 and 4. Half-column width, 4:3 landscape.
      Float side set by the directional modifier so beats 2 and 4
-     alternate (right / left). */
+     alternate (right / left). 1px pink hairline frame as the
+     editorial slot frame for real photographs. Placeholders keep
+     their dashed-gold border (rule further down) — the `.placeholder`
+     class shares this wrapper but overrides the border so the
+     pending-shot reading stays intact. Same slot, different state. */
   .about-ed__figure--inset {
     width: min(48%, 320px);
     aspect-ratio: 4 / 3;
+    border: 1px solid var(--pink);
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+  /* Real-photo inset img — fills the 4:3 frame, crops to fit so
+     non-4:3 sources don't distort. */
+  .about-ed__figure-inset-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+  /* Placeholder + inset together — restore the dashed-gold border
+     on the placeholder variant so beat 4 still reads as pending.
+     This wins because the selector is more specific than the
+     wrapper rule above. */
+  .about-ed__figure--inset.placeholder {
+    border: 1px dashed var(--gold-deep);
+    overflow: visible;
   }
   .about-ed__figure--inset-right {
     float: right;
@@ -395,20 +420,20 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
      ═══════════════════════════════════════════════════════════ */
   .about-ed__transition {
     text-align: center;
-    /* Top gap reduced 25% (Stephane). Bottom halved (Stephane) — pairs with .about-ed__feature padding-top halving to halve the eyebrow → standfirst gap. */
-    padding-top: clamp(calc(var(--space-8) * 0.75), 7.5vw, calc(var(--space-9) * 0.75));
-    padding-bottom: clamp(calc(var(--space-8) * 0.5), 5vw, calc(var(--space-9) * 0.5));
+    /* Top gap reduced 25% twice (Stephane) — 0.75 × 0.75 = 0.5625. Bottom halved twice (Stephane) — pairs with .about-ed__feature padding-top halving to quarter the eyebrow → standfirst gap. */
+    padding-top: clamp(calc(var(--space-8) * 0.5625), 5.625vw, calc(var(--space-9) * 0.5625));
+    padding-bottom: clamp(calc(var(--space-8) * 0.25), 2.5vw, calc(var(--space-9) * 0.25));
   }
   /* Bridge quote panel — Treatment 3 from /about-quote-mocks
      (cream/pearl panel, Spectral italic gold-deep type, centred,
      hairlines top + bottom), with one modification: TOP hairline
      is --pink (this page only), BOTTOM stays --gold-deep. Sits
-     between the last Origins beat and the eyebrow that follows;
-     bottom margin matches the founder standfirst → first paragraph
-     gap (var(--space-7)). */
+     between the last Origins beat and the eyebrow that follows.
+     Bottom margin matches the new bridge-ABOVE expression exactly
+     (identical clamp) so the panel stays symmetric if tokens change. */
   .about-ed__bridge-panel {
     clear: both;
-    margin: 0 0 var(--space-7) 0;
+    margin: 0 0 clamp(calc(var(--space-8) * 0.5625), 5.625vw, calc(var(--space-9) * 0.5625)) 0;
     background: var(--pearl);
     border-top: 1px solid var(--pink);
     border-bottom: 1px solid var(--gold-deep);
@@ -440,8 +465,8 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
      Founder feature.
      ═══════════════════════════════════════════════════════════ */
   .about-ed__feature {
-    /* Bottom gap below pull quote reduced 50% (Stephane). Top halved (Stephane) — pairs with .about-ed__transition padding-bottom halving to halve the eyebrow → standfirst gap. */
-    padding-block: clamp(calc(var(--space-7) * 0.5), 4vw, calc(var(--space-9) * 0.5)) clamp(calc(var(--space-9) * 0.5), 6vw, calc(var(--space-10) * 0.5));
+    /* Bottom gap below pull quote reduced 50% (Stephane). Top halved twice (Stephane) — 0.5 × 0.5 = 0.25 — pairs with .about-ed__transition padding-bottom (now 0.25) to halve the eyebrow → standfirst gap again. */
+    padding-block: clamp(calc(var(--space-7) * 0.25), 2vw, calc(var(--space-9) * 0.25)) clamp(calc(var(--space-9) * 0.5), 6vw, calc(var(--space-10) * 0.5));
   }
   .about-ed__feature-standfirst {
     font-family: var(--font-display);
@@ -455,7 +480,8 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
   }
   .about-ed__feature-figure {
     float: right;
-    width: min(48%, 320px);
+    /* Width scaled 0.75× (Stephane) — portrait floats over ~2 paragraphs not 3. */
+    width: min(36%, 240px);
     margin: var(--space-1) 0 var(--space-5) var(--space-6);
     aspect-ratio: 4 / 5;
     overflow: hidden;
@@ -558,11 +584,11 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
     .about-ed__caption--inset {
       text-align: center;
     }
-    /* Founder portrait stacks too. */
+    /* Founder portrait stacks too. Max-width scaled 0.75× to match desktop. */
     .about-ed__feature-figure {
       float: none;
       width: 100%;
-      max-width: 320px;
+      max-width: 240px;
       margin: 0 auto var(--space-6) auto;
     }
     .about-ed__caption--feature {
