@@ -130,10 +130,12 @@ const { footer } = global;
     .site-footer__bottom {
       flex-direction: column;
       align-items: flex-start;
-      /* Stack gap reverts to the desktop --space-7 (48px) — Stephane
-         2026-05-24 reversed the prior tighten pass; the wordmark and
-         copyright should keep the section's standard vertical unit
-         even when stacked. */
+      /* Stack gap tightened to --space-2 (4px) — Stephane 2026-05-25
+         tightened: copyright just under wordmark. Reverses the
+         2026-05-24 walk-back; on mobile the wordmark + copyright
+         read as a tidy two-line block, copyright tucked beneath.
+         Desktop --space-7 (48px) gap above the media query untouched. */
+      gap: var(--space-2);
     }
     /* Brand line one step up on mobile (Stephane 2026-05-24): the
        single-line clamp above was binding to its 10px floor on the
