@@ -48,11 +48,11 @@ const storyParas = [
   "What he discovered inspired him to craft a blend for his own humidor and closest friends. Yet, as word spread and a wider circle grew curious, he knew it couldn't remain a private reserve. The brand was born to bring this unique cigar to a growing community in Bali and beyond.",
   "Today, Mariposa captures the rich, multi-cultural soul of cigars, giving friends around the world the perfect excuse to light up, slow down, and share a good conversation. Whatever the hour.",
 ];
-const pullQuote =
-  "A Havana-seed smoke, adorned in gold leaf, for the people who don't wait for special occasions, but create them.";
+const closingQuote =
+  "Life isn't meant to be spent waiting for special occasions; it is about creating them on any ordinary day. The gold leaf on each Mariposa is my personal reminder to pause, slow down, and truly savour the hours shared with friends.";
 
 const founderStandfirst =
-  'The founder of Mariposa, on the curiosity that became a humidor and then a brand.';
+  "What began as a founder's personal journey into the tobacco fields of East Java evolved into an exclusive blend made for close friends. Today, Mariposa brings that private reserve spirit with global friends around the world.";
 
 /* ─── Placeholder captions (un-commissioned beats) ─────────── */
 const capBeat2 =
@@ -141,13 +141,12 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
     {/* ── Origins → Founder transition. Quiet hairline + eyebrow. ── */}
     <div class="about-ed__transition" data-reveal>
       <span class="about-ed__transition-rule" aria-hidden="true"></span>
-      <p class="about-ed__transition-eyebrow">The Founder &middot; A Feature</p>
+      <p class="about-ed__transition-eyebrow">From Private Reserve to Shared Passion</p>
     </div>
 
     {/* ── Founder feature. Three uniform paragraphs, half-column
-           portrait before paragraph 1, pull quote at the close. ── */}
+           portrait before paragraph 1, closing quote at the close. ── */}
     <section class="about-ed__feature" aria-label="The Founder" data-reveal>
-      <h2 class="about-ed__feature-headline">Stephane Zermatten.</h2>
       <p class="about-ed__feature-standfirst">{founderStandfirst}</p>
 
       <figure class="about-ed__feature-figure">
@@ -168,9 +167,7 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
       <p class="about-ed__feature-body">{storyParas[1]}</p>
       <p class="about-ed__feature-body">{storyParas[2]}</p>
 
-      <blockquote class="about-ed__pullquote" data-reveal>
-        <p>{pullQuote}</p>
-      </blockquote>
+      <p class="about-ed__feature-closing" data-reveal>{closingQuote}</p>
     </section>
 
   </article>
@@ -403,7 +400,7 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
     display: block;
     width: 100px;
     height: 1px;
-    background: var(--hairline);
+    background: var(--pink);
     margin: 0 auto var(--space-6) auto;
   }
   .about-ed__transition-eyebrow {
@@ -422,16 +419,6 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
   .about-ed__feature {
     /* Bottom gap below pull quote reduced 50% (Stephane). Top unchanged. */
     padding-block: clamp(var(--space-7), 8vw, var(--space-9)) clamp(calc(var(--space-9) * 0.5), 6vw, calc(var(--space-10) * 0.5));
-  }
-  .about-ed__feature-headline {
-    font-family: var(--font-display);
-    font-style: italic;
-    font-weight: 400;
-    font-size: clamp(2.4rem, 5vw, 3.6rem);
-    line-height: var(--lh-tight);
-    color: var(--ink);
-    margin: 0 0 var(--space-5) 0;
-    letter-spacing: var(--ls-display);
   }
   .about-ed__feature-standfirst {
     font-family: var(--font-display);
@@ -473,27 +460,20 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
   }
 
   /* ═══════════════════════════════════════════════════════════
-     Pull quote — Spectral italic, gold-deep, centred, gold-leaf
-     hairlines top and bottom.
+     Closing quote — Spectral italic, gold-deep, same size as the
+     masthead standfirst. No hairlines, no quotation marks.
+     Inherits the founder column's left alignment.
      ═══════════════════════════════════════════════════════════ */
-  .about-ed__pullquote {
+  .about-ed__feature-closing {
     clear: both;
-    margin: var(--space-8) auto 0 auto;
-    max-width: 840px;
-    padding: var(--space-7) 0;
-    border-top: 1px solid var(--gold-leaf);
-    border-bottom: 1px solid var(--gold-leaf);
-    text-align: center;
-  }
-  .about-ed__pullquote p {
     font-family: var(--font-display);
     font-style: italic;
     font-weight: 400;
-    font-size: clamp(1.8rem, 3.6vw, 2.6rem);
+    font-size: clamp(1.2rem, 2vw, 1.5rem);
     line-height: var(--lh-snug);
     color: var(--gold-deep);
-    margin: 0 auto;
-    max-width: 32ch;
+    margin: var(--space-8) 0 0 0;
+    max-width: 56ch;
   }
 
   /* ═══════════════════════════════════════════════════════════
@@ -582,9 +562,8 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
     .about-ed__caption--feature {
       text-align: center;
     }
-    .about-ed__pullquote {
+    .about-ed__feature-closing {
       margin-top: var(--space-7);
-      padding: var(--space-6) 0;
     }
   }
 </style>
