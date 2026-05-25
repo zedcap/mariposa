@@ -463,8 +463,16 @@ const founderStandfirst =
     font-size: clamp(1.2rem, 2vw, 1.5rem);
     line-height: var(--lh-snug);
     color: var(--ink-soft);
-    margin: 0 0 var(--space-7) 0;
-    max-width: 56ch;
+    /* Centred passage above the floated founder portrait. The
+       block itself is centred in the article column via
+       margin-inline: auto (previously left-anchored, which made
+       text-align: center read as misaligned with the body-text
+       column that flows beside the float below). Measure clamped
+       to a compact passage rather than spanning the full article
+       width. Mobile: clamp floor exceeds the container so the
+       block fills the column as before — no visible change. */
+    margin: 0 auto var(--space-7);
+    max-width: clamp(440px, 60ch, 640px);
     text-align: center;
   }
   .about-ed__feature-figure {
