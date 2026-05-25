@@ -1,0 +1,724 @@
+---
+/* Volage product page — restructured 2026-05-24.
+   ------------------------------------------------------------------
+   Two passes on this date:
+
+   Pass 1 (earlier today) replaced the header with Option A
+   (tagline-led) from volage-header-research.md and removed the
+   SignatureBlock invocation + Caprice cross-link section.
+
+   Pass 2 (this commit) rebuilt the hero header order and removed
+   the Presentation section entirely. Page now sequences:
+
+     1. Hero            — Pearl ground, 62/38 split. Header order:
+                          (a) signature "Volage" (Spectral roman,
+                              size unchanged from prior signature),
+                          (b) gold hairline 120px (moved beneath
+                              the signature),
+                          (c) italic Spectral tagline (protagonist,
+                              22ch measure),
+                          (d) two eyebrow lines — "CANONAZO"
+                              uppercase, then "150 mm · 52 ring
+                              gauge" in the same eyebrow grammar but
+                              with `text-transform: none`.
+                          cigar-volage.png with a soft drop shadow
+                          in the right column, no frame.
+     2. The cigar       — narrative + PROFILE / BLEND specs.
+     3. The smoke arc   — tasting thirds on a sticky timeline.
+
+   The Presentation section (3-image packaging gallery) was stripped
+   in Pass 2: markup, CSS (.packaging*, .placeholder*), and the
+   reveal call. The `packaging` field in volage.json stays as
+   harmless data; it is simply no longer rendered. Page now
+   terminates at the smoke arc and runs straight into the footer.
+
+   The SignatureBlock import and invocation were dropped in Pass 1;
+   the component file remains on disk for possible reuse. The
+   Caprice cross-link markup + CSS + reveal were also removed in
+   Pass 1.
+
+   Background flow (top to bottom): pearl (hero) → white (cigar) →
+   white (smoke arc, component-owned) → footer (component-owned
+   pearl). One pearl bed at the top, one at the foot via the
+   footer, white in between for reading.
+
+   Motion: rise-and-fade reveals via the shared helper. Hero
+   uses a cascade — signature → rule (drawing left-to-right) →
+   tagline → eyebrow lines, with the cigar fading alongside. */
+
+import { getEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SmokeArc from '../components/SmokeArc.astro';
+import cigarVolage from '../assets/cigar-volage.png';
+import { withBase } from '../lib/path';
+
+const product = (await getEntry('products', 'volage'))!.data;
+
+/* Specs-bleed background photo. Served from /public so CSS url() can
+   resolve it under any Astro `base`. Injected as a CSS custom property
+   on the section element (CSS url() is not rewritten for the base, so
+   the path must be baked in here). Swapped 2026-05-24 (second pass) from
+   specs-bg-header-1.jpg to specs-bg-volage-gold.jpg
+   (source: creative-assets/cigars/volage_gold.jpg) per Stephane — brand-
+   coded to Volage. The 80% --ink-brown wash on top is unchanged; only
+   the underlying photo changes. Earlier swap that day moved off
+   cigars-table.jpg → specs-bg-header-1.jpg; both prior files stay on
+   disk (Caprice still references specs-bg-header-1.jpg). */
+const specsBgImage = `url("${withBase('/specs-bg-volage-gold.jpg')}")`;
+---
+
+<BaseLayout title={`Mariposa • ${product.name} — Typography Mock`}>
+  {/* Top dark ribbon — typography mock banner. */}
+  <div class="typo-mock-ribbon">
+    Volage — Typography Mock: italic Spectral section titles + sans-serif tasting notes. Live /volage unchanged.
+  </div>
+
+  {/* ─── 1. Hero — signature-led header (Stephane 2026-05-24) ───
+       Source + visual order:
+         signature (Volage) → hairline → tagline → vitola eyebrow
+         (CANONAZO) → format eyebrow (150 mm · 52 ring gauge).
+       The signature opens the page in the same Spectral roman as
+       before; the gold hairline now sits BELOW it; the italic
+       tagline carries protagonist size; two eyebrow lines close
+       the block. Format line uses .hero__eyebrow--cased so the
+       lowercase "mm" reads literally — same font/weight/colour/
+       tracking as the vitola eyebrow above, only text-transform
+       is overridden to none. */}
+  <section class="hero" data-reveal-section>
+    <div class="hero__inner container">
+      <div class="hero__copy" data-reveal-copy>
+        <h1 class="hero__signature">{product.name}</h1>
+        <span class="hero__rule" aria-hidden="true"></span>
+        <p class="hero__tagline">{product.tagline}</p>
+        <p class="hero__eyebrow">{product.vitola}</p>
+        <p class="hero__eyebrow hero__eyebrow--cased">{product.format}</p>
+      </div>
+
+      <div class="hero__media" data-reveal-media>
+        <Image
+          class="hero__cigar"
+          src={cigarVolage}
+          alt={`The Mariposa ${product.name} cigar, ${product.tagline.toLowerCase()}`}
+          widths={[260, 420, 640, 860]}
+          sizes="(max-width: 720px) 65vw, 30vw"
+          loading="eager"
+        />
+      </div>
+    </div>
+  </section>
+
+  {/* ─── 2. The cigar — narrative + full specs ───────────────── */}
+  <section class="cigar" aria-labelledby="cigar-heading" data-reveal-section>
+    <div class="cigar__inner container">
+      <p class="eyebrow cigar__eyebrow" id="cigar-heading">The cigar</p>
+
+      {/* Narrative — four paragraphs in two treatments (Stephane
+          2026-05-24). The first entry of `narrative` reads as a
+          punchier body-font intro (Hanken Grotesk, regular, body
+          register); paragraphs 2-4 carry the italic Spectral
+          treatment matching .cigar__para. Treatment is decided
+          here, not in JSON — keeps the schema flat and the
+          first-paragraph-is-intro rule explicit at the render
+          site. Paragraph rhythm is shared (--space-5 between any
+          two), so the intro reads as part of the same beat
+          rather than a separate block. */}
+      <div class="cigar__narrative">
+        {product.narrative.map((para, i) => (
+          <p
+            class={i === 0 ? 'cigar__intro' : 'cigar__para'}
+            data-reveal-para
+          >
+            {para}
+          </p>
+        ))}
+      </div>
+    </div>
+
+    {/* PROFILE + BLEND specs on a full-bleed dark-brown ground
+        (Stephane 2026-05-24). The spec blocks break out of the
+        page container into a 100vw band so the dark ground reads
+        as a deliberate room around the table. Container resumes
+        inside, so the strips themselves still sit at 880px centred
+        — same measure as the narrative above, only the background
+        widens. Text colours invert for legibility: titles step up
+        to --gold-leaf, labels to --gold-soft, values to --pearl;
+        hairlines move to a translucent gold that reads on dark.
+        Brown chosen: #2A1E14 — warmer/redder than --ink (#1F1B17),
+        unambiguously brown while still dark enough to host
+        inverted text at WCAG AA. Declared as --ink-brown locally,
+        not promoted to tokens.css until a second surface earns it. */}
+    <div class="cigar__specs-bleed" style={`--specs-bg-image: ${specsBgImage};`}>
+      <div class="cigar__inner container">
+        {/* Spec list — split into two blocks of six (Stephane review
+            2026-05-24). Block 1 = the headline-grade specs (Vitola,
+            Strength, Format, Origin, Smoke time, Release). Block 2 =
+            the leaf/build/time specs (Wrapper, Binder, Filler,
+            Construction, Fermentation, Ageing). Each block gets its
+            own full-width gold rule on top via the .cigar__strip
+            border-top; per-row bottom rules are kept for readability.
+            JSON order is row-by-row interleaved (left then right per
+            row) to match CSS Grid's default auto-flow:row fill. */}
+        <p class="cigar__strip-title" data-reveal-strip>Profile</p>
+        <dl class="cigar__strip" data-reveal-strip>
+          {product.specs.slice(0, 6).map((row) => (
+            <div class="cigar__strip-row">
+              <dt class="cigar__strip-label">{row.label}</dt>
+              <dd class="cigar__strip-value">{row.value}</dd>
+            </div>
+          ))}
+        </dl>
+        <p class="cigar__strip-title cigar__strip-title--second" data-reveal-strip>Blend</p>
+        <dl class="cigar__strip cigar__strip--second" data-reveal-strip>
+          {product.specs.slice(6).map((row) => (
+            <div class="cigar__strip-row">
+              <dt class="cigar__strip-label">{row.label}</dt>
+              <dd class="cigar__strip-value">{row.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  {/* ─── 3. The smoke arc ────────────────────────────────────── */}
+  {/* Minute marks per Stephane 2026-05-24 (reverted from ordinals).
+       60-min smoke in 20-min beats: 0 → 20 → 40 → 60. Four ticks,
+       three thirds; the trailing 60 is the end-marker. */}
+  <SmokeArc tasting={product.tasting} marks={["0", "20", "40", "60"]} />
+</BaseLayout>
+
+<style>
+  /* ── Shared section rhythm ─────────────────────────────────── */
+  section[data-reveal-section] {
+    padding-block: clamp(var(--space-7), 7vw, var(--space-9));
+  }
+
+  /* ── 1. Hero — Option A, tagline-led ───────────────────────
+     Pearl ground, constrained to the container (not full-bleed).
+     62/38 split at desktop: type left, image right. The tagline
+     is the loudest element on the page; "Volage" sits beneath as
+     a quiet signature. Source-order keeps <h1>Volage</h1> first;
+     flex `order` flips the visual sequence to:
+       eyebrow → rule → tagline → signature (Volage). */
+  .hero {
+    /* Pearl ground that fades to transparent over the bottom ~180px
+       so the white .cigar section below shows through gradually,
+       erasing the hard horizontal line at the boundary. Same recipe
+       as the home page's .position fade. Mobile tightens the band
+       to ~120px in the mobile-collapse block. */
+    background: linear-gradient(
+      to bottom,
+      var(--pearl) 0%,
+      var(--pearl) calc(100% - 180px),
+      transparent 100%
+    );
+    /* Commit the viewport on entry, per Option A spec (88–95vh).
+       Override the shared section rhythm to land on the min-height
+       move rather than padding alone. */
+    min-height: 88vh;
+    display: flex;
+    align-items: center;
+    /* Padding split (2026-05-24): top retains the original clamp; bottom
+       halved so the cigar narrative sits closer to the foot of the hero.
+       The pearl→white gradient fade above is untouched. */
+    padding-top: clamp(var(--space-8), 10vw, var(--space-10));
+    padding-bottom: clamp(calc(var(--space-8) / 4), 2.5vw, calc(var(--space-10) / 4));
+  }
+  .hero__inner {
+    display: grid;
+    grid-template-columns: 62fr 38fr;
+    gap: clamp(var(--space-7), 7vw, var(--space-10));
+    align-items: center;
+    width: 100%;
+  }
+
+  /* Copy column — source order matches visual order
+     (eyebrow → rule → tagline → signature). Signature sits beneath
+     the tagline as a quiet sign-off; no flex `order` choreography
+     needed. */
+  .hero__copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  /* Eyebrow lines (vitola + format). Matched to the CIGAR-section
+     strip-title treatment (Stephane 2026-05-24): weight 600,
+     letter-spacing --ls-section, colour --accent-strong. Two lines
+     sit at the foot of the header block: the vitola in canonical
+     uppercase, the format in --cased so its literal mixed case
+     ("150 mm · 52 ring gauge") reads as written. Spacing between
+     the two eyebrow rows is tight (--space-2) so they read as a
+     paired caption rather than two separate beats. */
+  .hero__eyebrow {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    letter-spacing: var(--ls-section);
+    text-transform: uppercase;
+    color: var(--accent-strong);
+    margin: 0;
+  }
+  /* First eyebrow sits a generous beat below the tagline. */
+  .hero__tagline + .hero__eyebrow {
+    margin-top: var(--space-5);
+  }
+  /* Format line — same eyebrow grammar but cased: text-transform
+     dropped so lowercase reads literally. Sits tight under the
+     vitola eyebrow above. Weight dropped to 400 (Stephane
+     2026-05-24): the format/dimensions line ("150 mm · 52 ring
+     gauge") reads as a quiet caption beneath the bold vitola
+     line above, not as a second emphasised eyebrow. The vitola
+     line keeps weight 600 from .hero__eyebrow. Letter-spacing
+     tightened (Stephane 2026-05-24, pass 3): the cased line steps
+     down from --ls-section (0.32em, vitola tracking) to --ls-small
+     (0.04em) so the dimensions read as natural prose, not as a
+     loose caps line. The vitola eyebrow above keeps --ls-section. */
+  .hero__eyebrow--cased {
+    text-transform: none;
+    margin-top: var(--space-2);
+    font-weight: 400;
+    letter-spacing: var(--ls-small);
+  }
+  /* Hairline beneath the signature — sits BELOW the signature and
+     ABOVE the tagline (Stephane 2026-05-24). Margins carry both
+     gaps. Colour flipped from --gold-leaf to --pink (Stephane
+     2026-05-24, pass 3) when the signature flipped from pink to
+     gold; the rule now carries the pink accent. */
+  .hero__rule {
+    display: block;
+    width: 120px;
+    height: 1px;
+    background: var(--pink);
+    margin: var(--space-5) 0 var(--space-6) 0;
+    /* Drawn-in entry: starts at scaleX(0); the rule's tween in the
+       script below scales it to 1 left-to-right shortly after the
+       copy column enters. Resting state for prefers-reduced-motion
+       restored in the script (the helper handles that branch). */
+    transform: scaleX(0);
+    transform-origin: left center;
+  }
+  /* Signature — Spectral italic display, sized to mirror the
+     home page's "Volcanic Soul." treatment on .position__line /
+     .position__em (Stephane 2026-05-24, second pass). Colour
+     flipped from --pink to --gold-deep (Stephane 2026-05-24,
+     pass 3): the cigar name now carries gold while the pink
+     migrates to the hairline beneath. Same eyebrow gold as
+     elsewhere on the page (label rows, eyebrow accents). Floor
+     (3.4rem ≈ 54.4px) holds on a 320px viewport for both Volage
+     (6 chars) and Caprice (7 chars) — confirmed against the
+     70/30 mobile hero grid which leaves ~70vw for the type
+     column. */
+  .hero__signature {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(3.4rem, 9vw, 6.5rem);
+    line-height: var(--lh-snug);
+    letter-spacing: var(--ls-display);
+    color: var(--gold-deep);
+    margin: 0;
+  }
+  .hero__tagline {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(2.4rem, 5vw, 4.2rem);
+    line-height: 1.05;
+    color: var(--ink);
+    margin: 0;
+    max-width: 22ch;
+  }
+
+  /* Image column — existing isolated-cigar PNG (alpha channel),
+     centred in its grid cell, no frame. Soft directional drop
+     shadow stands in for the old gold border — matches the home
+     slider's floating-cigar shadow register. */
+  .hero__media {
+    display: grid;
+    place-items: center;
+  }
+  .hero__cigar {
+    width: auto;
+    max-width: 78%;
+    max-height: 72vh;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 24px 40px rgba(31, 27, 23, 0.18));
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    /* Reduced-motion: the rule renders at its resting (full-width)
+       state immediately. The reveal script also no-ops under the
+       helper's REDUCED branch, so a CSS-level fallback here keeps
+       things sane if the script never runs at all. */
+    .hero__rule {
+      transform: scaleX(1);
+    }
+  }
+
+  /* ── 2. The cigar ──────────────────────────────────────────── */
+  .cigar {
+    /* Local dark-brown token for the specs bleed band. Warmer/redder
+       than --ink (#1F1B17), which reads near-black. #2A1E14 holds
+       its brown character while staying dark enough for inverted
+       text at AA. Kept local — not promoted to tokens.css until a
+       second surface needs it. */
+    --ink-brown: #2A1E14;
+    /* Zero the section's bottom padding — the dark bleed band carries
+       its own generous block padding, so the inherited section rhythm
+       would only create a white sliver between the brown band and
+       the smoke arc below. */
+    padding-bottom: 0;
+    /* Top padding halved (2026-05-24) from the inherited section rhythm
+       so the cigar narrative sits closer to the foot of the hero above.
+       Was clamp(var(--space-7), 7vw, var(--space-9)) via section rule. */
+    padding-top: clamp(calc(var(--space-7) / 4), 1.75vw, calc(var(--space-9) / 4));
+  }
+  /* Desktop-only second halving (2026-05-24) — mobile keeps the values
+     above. Tightens the hero → cigar transition further at ≥721px so
+     "THE CIGAR" sits closer to the hero foot. Hero gradient and internal
+     cigar spacing are untouched. */
+  @media (min-width: 721px) {
+    .hero {
+      padding-bottom: clamp(8px, 1.25vw, 16px);
+    }
+    .cigar {
+      padding-top: clamp(6px, 0.9vw, 12px);
+    }
+  }
+  .cigar__inner {
+    max-width: 880px;
+    margin-inline: auto;
+  }
+  /* Section-level eyebrow override (Stephane 2026-05-24): THE CIGAR
+     and Tasting Notes are section titles, not sub-headings inside a
+     section, so they step up from --fs-eyebrow (12px) to a clamp that
+     reads meaningfully larger. Same Hanken-uppercase-tracked grammar
+     as .eyebrow; only the font-size changes. PROFILE / BLEND keep
+     the default eyebrow size — they're sub-headings within this
+     section. The Presentation eyebrow likewise stays at default. */
+  .cigar__eyebrow {
+    font-size: clamp(0.95rem, 1.6vw, 1.15rem);
+    margin-bottom: var(--space-5);
+  }
+
+  /* Full-bleed dark-brown band wrapping PROFILE + BLEND specs.
+     Breaks out of the parent container using the project's standard
+     full-bleed recipe (100vw + margin-inline trick). Generous block
+     padding so the dark ground reads as a deliberate room, not a
+     stripe. The inner .container resumes the page measure so the
+     spec strips stay at 880px centred — alignment with the narrative
+     above is preserved. */
+  .cigar__specs-bleed {
+    margin-top: clamp(var(--space-7), 7vw, var(--space-9));
+    width: 100vw;
+    margin-inline: calc(50% - 50vw);
+    /* Stacked background (2026-05-24): cigars-table.jpg as the base
+       layer, 90% --ink-brown wash on top via a flat linear-gradient.
+       Single-element mechanism (no ::before) so the spec children
+       inherit nothing extra and need no z-index. Wash hex must match
+       --ink-brown (#2A1E14); CSS gradients don't accept var() inside
+       rgba(), so the literal is repeated here. Photo shows through at
+       ~15% (2026-05-24: opacity eased from 0.90 → 0.85), enough texture
+       to read as a table surface without compromising legibility of the
+       inverted text. Fallback solid brown preserved for the no-image
+       edge case. */
+    background-color: var(--ink-brown);
+    /* Stacked backgrounds: 85% --ink-brown wash over the cigars-table
+       photo. The bottom-fade-to-white layer was tried (2026-05-24) and
+       walked back same day per Stephane — the soft fade didn't read;
+       the hard horizontal boundary into the Tasting Notes section is
+       the preferred treatment. Wash hex must match --ink-brown
+       (#2A1E14); CSS gradients don't accept var() inside rgba(), so
+       the literal is repeated here. Photo shows through at ~15%. */
+    background-image:
+      linear-gradient(rgba(42, 30, 20, 0.85), rgba(42, 30, 20, 0.85)),
+      var(--specs-bg-image);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    /* Padding split (2026-05-24): top halved so PROFILE sits closer to
+       the top edge of the brown bleed; bottom (BLEND→bottom edge)
+       preserved at the original clamp value. Top trimmed a further 35%
+       (2026-05-24) to tighten PROFILE against the bleed's upper edge. */
+    padding-top: clamp(31px, 3.25vw, 42px);
+    padding-bottom: clamp(var(--space-9), 10vw, var(--space-10));
+  }
+  .cigar__narrative {
+    max-width: 720px;
+    margin-inline: auto;
+  }
+  .cigar__para {
+    font-family: var(--font-body);
+    font-style: normal;
+    font-weight: 400;
+    /* Stepped down one (Stephane 2026-05-24): --fs-body (17px) →
+       --fs-small (14px). Applies to paragraphs 2-4 of the narrative;
+       .cigar__intro (italic Spectral lede, paragraph 1) is untouched.
+       Both mobile and desktop pick this up — no media-query split. */
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--ink);
+    margin: 0;
+  }
+  /* Intro — matches .cigar__para exactly (Stephane 2026-05-24).
+     All three narrative paragraphs share the Hanken body treatment;
+     the prior italic Spectral lede has been retired. Rule kept (not
+     dropped) so the markup class still resolves and the adjacency
+     selector below continues to target it. */
+  .cigar__intro {
+    font-family: var(--font-body);
+    font-style: normal;
+    font-weight: 400;
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--ink);
+    margin: 0;
+  }
+  /* Shared paragraph rhythm — any narrative paragraph inherits the
+     same gap from its predecessor. */
+  .cigar__intro + .cigar__para,
+  .cigar__para + .cigar__para {
+    margin-top: var(--space-5);
+  }
+
+  /* Spec list — two columns at desktop, stacked on mobile. Split
+     into two blocks of six (Stephane 2026-05-24); each block carries
+     its own full-width gold rule between the title and the first
+     spec row, so the visual order is title → rule → first spec row.
+     The rule lives on .cigar__strip (border-top); the title carries
+     only the gap (margin-bottom) that separates it from the rule. */
+  /* Font treatment matched to THE CIGAR eyebrow (.eyebrow in base.css)
+     per Stephane 2026-05-24: weight 400→600, letter-spacing --ls-eyebrow
+     →--ls-section, color --gold-deep→--accent-strong. font-family,
+     font-size and text-transform were already aligned. Title→rule gap
+     (margin-bottom: --space-3) preserved — .cigar__eyebrow's --space-5
+     bottom margin governs eyebrow→narrative spacing, a different beat
+     and not mirrored here. */
+  .cigar__strip-title {
+    margin: clamp(var(--space-7), 6vw, var(--space-8)) 0 var(--space-3) 0;
+    font-family: var(--font-body);
+    font-size: clamp(0.95rem, 1.6vw, 1.15rem);
+    font-weight: 600;
+    letter-spacing: var(--ls-section);
+    text-transform: uppercase;
+    color: var(--accent-strong);
+  }
+  /* Second title — same grammar, smaller top gap so the two blocks
+     sit closer together than the first block does to the narrative.
+     Gap grown a further 50% (Stephane 2026-05-24, compound +50%) via
+     calc(... * 2.25) on the floor/ceiling and 6.75vw on the middle stop;
+     preserves the same fluid shape, just scaled. */
+  .cigar__strip-title--second {
+    margin-top: clamp(calc(var(--space-5) * 2.25), 6.75vw, calc(var(--space-6) * 2.25));
+  }
+  .cigar__strip {
+    margin: 0;
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--border-gold);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: clamp(var(--space-6), 5vw, var(--space-9));
+    row-gap: 0;
+  }
+  .cigar__strip-row {
+    display: grid;
+    grid-template-columns: minmax(7rem, 9rem) 1fr;
+    gap: var(--space-5);
+    align-items: baseline;
+    padding-block: var(--space-4);
+    border-bottom: 1px solid var(--border-gold);
+  }
+  /* Block 1's last two rows (Smoke time + Release) drop their bottom
+     hairline — the full-width gold rule above block 2 already serves
+     as the visual break, so the per-row line under block 1's last row
+     reads as a duplicate. (Stephane 2026-05-24.) Block 2's rows keep
+     their hairlines so the spec list still reads as a tabulated set,
+     including the final row which terminates against the page below. */
+  .cigar__strip:not(.cigar__strip--second) > .cigar__strip-row:nth-last-child(-n+2) {
+    border-bottom: 0;
+  }
+  .cigar__strip-label {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 500;
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    margin: 0;
+  }
+  .cigar__strip-value {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    color: var(--ink);
+    margin: 0;
+    line-height: var(--lh-snug);
+    /* Honour newlines embedded in JSON spec values (Binder, Filler,
+       Construction). Whitespace within a run still collapses; only
+       \n breaks render as line breaks. (Stephane 2026-05-24.) */
+    white-space: pre-line;
+  }
+
+  /* Text-colour inversions inside the dark-brown bleed band.
+     Same typographic grammar as on the white ground; only the
+     hue values change so each role still reads on the dark.
+       title → --gold-leaf (hotter gold, holds against brown)
+       label → --gold-soft (quiet caps line, ~AA on #2A1E14)
+       value → --pearl (near-white body text, AAA on dark)
+       hairlines → translucent gold-soft so the table still
+                   reads as a tabulated set without glowing. */
+  .cigar__specs-bleed .cigar__strip-title {
+    color: var(--gold-leaf);
+  }
+  .cigar__specs-bleed .cigar__strip {
+    /* Hairline under PROFILE / BLEND titles in pink (Stephane 2026-05-25). */
+    border-top-color: var(--pink);
+  }
+  .cigar__specs-bleed .cigar__strip-row {
+    border-bottom-color: color-mix(in srgb, var(--gold-soft) 22%, transparent);
+  }
+  .cigar__specs-bleed .cigar__strip-label {
+    color: var(--gold-soft);
+  }
+  .cigar__specs-bleed .cigar__strip-value {
+    color: var(--pearl);
+  }
+
+  /* ── Mobile collapse ───────────────────────────────────────── */
+  @media (max-width: 720px) {
+    .hero {
+      min-height: 0;
+      padding-block: clamp(var(--space-7), 12vw, var(--space-9));
+      /* Tighten the pearl-to-transparent fade on mobile — shorter
+         viewport, shorter band. */
+      background: linear-gradient(
+        to bottom,
+        var(--pearl) 0%,
+        var(--pearl) calc(100% - 120px),
+        transparent 100%
+      );
+    }
+    /* Side-by-side preserved at mobile widths (Stephane 2026-05-24):
+       desktop's 62/38 grid was previously collapsed to a single column
+       with the image stacked above via `order: -1`. Stephane wants the
+       cigar to sit next to the type even at narrow viewports, accepting
+       a smaller cigar. Grid shifts to 70/30 below 720px so the type
+       column has the room it needs and the cigar reads as the quieter
+       visual element. Inter-column gap tightens too — the desktop clamp
+       compresses naturally at small viewports, but pinned tighter here
+       so the 30% cigar column doesn't crowd the type. The image
+       `max-height` is also constrained so portrait viewports don't push
+       the cigar to a runaway height inside its narrow column. */
+    .hero__inner {
+      grid-template-columns: 70fr 30fr;
+      gap: var(--space-5);
+      align-items: center;
+    }
+    .hero__cigar {
+      /* Fill the 30% column edge-to-edge — at ~320px viewport that's a
+         ~84px-wide cigar after container padding; smaller, but Stephane
+         accepted that. max-height caps it on portrait phones where the
+         hero is short. */
+      max-width: 100%;
+      max-height: 38vh;
+    }
+    /* Tagline tightens slightly so the 70% column reads at narrow
+       widths without forcing a third wrap. The clamp floor was 2.4rem
+       (~38px); the 22ch measure plus that floor pushes the tagline
+       wider than the column can hold on the smallest viewport. */
+    .hero__tagline {
+      font-size: clamp(1.85rem, 7vw, 2.6rem);
+      max-width: 18ch;
+    }
+    .cigar__strip {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ── Typography mock overrides ──────────────────────────────
+     Section titles "THE CIGAR" and "Tasting Notes" rendered as
+     .about-ed__beat-title (italic Spectral, clamp(2rem, 4vw, 2.8rem),
+     lh-tight, ink, not uppercase, not bold). Tasting note descriptions
+     swapped to Hanken sans-serif sized to cigar body paragraphs
+     (--fs-small, --lh-body, ink).
+     :global() is required for .smoke__* selectors because SmokeArc.astro
+     scopes its own classes; reach across the scope boundary here. */
+  .cigar__eyebrow,
+  :global(.smoke__eyebrow) {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    line-height: var(--lh-tight);
+    color: var(--ink);
+    letter-spacing: var(--ls-display);
+    text-transform: none;
+  }
+  :global(.smoke__note) {
+    font-family: var(--font-body);
+    font-style: normal;
+    font-weight: 400;
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--ink);
+  }
+  @media (min-width: 721px) {
+    :global(.smoke__note) {
+      font-size: var(--fs-small);
+    }
+  }
+
+  /* Top dark ribbon — typography mock banner. Sits above the hero,
+     ink ground with pearl text. */
+  .typo-mock-ribbon {
+    background: var(--ink);
+    color: var(--pearl);
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    padding: var(--space-4) var(--space-5);
+    text-align: center;
+  }
+</style>
+
+<script>
+  /* Section reveals — restrained editorial entry. Each block's
+     animatable children rise-and-fade as it scrolls into view.
+     Reveals for the componentised sections (smoke) are handled
+     inside the components themselves. */
+  import { reveal, refreshOnLoad, gsap } from '../lib/motion';
+
+  // Hero — Option A cascade.
+  //   Copy column rises as a single composed unit; cigar image
+  //   fades and lifts alongside; the gold hairline draws in from
+  //   left to right on its own scrollTrigger. Visual order reads
+  //   eyebrow → rule (drawing) → tagline → signature.
+  const heroMedia = document.querySelector<HTMLElement>('.hero [data-reveal-media]');
+  const heroCopy  = document.querySelector<HTMLElement>('.hero [data-reveal-copy]');
+  const heroRule  = document.querySelector<HTMLElement>('.hero__rule');
+  if (heroCopy)  reveal(heroCopy,  { y: 28, duration: 0.95, start: 'top 88%' });
+  if (heroMedia) reveal(heroMedia, { y: 24, duration: 1.1, delay: 0.1, start: 'top 88%' });
+  if (heroRule) {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) {
+      gsap.set(heroRule, { scaleX: 1 });
+    } else {
+      gsap.to(heroRule, {
+        scaleX: 1,
+        duration: 0.6,
+        delay: 0.25,
+        ease: 'power2.out',
+        scrollTrigger: { trigger: heroCopy ?? heroRule, start: 'top 88%', toggleActions: 'play none none none' },
+      });
+    }
+  }
+
+  // Section 2 (cigar) — narrative paragraphs cascade, spec strips lift in.
+  const cigarParas = document.querySelectorAll('.cigar [data-reveal-para]');
+  const cigarStrips = document.querySelectorAll<HTMLElement>('.cigar [data-reveal-strip]');
+  if (cigarParas.length) reveal(cigarParas, { y: 22, duration: 0.9, stagger: 0.14, start: 'top 82%' });
+  if (cigarStrips.length) reveal(cigarStrips, { y: 24, duration: 0.9, stagger: 0.1, start: 'top 82%' });
+
+  refreshOnLoad();
+</script>
