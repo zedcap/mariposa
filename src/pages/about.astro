@@ -49,7 +49,7 @@ const storyParas = [
   "Today, Mariposa captures the rich, multi-cultural soul of cigars, giving friends around the world the perfect excuse to light up, slow down, and share a good conversation. Whatever the hour.",
 ];
 const closingQuote =
-  "Life isn't meant to be spent waiting for special occasions; it is about creating them on any ordinary day. The gold leaf on each Mariposa is my personal reminder to pause, slow down, and truly savour the hours shared with friends.";
+  "\"Life isn't meant to be spent waiting for special occasions; it is about creating them on any ordinary day. The gold leaf on each Mariposa is my personal reminder to pause, slow down, and truly savour the hours shared with friends.\"";
 
 const founderStandfirst =
   "What began as a founder's personal journey into the tobacco fields of East Java evolved into an exclusive blend made for close friends. Today, Mariposa brings that private reserve spirit with global friends around the world.";
@@ -392,16 +392,17 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
      ═══════════════════════════════════════════════════════════ */
   .about-ed__transition {
     text-align: center;
-    /* Top gap reduced 25% (Stephane). Bottom unchanged. */
+    /* Top gap reduced 25% (Stephane). Bottom halved (Stephane) — pairs with .about-ed__feature padding-top halving to halve the eyebrow → standfirst gap. */
     padding-top: clamp(calc(var(--space-8) * 0.75), 7.5vw, calc(var(--space-9) * 0.75));
-    padding-bottom: clamp(var(--space-8), 10vw, var(--space-9));
+    padding-bottom: clamp(calc(var(--space-8) * 0.5), 5vw, calc(var(--space-9) * 0.5));
   }
   .about-ed__transition-rule {
     display: block;
     width: 100px;
     height: 1px;
     background: var(--pink);
-    margin: 0 auto var(--space-6) auto;
+    /* Divider → eyebrow gap doubled (Stephane). */
+    margin: 0 auto calc(var(--space-6) * 2) auto;
   }
   .about-ed__transition-eyebrow {
     font-family: var(--font-body);
@@ -417,8 +418,8 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
      Founder feature.
      ═══════════════════════════════════════════════════════════ */
   .about-ed__feature {
-    /* Bottom gap below pull quote reduced 50% (Stephane). Top unchanged. */
-    padding-block: clamp(var(--space-7), 8vw, var(--space-9)) clamp(calc(var(--space-9) * 0.5), 6vw, calc(var(--space-10) * 0.5));
+    /* Bottom gap below pull quote reduced 50% (Stephane). Top halved (Stephane) — pairs with .about-ed__transition padding-bottom halving to halve the eyebrow → standfirst gap. */
+    padding-block: clamp(calc(var(--space-7) * 0.5), 4vw, calc(var(--space-9) * 0.5)) clamp(calc(var(--space-9) * 0.5), 6vw, calc(var(--space-10) * 0.5));
   }
   .about-ed__feature-standfirst {
     font-family: var(--font-display);
