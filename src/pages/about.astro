@@ -147,14 +147,23 @@ const founderStandfirst =
       <p class="about-ed__feature-standfirst">{founderStandfirst}</p>
 
       <figure class="about-ed__feature-figure">
-        <Image
-          src={szSmoking}
-          alt="Portrait of founder Stephane Zermatten lighting a Mariposa cigar."
-          class="about-ed__feature-img"
-          widths={[360, 540, 720, 960]}
-          sizes="(max-width: 720px) 100vw, 320px"
-          loading="lazy"
-        />
+        {/* Mobile (≤720px) uses a separate, wider-crop source so the
+            founder portrait isn't severely cropped at the full-width
+            15rem-height mobile treatment. Desktop continues to use the
+            optimised <Image> (Astro picks the appropriate width from
+            the srcset). The <picture>'s <source> overrides on mobile;
+            the <Image> below renders the fallback <img>. */}
+        <picture>
+          <source media="(max-width: 720px)" srcset={withBase('/founder-mobile.jpg')} />
+          <Image
+            src={szSmoking}
+            alt="Portrait of founder Stephane Zermatten lighting a Mariposa cigar."
+            class="about-ed__feature-img"
+            widths={[360, 540, 720, 960]}
+            sizes="(max-width: 720px) 100vw, 320px"
+            loading="lazy"
+          />
+        </picture>
       </figure>
 
       <p class="about-ed__feature-body">{storyParas[0]}</p>
@@ -554,9 +563,11 @@ const founderStandfirst =
       order: -1;
       /* Tighten the gap above the figure on mobile — desktop margin
          (var(--space-7)) was sized for figure-below-body. Now the
-         figure sits directly under the title, so match the title's
-         margin-bottom rhythm. */
-      margin-top: var(--space-6);
+         figure sits directly under the title, so match beat 2's
+         mobile title→figure gap (the inset figure's margin-top of
+         var(--space-5) from the .about-ed__figure--inset mobile
+         override). */
+      margin-top: var(--space-5);
     }
     .about-ed__beat--column .about-ed__body {
       /* Add breathing room between figure and body on mobile. */
