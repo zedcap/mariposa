@@ -16,6 +16,7 @@
 
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { withBase } from '../lib/path';
 
 import beat1Atmosphere from '../assets/hero-mp-1.jpg';
 import beat3Atmosphere from '../assets/hero-mp-3.jpg';
@@ -98,7 +99,7 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
       <h2 class="about-ed__beat-title">{beat2Title}</h2>
       <figure class="about-ed__figure about-ed__figure--inset about-ed__figure--inset-right">
         <img
-          src="/origins-volcanic.jpg"
+          src={withBase('/origins-volcanic.jpg')}
           alt="Young tobacco plants growing under shade tents in East Java."
           class="about-ed__figure-inset-img"
           loading="lazy"
@@ -203,10 +204,15 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
   .about-ed > .about-ed__transition,
   .about-ed > .about-ed__feature {
     width: 100%;
-    max-width: var(--col);
+    /* border-box (inherited site default). max-width absorbs the
+       horizontal padding so the content measure stays at --col while
+       the rendered box never exceeds the viewport — the previous
+       content-box override caused horizontal scroll between 720px
+       and 912px viewports (width:100% + 192px padding) and a ~48px
+       overflow on mobile (width:100% + 48px padding). */
+    max-width: calc(var(--col) + 2 * var(--page-pad-d));
     margin-inline: auto;
     padding-inline: var(--page-pad-d);
-    box-sizing: content-box;
   }
 
   /* ═══════════════════════════════════════════════════════════
