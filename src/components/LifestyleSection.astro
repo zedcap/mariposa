@@ -60,6 +60,8 @@ const { paragraphs } = Astro.props;
     <div class="story__scrim"></div>
   </div>
 
+  <div class="story__tint" aria-hidden="true"></div>
+
   <div class="story__inner" data-story-inner>
     <Image
       class="story__wordmark"
@@ -137,6 +139,21 @@ const { paragraphs } = Astro.props;
       rgba(31, 27, 23, 0.42) 50%,
       rgba(31, 27, 23, 0.28) 100%
     );
+  }
+
+  /* ── Brown tint overlay ─────────────────────────────────────────
+     Stephane 2026-05-25. A 20% ink-brown wash on top of the
+     gradient scrim, beneath the prose. Warms the photographic
+     ground further and lifts white type legibility a touch without
+     pushing the image into slab territory. Sits as a sibling of
+     .story__bed at z-index:1 so it stacks above the scrim (inside
+     the bed at z-index:0) and below .story__inner (z-index:2). */
+  .story__tint {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: rgba(42, 30, 20, 0.2);
+    pointer-events: none;
   }
 
   /* ── Prose column ───────────────────────────────────────────────

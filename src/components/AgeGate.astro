@@ -1,38 +1,42 @@
 ---
 /* 21+ age gate — full-screen interstitial.
-   Renders inline on every page and shows before content if no prior
-   confirmation flag is set. The flag (localStorage, ~30 days) means the
-   gate does not re-prompt on return visits within that window.
+   ------------------------------------------------------------------
+   2026-05-25. Replaced the prior full-bleed gold-wordmark design with
+   the revised "card on translucent overlay" treatment Stephane picked
+   from `age-gate-mocks.astro`. The home page sits visible behind a
+   60% white overlay; a centred white card with pink hairline carries
+   the question, side-by-side Yes / No buttons, a Remember-me tickbox
+   (circular, ink-fill), and an inline Terms & Conditions trigger that
+   fires the existing `mariposa:open-terms` event.
 
-   The gate is rendered visible by default and the body is lock-scrolled;
-   a tiny inline head script clears both immediately if the flag is valid,
-   so a confirmed visitor never sees a flash of the gate. JS-disabled
-   visitors see the gate and can dismiss it — without JS it cannot gate,
-   but it also cannot trap; the script enhances, it does not obstruct. */
+   Persistence:
+   - "Yes" with Remember-me CHECKED  → localStorage['mariposaAgeConfirmed'] = 'true'
+   - "Yes" with Remember-me UNCHECKED → sessionStorage['mariposaAgeConfirmed'] = 'true'
+   - "No" → no-op (gate stays). Final destination unspecified; flagged.
+
+   A tiny inline head script clears the gate before paint if either
+   store carries the flag, so a returning visitor never sees a flash. */
 import { getEntry } from 'astro:content';
 
 const global = (await getEntry('site', 'global'))!.data as {
-  wordmark: string;
-  positionLine: string;
   ageGate: {
-    intro: string;
     question: string;
     confirm: string;
     decline: string;
-    declineHeading: string;
-    declineBody: string;
   };
 };
-const { positionLine, ageGate } = global;
+const { ageGate } = global;
 ---
 
-{/* Runs before paint: if a valid flag exists, drop the gate and unlock scroll
-    so confirmed visitors never see it. Inline by necessity — it must beat render. */}
+{/* Runs before paint: if either store carries the flag, hide the gate
+    and unlock scroll so a confirmed visitor never sees it. */}
 <script is:inline>
   (function () {
     try {
-      var raw = localStorage.getItem('mariposa-age-ok');
-      if (raw && Number(raw) > Date.now()) {
+      var ok =
+        localStorage.getItem('mariposaAgeConfirmed') === 'true' ||
+        sessionStorage.getItem('mariposaAgeConfirmed') === 'true';
+      if (ok) {
         document.documentElement.setAttribute('data-age-ok', 'true');
       }
     } catch (e) {
@@ -41,32 +45,37 @@ const { positionLine, ageGate } = global;
   })();
 </script>
 
-<div class="age-gate grain" data-age-gate role="dialog" aria-modal="true" aria-labelledby="age-gate-q">
-  <div class="age-gate__inner">
-    <!-- Ask state -->
-    <div class="age-gate__panel" data-age-ask>
-      <span class="wordmark age-gate__mark">mariposa</span>
-      <p class="age-gate__position">{positionLine}</p>
-      <hr class="rule-gold age-gate__rule" />
-      <p class="age-gate__intro">{ageGate.intro}</p>
-      <p class="age-gate__question" id="age-gate-q">{ageGate.question}</p>
-      <div class="age-gate__choices">
-        <button class="pill pill--solid" type="button" data-age-confirm>
-          {ageGate.confirm}
-        </button>
-        <button class="pill pill--ghost" type="button" data-age-decline>
-          {ageGate.decline}
-        </button>
-      </div>
+<div class="age-gate" data-age-gate aria-hidden="false">
+  {/* Overlay — full-stage, 60% white, blocks the page beneath. */}
+  <div class="age-gate__overlay" aria-hidden="true"></div>
+
+  {/* Card — centred, opaque white, pink hairline, editorial frame. */}
+  <div class="gate-card" role="dialog" aria-modal="true" aria-labelledby="age-gate-q">
+    <span class="wordmark gate-card__mark">mariposa</span>
+
+    <h2 class="gate-card__question" id="age-gate-q">{ageGate.question}</h2>
+
+    <div class="gate-card__choices">
+      <button class="gate-btn gate-btn--solid" type="button" data-age-confirm>
+        {ageGate.confirm}
+      </button>
+      <button class="gate-btn gate-btn--outline" type="button" data-age-decline>
+        {ageGate.decline}
+      </button>
     </div>
 
-    <!-- Decline state -->
-    <div class="age-gate__panel age-gate__panel--decline" data-age-declined hidden>
-      <span class="wordmark age-gate__mark">mariposa</span>
-      <hr class="rule-gold age-gate__rule" />
-      <p class="age-gate__decline-heading">{ageGate.declineHeading}</p>
-      <p class="age-gate__decline-body">{ageGate.declineBody}</p>
-    </div>
+    <label class="gate-card__remember">
+      <input type="checkbox" class="gate-check" data-age-remember checked />
+      <span class="gate-card__remember-text">Remember me on this device</span>
+    </label>
+
+    <p class="gate-card__disclaimer">
+      By continuing, you confirm that you are of legal smoking age
+      and agree to our{' '}
+      <button type="button" class="gate-card__terms" data-open-terms>
+        Terms &amp; Conditions
+      </button>.
+    </p>
   </div>
 </div>
 
@@ -75,151 +84,198 @@ const { positionLine, ageGate } = global;
     position: fixed;
     inset: 0;
     z-index: 100;
-    background: var(--white);
-    display: grid;
-    place-items: center;
-    padding: var(--page-pad-m);
   }
   /* Confirmed visitor (flag valid): never render the gate. */
   :global(html[data-age-ok='true']) .age-gate {
     display: none;
   }
 
-  .age-gate__inner {
-    width: 100%;
-    max-width: 520px;
-    text-align: center;
+  /* ─── Overlay — 60% white ────────────────────────────────── */
+  .age-gate__overlay {
+    position: absolute;
+    inset: 0;
+    background: color-mix(in srgb, var(--white) 60%, transparent);
   }
 
-  .age-gate__panel {
+  /* ═══════════════════════════════════════════════════════════
+     Gate card — centred, opaque, pink hairline.
+     ═══════════════════════════════════════════════════════════ */
+  .gate-card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    width: min(440px, 90vw);
+    background: var(--white);
+    border: 1px solid var(--pink);
+
+    padding-block: var(--space-7);
+    padding-inline: var(--space-8);
+
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
-  .age-gate__panel[hidden] {
-    display: none;
+    text-align: center;
   }
 
-  .age-gate__mark {
-    font-size: clamp(2rem, 7vw, 3rem);
-    color: var(--gold-deep);
+  .gate-card__mark {
+    font-size: var(--fs-h5);
+    color: var(--ink);
+    line-height: 1;
   }
 
-  .age-gate__position {
-    font-family: var(--font-body);
-    font-size: var(--fs-caption);
-    letter-spacing: var(--ls-section);
-    text-transform: uppercase;
-    color: var(--ash);
-    margin-top: var(--space-4);
-  }
-
-  .age-gate__rule {
-    width: 64px;
-    margin-block: var(--space-7);
-  }
-
-  .age-gate__intro {
-    font-family: var(--font-body);
-    font-size: var(--fs-small);
-    letter-spacing: var(--ls-small);
-    color: var(--ash);
-    margin-bottom: var(--space-2);
-  }
-
-  .age-gate__question {
+  .gate-card__question {
+    margin: var(--space-6) 0 0 0;
     font-family: var(--font-display);
-    font-weight: 300;
-    font-size: clamp(1.75rem, 4.5vw, 2.5rem);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
     line-height: var(--lh-snug);
     color: var(--ink);
   }
 
-  .age-gate__choices {
+  .gate-card__choices {
     display: flex;
-    gap: var(--space-4);
-    margin-top: var(--space-7);
-    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-6);
+    width: 100%;
     justify-content: center;
   }
 
-  .age-gate__decline-heading {
-    font-family: var(--font-display);
-    font-weight: 300;
-    font-size: clamp(1.4rem, 3.6vw, 2rem);
-    line-height: var(--lh-snug);
-    color: var(--ink);
-    max-width: 22ch;
-  }
-  .age-gate__decline-body {
-    font-family: var(--font-display);
-    font-style: italic;
-    font-size: var(--fs-lede);
-    color: var(--ash);
-    margin-top: var(--space-4);
-    max-width: 26ch;
-  }
-
-  /* Pill buttons — design-system pill, used for the two choices. */
-  .pill {
+  /* Buttons — square corners (--radius-xs) for the editorial register. */
+  .gate-btn {
     font-family: var(--font-body);
     font-size: var(--fs-small);
     font-weight: 600;
     letter-spacing: var(--ls-small);
-    border-radius: var(--radius-pill);
-    padding: 14px 32px;
+    border-radius: var(--radius-xs);
+    padding: 12px 24px;
     cursor: pointer;
+    flex: 1 1 auto;
+    min-width: 120px;
     transition:
-      transform var(--dur-default) var(--ease-paper),
-      box-shadow var(--dur-default) var(--ease-paper),
-      background-color var(--dur-default) var(--ease-paper);
+      background-color var(--dur-default) var(--ease-paper),
+      color var(--dur-default) var(--ease-paper);
   }
-  .pill--solid {
+  .gate-btn--solid {
     color: var(--white);
     background: var(--ink);
     border: 1px solid var(--ink);
-    box-shadow: var(--shadow-rise);
   }
-  .pill--solid:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lift);
+  .gate-btn--solid:hover {
+    background: color-mix(in srgb, var(--ink) 85%, var(--white));
   }
-  .pill--ghost {
+  .gate-btn--outline {
     color: var(--ink);
     background: transparent;
-    border: 1px solid var(--border-gold);
+    border: 1px solid var(--ink);
   }
-  .pill--ghost:hover {
+  .gate-btn--outline:hover {
     background: var(--pearl);
   }
-  .pill:active {
-    transform: translateY(1px);
-    box-shadow: var(--shadow-press);
+
+  /* Remember-me — checkbox + label on one row. Amend (a): circular. */
+  .gate-card__remember {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-6);
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    color: var(--ink-soft);
+  }
+  .gate-check {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border: 1px solid var(--ink);
+    background: var(--white);
+    border-radius: 50%;
+    display: inline-grid;
+    place-content: center;
+    cursor: pointer;
+    margin: 0;
+  }
+  .gate-check::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    transform: scale(0);
+    transition: transform var(--dur-quick) var(--ease-paper);
+    background: var(--ink);
+    border-radius: 50%;
+  }
+  .gate-check:checked::before {
+    transform: scale(1);
+  }
+  .gate-check:focus-visible {
+    outline: 2px solid var(--pink);
+    outline-offset: 2px;
+  }
+
+  .gate-card__disclaimer {
+    margin: var(--space-4) 0 0 0;
+    font-family: var(--font-body);
+    font-size: var(--fs-caption);
+    line-height: var(--lh-body);
+    color: var(--ash);
+    max-width: 36ch;
+  }
+  /* Amend (b): no underline. Amend (c): gold on hover/focus. */
+  .gate-card__terms {
+    font: inherit;
+    color: var(--ink);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    text-decoration: none;
+    transition: color var(--dur-quick) var(--ease-paper);
+  }
+  .gate-card__terms:hover,
+  .gate-card__terms:focus-visible {
+    color: var(--gold-deep);
+  }
+
+  /* ─── Mobile ─────────────────────────────────────────────── */
+  @media (max-width: 720px) {
+    .gate-card {
+      padding-block: var(--space-6);
+      padding-inline: var(--space-6);
+    }
+    .gate-card__choices { flex-wrap: wrap; }
   }
 </style>
 
 <script>
-  // Age gate behaviour: lock scroll while showing, confirm/decline handlers.
+  /* Age gate behaviour.
+     - Yes  : persist flag (localStorage if Remember-me, else sessionStorage),
+              remove the gate, unlock scroll.
+     - No   : no-op for now — Stephane has not specified the refusal
+              destination. Gate stays visible. Flagged for follow-up.
+     - T&C  : dispatches the existing `mariposa:open-terms` event. */
   const gate = document.querySelector<HTMLElement>('[data-age-gate]');
-  const ask = document.querySelector<HTMLElement>('[data-age-ask]');
-  const declined = document.querySelector<HTMLElement>('[data-age-declined]');
   const confirmBtn = document.querySelector<HTMLButtonElement>('[data-age-confirm]');
   const declineBtn = document.querySelector<HTMLButtonElement>('[data-age-decline]');
+  const rememberBox = document.querySelector<HTMLInputElement>('[data-age-remember]');
+  const termsBtn = document.querySelector<HTMLButtonElement>('[data-open-terms]');
 
   const ALREADY_OK = document.documentElement.getAttribute('data-age-ok') === 'true';
-  const FLAG_KEY = 'mariposa-age-ok';
-  const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
+  const FLAG_KEY = 'mariposaAgeConfirmed';
 
-  if (gate && ask && declined && confirmBtn && declineBtn) {
+  if (gate && confirmBtn && declineBtn && rememberBox) {
     if (!ALREADY_OK) {
-      // Gate is showing — lock scroll and move focus into it.
       document.body.classList.add('gate-locked');
       confirmBtn.focus();
     }
 
     confirmBtn.addEventListener('click', () => {
       try {
-        localStorage.setItem(FLAG_KEY, String(Date.now() + THIRTY_DAYS));
+        const store = rememberBox.checked ? localStorage : sessionStorage;
+        store.setItem(FLAG_KEY, 'true');
       } catch (e) {
         /* storage blocked — gate will re-prompt next visit, acceptable */
       }
@@ -228,9 +284,14 @@ const { positionLine, ageGate } = global;
     });
 
     declineBtn.addEventListener('click', () => {
-      ask.hidden = true;
-      declined.hidden = false;
-      // Scroll stays locked — there is no onward link from the decline screen.
+      /* Intentional no-op pending Stephane's spec for the refusal
+         destination. Gate stays mounted; scroll stays locked. */
     });
   }
+
+  termsBtn?.addEventListener('click', () => {
+    window.dispatchEvent(
+      new CustomEvent('mariposa:open-terms', { detail: { opener: termsBtn } })
+    );
+  });
 </script>
