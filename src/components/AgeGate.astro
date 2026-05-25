@@ -12,11 +12,15 @@
    Persistence:
    - "Yes" with Remember-me CHECKED  → localStorage['mariposaAgeConfirmed'] = 'true'
    - "Yes" with Remember-me UNCHECKED → sessionStorage['mariposaAgeConfirmed'] = 'true'
-   - "No" → no-op (gate stays). Final destination unspecified; flagged.
+   - "No"  → redirect to /refusal/. No storage write — we don't
+             remember a decline (could be a typo, a returning visitor
+             might be of age). location.assign so the back button
+             doesn't bring them back to the gated page in this session.
 
    A tiny inline head script clears the gate before paint if either
    store carries the flag, so a returning visitor never sees a flash. */
 import { getEntry } from 'astro:content';
+import { withBase } from '../lib/path';
 
 const global = (await getEntry('site', 'global'))!.data as {
   ageGate: {
@@ -45,7 +49,7 @@ const { ageGate } = global;
   })();
 </script>
 
-<div class="age-gate" data-age-gate aria-hidden="false">
+<div class="age-gate" data-age-gate data-refusal-url={withBase('/refusal/')} aria-hidden="false">
   {/* Overlay — full-stage, 60% white, blocks the page beneath. */}
   <div class="age-gate__overlay" aria-hidden="true"></div>
 
@@ -284,8 +288,14 @@ const { ageGate } = global;
     });
 
     declineBtn.addEventListener('click', () => {
-      /* Intentional no-op pending Stephane's spec for the refusal
-         destination. Gate stays mounted; scroll stays locked. */
+      /* Redirect to /refusal/. No storage write — we don't remember
+         a decline (could be a typo, or a returning visitor might be
+         of age). location.assign so the back button doesn't bring
+         the visitor back to the gated page in this session. The
+         URL is base-prefixed in the .astro template (data attribute)
+         so it resolves under any Astro `base`. */
+      const url = gate.dataset.refusalUrl ?? '/refusal/';
+      window.location.assign(url);
     });
   }
 

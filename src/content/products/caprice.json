@@ -2,7 +2,6 @@
   "name": "Caprice",
   "slug": "caprice",
   "order": 2,
-  "tag": "Q4 2026",
   "vitola": "Gordito",
   "format": "105 mm · 58 ring gauge",
   "tagline": "A small indulgence, taken short.",
@@ -35,7 +34,6 @@
     { "label": "Fermentation", "value": "24 months" },
     { "label": "Ageing", "value": "12 months" }
   ],
-  "condensedSpecKeys": ["Vitola", "Format", "Wrapper", "Origin", "Strength", "Release"],
   "tasting": [
     { "stage": "First third", "note": "Spice opens the smoke, warmed through by a steady note of toasted nuts." },
     { "stage": "Second third", "note": "The spice softens as cream comes in, and a slow caramel sweetness builds underneath." },

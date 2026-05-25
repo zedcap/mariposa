@@ -1,0 +1,121 @@
+---
+/* Refusal — the destination for the age-gate "No" button.
+   ------------------------------------------------------------------
+   Standalone page. Built outside BaseLayout deliberately:
+     · BaseLayout always mounts <AgeGate />, and the brief is explicit
+       that the refusal page must NOT re-prompt a visitor who has
+       already declined.
+     · BaseLayout also mounts the header, footer and sticky-contact
+       chrome. The refusal page wants none of those — no nav, no
+       footer, no return link.
+   So this file wires the same design tokens + base CSS directly and
+   renders a single centred composition on the white ground.
+
+   Copy comes from global.json (`ageGate.declineHeading` and
+   `ageGate.declineBody`) — those lines already carry the right
+   register: polite acknowledgement, no scolding, no apology, no
+   marketing flourish, the visit ends here.
+
+   No <AgeGate> import. No localStorage write. A visitor arriving via
+   the gate's No button has not been confirmed; we keep no record. */
+
+import '../styles/tokens.css';
+import '../styles/base.css';
+import { getEntry } from 'astro:content';
+
+const global = (await getEntry('site', 'global'))!.data as {
+  ageGate: {
+    declineHeading: string;
+    declineBody: string;
+  };
+};
+const { declineHeading, declineBody } = global.ageGate;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>Mariposa</title>
+    <meta name="description" content="Mariposa is for those of legal smoking age." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  </head>
+  <body class="refusal-body">
+    <main class="refusal" role="main">
+      <span class="wordmark refusal__mark">mariposa</span>
+      <hr class="refusal__rule" aria-hidden="true" />
+      <h1 class="refusal__heading">{declineHeading}</h1>
+      <p class="refusal__body">{declineBody}</p>
+    </main>
+
+    <style>
+      /* White ground, ink type, no chrome. Full viewport height, centred. */
+      .refusal-body {
+        min-height: 100vh;
+        background: var(--white);
+        display: flex;
+      }
+      .refusal {
+        margin: auto;
+        padding: var(--space-8) var(--page-pad-d);
+        max-width: 36rem;
+        width: 100%;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      /* Wordmark — small, ink, lowercase Spectral via the shared
+         .wordmark utility. Tone is sign-off, not header. */
+      .refusal__mark {
+        font-size: var(--fs-h5);
+        color: var(--ink);
+        line-height: 1;
+      }
+
+      /* Pink hairline beneath the wordmark — visual consistency with
+         the AgeGate card and the product-page editorial language. */
+      .refusal__rule {
+        border: 0;
+        height: 1px;
+        width: 120px;
+        background: var(--pink);
+        margin: var(--space-5) 0 var(--space-7) 0;
+      }
+
+      /* Heading — italic Spectral display, sized down from the page
+         h1 so the page reads as a quiet statement rather than a
+         marketing headline. */
+      .refusal__heading {
+        font-family: var(--font-display);
+        font-style: italic;
+        font-weight: 300;
+        font-size: clamp(1.8rem, 4vw, 2.6rem);
+        line-height: var(--lh-snug);
+        color: var(--ink);
+        letter-spacing: var(--ls-display);
+        margin: 0;
+        max-width: 24ch;
+      }
+
+      .refusal__body {
+        margin-top: var(--space-5);
+        font-family: var(--font-body);
+        font-size: var(--fs-body);
+        line-height: var(--lh-body);
+        color: var(--ink-soft);
+        max-width: 32ch;
+      }
+
+      @media (max-width: 720px) {
+        .refusal {
+          padding-inline: var(--page-pad-m);
+        }
+      }
+    </style>
+  </body>
+</html>

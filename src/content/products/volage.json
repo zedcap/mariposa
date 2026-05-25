@@ -2,7 +2,6 @@
   "name": "Volage",
   "slug": "volage",
   "order": 1,
-  "edition": "1st Edition",
   "vitola": "Canonazo",
   "format": "150 mm · 52 ring gauge",
   "tagline": "A cigar that doesn't wait for an occasion.",
@@ -15,28 +14,6 @@
     { "label": "Strength", "value": "Full body" },
     { "label": "Origin", "value": "East Java, Indonesia" },
     { "label": "Smoke time", "value": "~60 minutes" }
-  ],
-  "signature": {
-    "lede": "Each Mariposa wears 24-carat gold, laid by hand.",
-    "paragraph": "The leaf is applied by Wrights of Lymm, the British supplier whose gold has dressed Westminster, Versailles, and St Paul's. On a Mariposa, the same craft is brought to the band of a single cigar. The reasoning is the brand's: the finer things are meant to be enjoyed, not waited for.",
-    "placeholderCaption": "PLACEHOLDER: Macro shot of 24-carat gold leaf on Volage cigar, ideally application in progress or freshly applied."
-  },
-  "origin": [
-    {
-      "label": "Argopuro",
-      "copy": "Volcanic soil at the foot of an East Javan range. Havana-seed tobacco, learning what Indonesia tastes like.",
-      "placeholderCaption": "PLACEHOLDER: Argopuro range, East Java — tobacco field or volcanic landscape."
-    },
-    {
-      "label": "Jember",
-      "copy": "Hand-rolled by torcedoras in the BIN workshop. Entubado bunching, three-part construction, Cuban triple cap.",
-      "placeholderCaption": "PLACEHOLDER: Jember rolling room — torcedoras at work, hands and leaf."
-    },
-    {
-      "label": "Time",
-      "copy": "Twenty-four months of fermentation. Twelve months of ageing. Then the leaf goes on.",
-      "placeholderCaption": "PLACEHOLDER: Ageing room — rows of bundled cigars in maturation."
-    }
   ],
   "narrative": [
     "Cultivated in the shadow of the Argopuro range, Volage leverages Java's volcanic terroir, offering a unique Indonesian expression of classic Havana-seed tobacco.",
@@ -57,15 +34,9 @@
     { "label": "Fermentation", "value": "24 months" },
     { "label": "Ageing", "value": "12 months" }
   ],
-  "condensedSpecKeys": ["Vitola", "Format", "Wrapper", "Origin", "Strength", "Release"],
   "tasting": [
     { "stage": "First third", "note": "Creamy and woody, grounded by a rich, underlying note of roasted coffee." },
     { "stage": "Second third", "note": "The creaminess lingers as a deep, soft sweetness begins to unfold." },
     { "stage": "Final third", "note": "Warm spice arrives, the sweetness holds, and rich volcanic earth closes the smoke." }
-  ],
-  "packaging": [
-    { "placeholderCaption": "PLACEHOLDER: Single Volage cigar in presentation packaging — closed box, front three-quarter view." },
-    { "placeholderCaption": "PLACEHOLDER: Packaging detail — band and gold-leaf at close range, paired with the postcard insert." },
-    { "placeholderCaption": "PLACEHOLDER: Packaging open — box interior with cigar in situ, postcard visible." }
   ]
 }
