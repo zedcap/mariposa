@@ -492,6 +492,11 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
     width: min(36%, 240px);
     margin: var(--space-1) 0 var(--space-5) var(--space-6);
     aspect-ratio: 4 / 5;
+    /* 1px pink hairline frame — matches the inset figure treatment
+       on beat 2 (.about-ed__figure--inset). Same editorial slot
+       language for the founder portrait. */
+    border: 1px solid var(--pink);
+    box-sizing: border-box;
     overflow: hidden;
   }
   .about-ed__feature-img {
