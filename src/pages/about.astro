@@ -138,14 +138,19 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
       <p class="about-ed__caption about-ed__caption--inset">Photograph: [Name] &mdash; Jember rolling room, 2026.</p>
     </section>
 
-    {/* ── Origins → Founder transition. Quiet hairline + eyebrow. ── */}
+    {/* ── Origins → Founder transition. Bridge quote panel
+           (Treatment 3 with pink top hairline) replaces the former
+           pink hairline divider; eyebrow follows below. ── */}
     <div class="about-ed__transition" data-reveal>
-      <span class="about-ed__transition-rule" aria-hidden="true"></span>
+      <aside class="about-ed__bridge-panel">
+        <p class="about-ed__bridge-quote">{closingQuote}</p>
+      </aside>
       <p class="about-ed__transition-eyebrow">From Private Reserve to Shared Passion</p>
     </div>
 
     {/* ── Founder feature. Three uniform paragraphs, half-column
-           portrait before paragraph 1, closing quote at the close. ── */}
+           portrait before paragraph 1. No closing element — the
+           bridge quote above absorbed that role. ── */}
     <section class="about-ed__feature" aria-label="The Founder" data-reveal>
       <p class="about-ed__feature-standfirst">{founderStandfirst}</p>
 
@@ -166,8 +171,6 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
       <p class="about-ed__feature-body">{storyParas[0]}</p>
       <p class="about-ed__feature-body">{storyParas[1]}</p>
       <p class="about-ed__feature-body">{storyParas[2]}</p>
-
-      <p class="about-ed__feature-closing" data-reveal>{closingQuote}</p>
     </section>
 
   </article>
@@ -396,13 +399,32 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
     padding-top: clamp(calc(var(--space-8) * 0.75), 7.5vw, calc(var(--space-9) * 0.75));
     padding-bottom: clamp(calc(var(--space-8) * 0.5), 5vw, calc(var(--space-9) * 0.5));
   }
-  .about-ed__transition-rule {
-    display: block;
-    width: 100px;
-    height: 1px;
-    background: var(--pink);
-    /* Divider → eyebrow gap doubled (Stephane). */
-    margin: 0 auto calc(var(--space-6) * 2) auto;
+  /* Bridge quote panel — Treatment 3 from /about-quote-mocks
+     (cream/pearl panel, Spectral italic gold-deep type, centred,
+     hairlines top + bottom), with one modification: TOP hairline
+     is --pink (this page only), BOTTOM stays --gold-deep. Sits
+     between the last Origins beat and the eyebrow that follows;
+     bottom margin matches the founder standfirst → first paragraph
+     gap (var(--space-7)). */
+  .about-ed__bridge-panel {
+    clear: both;
+    margin: 0 0 var(--space-7) 0;
+    background: var(--pearl);
+    border-top: 1px solid var(--pink);
+    border-bottom: 1px solid var(--gold-deep);
+    padding-block: var(--space-7);
+    padding-inline: var(--space-5);
+  }
+  .about-ed__bridge-quote {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.2rem, 2vw, 1.5rem);
+    line-height: var(--lh-snug);
+    color: var(--gold-deep);
+    margin: 0 auto;
+    text-align: center;
+    max-width: 48ch;
   }
   .about-ed__transition-eyebrow {
     font-family: var(--font-body);
@@ -458,23 +480,6 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
   }
   .about-ed__feature-body:last-of-type {
     margin-bottom: 0;
-  }
-
-  /* ═══════════════════════════════════════════════════════════
-     Closing quote — Spectral italic, gold-deep, same size as the
-     masthead standfirst. No hairlines, no quotation marks.
-     Inherits the founder column's left alignment.
-     ═══════════════════════════════════════════════════════════ */
-  .about-ed__feature-closing {
-    clear: both;
-    font-family: var(--font-display);
-    font-style: italic;
-    font-weight: 400;
-    font-size: clamp(1.2rem, 2vw, 1.5rem);
-    line-height: var(--lh-snug);
-    color: var(--gold-deep);
-    margin: var(--space-8) 0 0 0;
-    max-width: 56ch;
   }
 
   /* ═══════════════════════════════════════════════════════════
@@ -562,9 +567,6 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
     }
     .about-ed__caption--feature {
       text-align: center;
-    }
-    .about-ed__feature-closing {
-      margin-top: var(--space-7);
     }
   }
 </style>
