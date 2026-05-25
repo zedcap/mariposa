@@ -562,6 +562,11 @@ const founderStandfirst =
     }
     .about-ed__beat--column .about-ed__beat-title {
       order: -2;
+      /* Flex containers don't collapse margins. Zero the title's
+         bottom margin so only the figure's margin-top contributes
+         to the title→figure gap, matching beats 2/3 where standard
+         block flow collapses these margins together. */
+      margin-block-end: 0;
     }
     .about-ed__beat--column .about-ed__figure--column {
       order: -1;
@@ -597,6 +602,10 @@ const founderStandfirst =
     }
     .about-ed__beat:nth-of-type(4) .about-ed__beat-title {
       order: -2;
+      /* Same rationale as beat 1 — flex container, no margin
+         collapse, zero the title's bottom margin so the gap
+         matches beats 2/3. */
+      margin-block-end: 0;
     }
     .about-ed__beat:nth-of-type(4) .about-ed__figure--inset-right {
       order: -1;
