@@ -203,7 +203,11 @@ const fullMarks = marks.length >= targetMarkCount
       letter-spacing: var(--ls-section);
       text-transform: uppercase;
       color: var(--gold-deep);
-      margin: 0 0 var(--space-4) 0;
+      /* Phase marker → description gap halved (2026-05-25, Stephane):
+         var(--space-4) 16px → var(--space-2) 8px. Matches the desktop
+         .smoke__stage gap below; both registers must tighten together
+         so the inline-marker layout (≤1080px) tracks the desktop look. */
+      margin: 0 0 var(--space-2) 0;
     }
     .smoke__inline-dot {
       width: 9px;
@@ -320,7 +324,10 @@ const fullMarks = marks.length >= targetMarkCount
     letter-spacing: var(--ls-section);
     text-transform: uppercase;
     color: var(--gold-deep);
-    margin: 0 0 var(--space-4) 0;
+    /* Phase title → description gap halved (2026-05-25, Stephane):
+       var(--space-4) 16px → var(--space-2) 8px. Title and its body
+       now read as a single unit rather than two beats. */
+    margin: 0 0 var(--space-2) 0;
   }
   /* Tasting-note body treatment (Stephane 2026-05-25): swapped from
      italic Spectral display to Hanken sans-serif at --fs-small, the
