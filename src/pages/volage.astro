@@ -567,7 +567,8 @@ const specsBgImage = `url("${withBase('/specs-bg-volage-gold.jpg')}")`;
     color: var(--gold-leaf);
   }
   .cigar__specs-bleed .cigar__strip {
-    border-top-color: color-mix(in srgb, var(--gold-soft) 45%, transparent);
+    /* Hairline under PROFILE / BLEND titles in pink (Stephane 2026-05-25). */
+    border-top-color: var(--pink);
   }
   .cigar__specs-bleed .cigar__strip-row {
     border-bottom-color: color-mix(in srgb, var(--gold-soft) 22%, transparent);

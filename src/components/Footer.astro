@@ -76,6 +76,10 @@ const { footer } = global;
        brand-line / bottom rhythm; the divider alone gets the tighter
        block margin. */
     margin-block: var(--space-5);
+    /* Divider colour: pink (Stephane 2026-05-25). Overrides the shared
+       .rule-gold base (which still paints the AgeGate rule in gold);
+       only the footer instance turns pink. Hairline weight unchanged. */
+    background: var(--pink);
   }
 
   .site-footer__bottom {
