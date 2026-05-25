@@ -741,27 +741,33 @@ const discoverHref: Record<string, string> = {};
       width: auto;
       height: auto;
     }
-    /* Volage mobile — same layered treatment. Sizing pass (Stephane
-       2026-05-25, follow-up): the prior 80vh/75% combo made width bind
-       first on phone widths (75% of 375px = 281px), which against the
-       ~1:4 PNG yielded an intrinsic height ~1124px — far taller than
-       the copy column. With `.range__media { inset: 0 }` bound to
-       `.range__frame` (collapsed to copy height on mobile) and the
-       viewport's `overflow: hidden`, the cigar's cap was clipped at
-       the frame's top edge (the same horizontal line where the
-       eyebrow began). Both caps reduced so the cigar's bounding box
-       fits inside the frame: max-height switches to 60vh as the
-       primary binder; max-width drops 75% → 55% as a defensive belt
-       (rarely binds at this height on phones, but keeps the cigar
-       from creeping wide on a wider mobile). Cap and foot both
-       visible, vertical-column read preserved. */
+    /* Volage mobile — same layered treatment. Sizing reverted to the
+       earlier 80vh / 75% values (Stephane 2026-05-25, third pass): the
+       60vh / 55% step shrank the cigar without solving the clip — the
+       cap was still cut at the top. Root cause: `.range__media` is
+       `position: absolute; inset: 0` relative to `.range__frame`, which
+       on mobile collapses to `.range__copy`'s natural height. The
+       frame's top edge therefore sits on the eyebrow line; with the
+       base mobile `place-items: start center`, the cigar's PNG top
+       edge is anchored to that same line, and the entrance scale (1.06
+       → 1) plus parallax (yPercent -4 → 4) push the cap above it,
+       where `.range__viewport`'s `overflow: hidden` clips. Fix is
+       geometric, not size: translate the cigar img down inside its
+       layer by 15% of its own height so the cap clears the top clip
+       line with headroom for the parallax drift; any overflow now
+       exits at the bottom (still clipped by the viewport — acceptable
+       per Stephane, cap visibility is the priority). Translate scoped
+       to the volage img only — Caprice is not reported as cropped and
+       its PNG has more transparent padding above the cap, so the base
+       `place-items: start center` continues to work there. */
     .range__frame--volage .range__media-frame--object {
       min-height: 0;
       max-width: none;
     }
     .range__frame--volage .range__cigar--object {
-      max-height: 60vh;
-      max-width: 55%;
+      max-height: 80vh;
+      max-width: 75%;
+      transform: translateY(15%);
     }
     .range__media-frame--scene {
       aspect-ratio: 1 / 1;
