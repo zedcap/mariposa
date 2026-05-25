@@ -767,6 +767,9 @@ const discoverHref: Record<string, string> = {};
     .range__frame--volage .range__cigar--object {
       max-height: 80vh;
       max-width: 75%;
+      /* 2026-05-25: small +12px nudge to clear residual cap clip;
+         full translateY(15%) was too aggressive, removed earlier same day. */
+      transform: translateY(12px);
     }
     .range__media-frame--scene {
       aspect-ratio: 1 / 1;
