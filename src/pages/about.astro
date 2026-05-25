@@ -587,14 +587,19 @@ const founderStandfirst =
       aspect-ratio: 16 / 9;
       margin: var(--space-5) 0;
     }
-    /* Beat 4 collapses its desktop 2-column grid to a single column.
-       Copy leads on mobile — figure stacks BELOW body via source
-       order. Override desktop grid-set width:100% already matches
-       new full-width treatment; clear the centred max-width too. */
+    /* Beat 4 — figure BETWEEN title and body on mobile (desktop grid
+       handles desktop placement; source order is title → body → figure).
+       Flex column with explicit orders so title stays first, figure
+       jumps to second, body falls to third. Mirrors the beat 1 pattern. */
     .about-ed__beat:nth-of-type(4) {
-      display: block;
+      display: flex;
+      flex-direction: column;
+    }
+    .about-ed__beat:nth-of-type(4) .about-ed__beat-title {
+      order: -2;
     }
     .about-ed__beat:nth-of-type(4) .about-ed__figure--inset-right {
+      order: -1;
       width: 100%;
       max-width: none;
       aspect-ratio: 16 / 9;
