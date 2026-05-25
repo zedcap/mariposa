@@ -173,6 +173,8 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
       <p class="about-ed__feature-body">{storyParas[0]}</p>
       <p class="about-ed__feature-body">{storyParas[1]}</p>
       <p class="about-ed__feature-body">{storyParas[2]}</p>
+
+      <p class="about-ed__feature-closer">For those who don't wait for special occasions,<br />but create them.</p>
     </section>
 
   </article>
@@ -512,6 +514,23 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
   }
   .about-ed__feature-body:last-of-type {
     margin-bottom: 0;
+  }
+  /* Closing rhetorical bookend — mirrors the home page position
+     statement's two-line cadence ("For those who don't wait for
+     special occasions, / but create them."). Spectral italic,
+     gold-deep, centred, sized between standfirst and body. No
+     hairlines. Top gap = var(--space-6), slightly more than the
+     inter-paragraph rhythm. */
+  .about-ed__feature-closer {
+    clear: both;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.1rem, 1.7vw, 1.35rem);
+    line-height: var(--lh-snug);
+    color: var(--gold-deep);
+    text-align: center;
+    margin: var(--space-6) 0 0 0;
   }
 
   /* ═══════════════════════════════════════════════════════════
