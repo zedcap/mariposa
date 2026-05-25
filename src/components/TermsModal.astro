@@ -195,9 +195,11 @@ const termsUrl = withBase('/terms/');
   .terms-modal__content :global(.terms-page__inner) {
     max-width: none;
   }
-  .terms-modal__content :global(.terms-page__header) {
+  .terms-modal__content :global(.terms-page__header),
+  .terms-modal__content :global(.terms-page__back) {
     /* The modal already carries a sticky title bar with the same
-       headings; drop the duplicate masthead from the injected body. */
+       headings and its own close X; drop the duplicate masthead and
+       the back-nav anchors from the injected body. */
     display: none;
   }
 
