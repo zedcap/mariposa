@@ -386,15 +386,27 @@ const specsBgImage = `url("${withBase('/specs-bg-volage-gold.jpg')}")`;
     max-width: 880px;
     margin-inline: auto;
   }
-  /* Section-level eyebrow override (Stephane 2026-05-24): THE CIGAR
-     and Tasting Notes are section titles, not sub-headings inside a
-     section, so they step up from --fs-eyebrow (12px) to a clamp that
-     reads meaningfully larger. Same Hanken-uppercase-tracked grammar
-     as .eyebrow; only the font-size changes. PROFILE / BLEND keep
-     the default eyebrow size — they're sub-headings within this
-     section. The Presentation eyebrow likewise stays at default. */
+  /* Section-level title treatment (Stephane 2026-05-25): THE CIGAR
+     and Tasting Notes promoted from Hanken-uppercase eyebrows to
+     italic Spectral display titles. Recipe matches the typography
+     mock — italic display, clamp(2rem, 4vw, 2.8rem), lh-tight, ink,
+     not uppercase, weight 400. Each property is set explicitly so
+     the base .eyebrow rule (weight 600, uppercase, ls-section,
+     fs-eyebrow) is fully overridden. The matching Tasting Notes
+     override lives in SmokeArc.astro (.smoke__eyebrow), reached via
+     :global() if needed; both must resolve to the same computed
+     font-size at every viewport. PROFILE / BLEND keep the default
+     eyebrow size — they're sub-headings within this section. The
+     Presentation eyebrow likewise stays at default. */
   .cigar__eyebrow {
-    font-size: clamp(0.95rem, 1.6vw, 1.15rem);
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    line-height: var(--lh-tight);
+    color: var(--ink);
+    letter-spacing: var(--ls-display);
+    text-transform: none;
     margin-bottom: var(--space-5);
   }
 

@@ -270,8 +270,24 @@ const specsBgImage = `url("${withBase('/specs-bg-caprice-gold.jpg')}")`;
     max-width: 880px;
     margin-inline: auto;
   }
+  /* Section-level title treatment (Stephane 2026-05-25): THE CIGAR
+     and Tasting Notes promoted from Hanken-uppercase eyebrows to
+     italic Spectral display titles. Recipe matches the typography
+     mock and the live Volage rule — italic display, clamp(2rem,
+     4vw, 2.8rem), lh-tight, ink, weight 400, not uppercase. Each
+     property is set explicitly so the base .eyebrow rule (weight
+     600, uppercase, ls-section, fs-eyebrow) is fully overridden.
+     Matching Tasting Notes override lives in SmokeArc.astro; both
+     must resolve to the same computed font-size at every viewport. */
   .cigar__eyebrow {
-    font-size: clamp(0.95rem, 1.6vw, 1.15rem);
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    line-height: var(--lh-tight);
+    color: var(--ink);
+    letter-spacing: var(--ls-display);
+    text-transform: none;
     margin-bottom: var(--space-5);
   }
 

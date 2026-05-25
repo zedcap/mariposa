@@ -126,15 +126,26 @@ const fullMarks = marks.length >= targetMarkCount
     max-width: 880px;
     margin-inline: auto;
   }
-  /* Section-level eyebrow override (Stephane 2026-05-24): Tasting
-     Notes is a section title, so it steps up from --fs-eyebrow (12px)
-     to a clamp that reads meaningfully larger — same scale as the
-     volage page's THE CIGAR eyebrow. Same Hanken-uppercase-tracked
-     grammar as .eyebrow; only the font-size changes. The per-third
-     STAGE labels (.smoke__stage) keep the default eyebrow size —
-     they're sub-headings within this section. */
+  /* Section-level title treatment (Stephane 2026-05-25): Tasting
+     Notes promoted from Hanken-uppercase eyebrow to italic Spectral
+     display title. Recipe matches the live .cigar__eyebrow on
+     volage.astro / caprice.astro exactly — italic display,
+     clamp(2rem, 4vw, 2.8rem), lh-tight, ink, weight 400, not
+     uppercase. Both section titles must resolve to identical
+     computed font-size at every viewport; each property is set
+     explicitly to fully override the base .eyebrow rule (weight 600,
+     uppercase, ls-section, fs-eyebrow). The per-third STAGE labels
+     (.smoke__stage) keep the default eyebrow size — they're
+     sub-headings within this section. */
   .smoke__eyebrow {
-    font-size: clamp(0.95rem, 1.6vw, 1.15rem);
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    line-height: var(--lh-tight);
+    color: var(--ink);
+    letter-spacing: var(--ls-display);
+    text-transform: none;
     margin-bottom: var(--space-7);
   }
 
@@ -311,29 +322,21 @@ const fullMarks = marks.length >= targetMarkCount
     color: var(--gold-deep);
     margin: 0 0 var(--space-4) 0;
   }
-  /* Tasting-note size matched to the Presentation section's intro
-     line (.packaging__lede in volage.astro) so the two read at the
-     same register. Was clamp(1.25rem, 2.4vw, 1.65rem). */
+  /* Tasting-note body treatment (Stephane 2026-05-25): swapped from
+     italic Spectral display to Hanken sans-serif at --fs-small, the
+     same size as cigar narrative body paragraphs (.cigar__para). The
+     italic display lede register is now reserved for the section
+     title (.smoke__eyebrow) above; the per-stage notes read as body
+     copy, matching the mock. Single rule — no desktop media-query
+     step-down; --fs-small is consistent across viewports. */
   .smoke__note {
-    font-family: var(--font-display);
-    font-style: italic;
+    font-family: var(--font-body);
+    font-style: normal;
     font-weight: 400;
-    font-size: clamp(1.05rem, 1.8vw, 1.25rem);
-    line-height: var(--lh-loose);
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
     color: var(--ink);
     margin: 0;
-  }
-  /* Desktop-only step-down (Stephane 2026-05-24): one size smaller on
-     desktop, mobile inherits the base above. clamp middle and ceiling
-     drop one step (1.8vw → 1.5vw, 1.25rem → 1.1rem); floor unchanged
-     at 1.05rem because the desktop range never binds to the floor (the
-     721px breakpoint times 1.5vw = ~10.8rem-equivalent; well above
-     1.05rem). Override wrapping is cleaner than restoring on mobile —
-     base survives unchanged and only desktop carries the override. */
-  @media (min-width: 721px) {
-    .smoke__note {
-      font-size: clamp(1.05rem, 1.5vw, 1.1rem);
-    }
   }
 
   /* Inline mobile marker — hidden on desktop. */
