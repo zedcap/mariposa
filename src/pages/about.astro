@@ -14,11 +14,8 @@
    Origins body copy and founder paragraphs remain verbatim from
    `mariposa cigars copy.docx`. */
 
-import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { withBase } from '../lib/path';
-
-import szSmoking from '../assets/sz_smoking_2.jpg';
 
 /* ─── Origins copy — verbatim, body unchanged from mock ────── */
 
@@ -149,18 +146,15 @@ const founderStandfirst =
       <figure class="about-ed__feature-figure">
         {/* Mobile (≤720px) uses a separate, wider-crop source so the
             founder portrait isn't severely cropped at the full-width
-            15rem-height mobile treatment. Desktop continues to use the
-            optimised <Image> (Astro picks the appropriate width from
-            the srcset). The <picture>'s <source> overrides on mobile;
-            the <Image> below renders the fallback <img>. */}
+            16:9 mobile treatment. Desktop uses a dedicated source
+            sized for the half-column 4:3 inset slot. The <picture>'s
+            <source> overrides on mobile; the <img> renders desktop. */}
         <picture>
           <source media="(max-width: 720px)" srcset={withBase('/founder-mobile.jpg')} />
-          <Image
-            src={szSmoking}
+          <img
+            src={withBase('/founder-desktop.jpg')}
             alt="Portrait of founder Stephane Zermatten lighting a Mariposa cigar."
             class="about-ed__feature-img"
-            widths={[360, 540, 720, 960]}
-            sizes="(max-width: 720px) 100vw, 320px"
             loading="lazy"
           />
         </picture>
@@ -473,11 +467,12 @@ const founderStandfirst =
     max-width: 56ch;
   }
   .about-ed__feature-figure {
-    float: right;
-    /* Width scaled 0.75× then 0.8× (Stephane) — portrait floats over ~2 paragraphs not 3. */
-    width: min(28.8%, 192px);
-    margin: var(--space-1) 0 var(--space-5) var(--space-6);
-    aspect-ratio: 4 / 5;
+    float: left;
+    /* Width + 4:3 match the inset figures on beats 2 and 3 — same
+       half-column slot language for the founder portrait. */
+    width: min(48%, 320px);
+    margin: var(--space-1) var(--space-6) var(--space-5) 0;
+    aspect-ratio: 4 / 3;
     /* 1px pink hairline frame — matches the inset figure treatment
        on beat 2 (.about-ed__figure--inset). Same editorial slot
        language for the founder portrait. */
@@ -489,7 +484,7 @@ const founderStandfirst =
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center;
+    object-position: center center;
     display: block;
   }
   .about-ed__feature-body {
@@ -596,15 +591,13 @@ const founderStandfirst =
       aspect-ratio: 16 / 9;
       margin: var(--space-5) 0;
     }
-    /* Founder portrait — full-width on mobile, ~240px visible height.
-       Drop the 4/5 aspect-ratio (replaced by explicit height), drop
-       float and centring margins; pink hairline + cover stay. */
+    /* Founder portrait — full-width on mobile at 16:9. Float and
+       centring margins drop; pink hairline + cover stay. */
     .about-ed__feature-figure {
       float: none;
       width: 100%;
       max-width: none;
-      height: 15rem;
-      aspect-ratio: auto;
+      aspect-ratio: 16 / 9;
       margin: 0 0 var(--space-6) 0;
     }
   }
