@@ -114,14 +114,16 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
       <p class="about-ed__body about-ed__body--dropcap">{beat3Body}</p>
     </section>
 
-    {/* ── Beat 4 — Uncompromising Craftsmanship. Half-column 4:3 inset placeholder, floated left (mirror of beat 2). ── */}
+    {/* ── Beat 4 — Uncompromising Craftsmanship. Half-column 4:3 inset photograph, floated right (restores L/R alternation: beat 2 right, beat 3 left, beat 4 right). ── */}
     <section class="about-ed__beat about-ed__beat--inset" aria-label="Uncompromising Craftsmanship" data-reveal>
       <h2 class="about-ed__beat-title">{beat4Title}</h2>
-      <figure class="about-ed__figure about-ed__figure--inset about-ed__figure--inset-left placeholder placeholder--4x3" aria-label="Jember rolling-room placeholder">
-        <span class="placeholder__corner placeholder__corner--tl" aria-hidden="true"></span>
-        <span class="placeholder__corner placeholder__corner--tr" aria-hidden="true"></span>
-        <span class="placeholder__corner placeholder__corner--bl" aria-hidden="true"></span>
-        <span class="placeholder__corner placeholder__corner--br" aria-hidden="true"></span>
+      <figure class="about-ed__figure about-ed__figure--inset about-ed__figure--inset-right">
+        <img
+          src={withBase('/origins-craftsmanship.jpg')}
+          alt="Hand-rolling tobacco leaves at the torcedor's bench."
+          class="about-ed__figure-inset-img"
+          loading="lazy"
+        />
       </figure>
       <p class="about-ed__body about-ed__body--dropcap">{beat4Body}</p>
     </section>
@@ -256,11 +258,11 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
     padding-block: clamp(var(--space-8), 9vw, var(--space-9));
   }
   /* First beat — tighten gap above by 25% (paired with the
-     masthead's reduced padding-bottom). Hard-coded value approved
-     by Stephane; unchanged when subsequent beats' top space was
-     halved. */
+     masthead's reduced padding-bottom), then subtract one
+     beat-title line-height (font-size × --lh-tight 1.08) at each
+     clamp stop to pull beat 1 up by one title-line worth. */
   .about-ed__beat:first-of-type {
-    padding-top: clamp(calc(var(--space-8) * 0.75), 6.75vw, calc(var(--space-9) * 0.75));
+    padding-top: clamp(calc(var(--space-8) * 0.75 - 2.16rem), 2.43vw, calc(var(--space-9) * 0.75 - 3.024rem));
   }
   /* Beats 2-4 — halve the space above to tighten the article's
      mid-cadence. padding-bottom inherited from the base rule
@@ -329,12 +331,9 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
     background: var(--pearl);
   }
   /* Inset figure — beats 2, 3, and 4. Half-column width, 4:3 landscape.
-     Float side set by the directional modifier so beats 2 and 4
-     alternate (right / left). 1px pink hairline frame as the
-     editorial slot frame for real photographs. Placeholders keep
-     their dashed-gold border (rule further down) — the `.placeholder`
-     class shares this wrapper but overrides the border so the
-     pending-shot reading stays intact. Same slot, different state. */
+     Float side set by the directional modifier so beats alternate
+     (right / left / right). 1px pink hairline frame as the editorial
+     slot frame for real photographs. */
   .about-ed__figure--inset {
     width: min(48%, 320px);
     aspect-ratio: 4 / 3;
@@ -350,14 +349,6 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
     object-fit: cover;
     object-position: center;
     display: block;
-  }
-  /* Placeholder + inset together — restore the dashed-gold border
-     on the placeholder variant so beat 4 still reads as pending.
-     This wins because the selector is more specific than the
-     wrapper rule above. */
-  .about-ed__figure--inset.placeholder {
-    border: 1px dashed var(--gold-deep);
-    overflow: visible;
   }
   .about-ed__figure--inset-right {
     float: right;
@@ -392,7 +383,7 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
   .about-ed__transition {
     text-align: center;
     /* Top gap reduced 25% twice (Stephane) — 0.75 × 0.75 = 0.5625. Bottom halved twice (Stephane) — pairs with .about-ed__feature padding-top halving to quarter the eyebrow → standfirst gap. */
-    padding-top: clamp(calc(var(--space-8) * 0.5625), 5.625vw, calc(var(--space-9) * 0.5625));
+    padding-top: clamp(calc(var(--space-8) * 0.45), 4.5vw, calc(var(--space-9) * 0.45));
     padding-bottom: clamp(calc(var(--space-8) * 0.25), 2.5vw, calc(var(--space-9) * 0.25));
   }
   /* Bridge quote panel — Treatment 3 from /about-quote-mocks
@@ -404,8 +395,8 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
      (identical clamp) so the panel stays symmetric if tokens change. */
   .about-ed__bridge-panel {
     clear: both;
-    margin: 0 0 clamp(calc(var(--space-8) * 1.125), 11.25vw, calc(var(--space-9) * 1.125)) 0;
-    background: var(--pearl);
+    margin: 0 0 clamp(calc(var(--space-8) * 1.6875), 16.875vw, calc(var(--space-9) * 1.6875)) 0;
+    background: transparent;
     border-top: 1px solid var(--pink);
     border-bottom: 1px solid var(--gold-deep);
     padding-block: var(--space-7);
@@ -451,8 +442,8 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
   }
   .about-ed__feature-figure {
     float: right;
-    /* Width scaled 0.75× (Stephane) — portrait floats over ~2 paragraphs not 3. */
-    width: min(36%, 240px);
+    /* Width scaled 0.75× then 0.8× (Stephane) — portrait floats over ~2 paragraphs not 3. */
+    width: min(28.8%, 192px);
     margin: var(--space-1) 0 var(--space-5) var(--space-6);
     aspect-ratio: 4 / 5;
     /* 1px pink hairline frame — matches the inset figure treatment
@@ -498,33 +489,6 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
   }
 
   /* ═══════════════════════════════════════════════════════════
-     Placeholder grammar — same dashed-gold convention as the
-     rest of the site.
-     ═══════════════════════════════════════════════════════════ */
-  .placeholder {
-    position: relative;
-    margin: 0;
-    background: var(--white);
-    border: 1px dashed var(--gold-deep);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: clamp(var(--space-5), 4vw, var(--space-7));
-  }
-  .placeholder--4x3 { aspect-ratio: 4 / 3; }
-  .placeholder__corner {
-    position: absolute;
-    width: 12px;
-    height: 12px;
-    border: 1px solid var(--gold-deep);
-    z-index: 2;
-  }
-  .placeholder__corner--tl { top: -1px;    left: -1px;  border-right: 0; border-bottom: 0; }
-  .placeholder__corner--tr { top: -1px;    right: -1px; border-left: 0;  border-bottom: 0; }
-  .placeholder__corner--bl { bottom: -1px; left: -1px;  border-right: 0; border-top: 0; }
-  .placeholder__corner--br { bottom: -1px; right: -1px; border-left: 0;  border-top: 0; }
-
-  /* ═══════════════════════════════════════════════════════════
      Mobile — ≤720px. Drop cap kept on mobile: at clamp lower
      bound (4.5rem with line-height 0.82) it still spans ~3
      body lines at the narrower measure, and the float wraps
@@ -560,11 +524,11 @@ const placeholderNote = 'Placeholder atmosphere — final shot to be commissione
       max-width: 320px;
       margin: var(--space-5) auto;
     }
-    /* Founder portrait stacks too. Max-width scaled 0.75× to match desktop. */
+    /* Founder portrait stacks too. Max-width scaled 0.75× then 0.8× to match desktop. */
     .about-ed__feature-figure {
       float: none;
       width: 100%;
-      max-width: 240px;
+      max-width: 192px;
       margin: 0 auto var(--space-6) auto;
     }
   }
