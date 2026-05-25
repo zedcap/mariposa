@@ -1,202 +1,98 @@
 ---
-/* Age gate — comparison mocks.
+/* Age gate — revised design mock.
    ------------------------------------------------------------------
-   2026-05-24. Four full-viewport-scale renderings of the 21+ age
-   gate, stacked vertically on a single comparison page for Stephane
-   to pick a direction.
-
-   Each option is rendered inside a contained landscape preview
-   frame (max 1200×800) so all four sit on one page rather than
-   each one filling the viewport. The frame is the picture-in-
-   picture device only; the actual gate, once chosen, would render
-   full-screen via AgeGate.astro.
+   2026-05-25. Single revised design replacing the prior four-option
+   comparison page. Stephane has picked the direction: a centred
+   white card on a 50% white overlay, with the home page visible
+   behind. Card includes wordmark, italic Spectral question, two
+   side-by-side buttons (ink-filled Yes / outlined No), a checked-
+   by-default "Remember me on this device" tickbox, and a small
+   disclaimer with an inline Terms & Conditions link that fires the
+   existing `mariposa:open-terms` event.
 
    Direct-URL only. NOT linked from the nav. The live AgeGate.astro
-   component is UNTOUCHED. Same pattern as `/about-mocks`,
-   `/story-mocks`, `/product-mocks`, `/volage-header-mocks`.
+   component is UNTOUCHED — this is a visual mock only. None of the
+   localStorage / sessionStorage logic is wired here; the overlay is
+   simply rendered visible so Stephane can see the design.
 
-   The four options:
-     1 — Current. Replicates AgeGate.astro exactly.
-     2 — Editorial pause. White ground, italic Spectral question,
-         minimal pair of buttons.
-     3 — Photographic ground. Full-bleed hero photo, dark gradient,
-         white type and outlined button.
-     4 — Brand statement. Dark ink ground, gold accents, italic
-         pearl question, gold-outlined / pearl text buttons. */
+   The backdrop is mocked inline (hero image + a position-statement
+   excerpt) rather than rendering the real home page, to avoid this
+   mock page double-mounting components and to keep the layered
+   effect legible regardless of the live gate's visibility state. */
 
 import { Image } from 'astro:assets';
 import { getEntry } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import heroBg from '../assets/hero-mp-1.jpg';
 
-/* Shared copy — pulled from the same source the live gate uses, so
-   every mock reads with the live wording rather than placeholders. */
-const global = (await getEntry('site', 'global'))!.data as {
-  wordmark: string;
-  positionLine: string;
-  ageGate: {
-    intro: string;
-    question: string;
-    confirm: string;
-    decline: string;
-    declineHeading: string;
-    declineBody: string;
-  };
+const home = (await getEntry('site', 'home'))!.data as {
+  position: { positionPink: string; positionInk: string; subline: string };
 };
-const { positionLine, ageGate } = global;
+const { position } = home;
 ---
 
-<BaseLayout title="Mariposa • Age gate — comparison mocks">
+<BaseLayout title="Mariposa • Age gate — revised design mock">
 
-  <section class="intro">
+  {/* Ribbon banner — internal label, sits above everything. */}
+  <div class="ribbon">
     <div class="container">
-      <p class="intro__eyebrow">Internal &mdash; comparison surface</p>
-      <h1 class="intro__title">Age gate &mdash; comparison mocks</h1>
-      <p class="intro__lede">
-        The current age gate plus three alternative directions, each
-        shown inside a contained landscape preview frame so all four
-        sit on one page. The live <code>AgeGate.astro</code> component
-        is unchanged.
-      </p>
-    </div>
-  </section>
-
-  {/* ════════════════════════════════════════════════════════════
-      OPTION 1 — Current
-      Replicates AgeGate.astro exactly, scaled into the frame.
-      ════════════════════════════════════════════════════════════ */}
-
-  <section class="label">
-    <div class="container">
-      <p class="label__eyebrow">Option 1 &mdash; Current</p>
-      <p class="label__desc">
-        The live <code>AgeGate.astro</code>. White ground, gold-deep
-        wordmark, position line, hairline gold rule, intro line,
-        Spectral display question, ink-filled "Yes" pill and
-        gold-outlined "No" ghost pill. The reference point.
-      </p>
-    </div>
-  </section>
-
-  <div class="frame-wrap">
-    <div class="frame frame--paper" aria-label="Option 1 preview">
-
-      <div class="o1__inner">
-        <span class="o1__mark">mariposa</span>
-        <p class="o1__position">{positionLine}</p>
-        <hr class="o1__rule" />
-        <p class="o1__intro">{ageGate.intro}</p>
-        <p class="o1__question">{ageGate.question}</p>
-        <div class="o1__choices">
-          <button class="pill pill--solid" type="button">{ageGate.confirm}</button>
-          <button class="pill pill--ghost" type="button">{ageGate.decline}</button>
-        </div>
-      </div>
-
+      <span class="ribbon__text">
+        Age Gate Mock &mdash; Revised Design. Live age gate unchanged.
+      </span>
     </div>
   </div>
 
-  {/* ════════════════════════════════════════════════════════════
-      OPTION 2 — Editorial pause
-      White ground, lowercase wordmark small at top, italic Spectral
-      question at display scale, ink-filled Yes / text-link No.
-      ════════════════════════════════════════════════════════════ */}
+  {/* ═══════════════════════════════════════════════════════════════
+      Stage — a contained viewport-scale surface that holds the
+      mocked backdrop, the 50% white overlay, and the centred card.
+      Aspect-ratio locked so the layered effect reads consistently
+      regardless of screen size.
+      ═══════════════════════════════════════════════════════════════ */}
 
-  <section class="label">
-    <div class="container">
-      <p class="label__eyebrow">Option 2 &mdash; Editorial pause</p>
-      <p class="label__desc">
-        White ground, single centred column. The wordmark sits small
-        at the top, the question carries the page in italic Spectral
-        at display scale, two minimal buttons sit beneath &mdash; an
-        ink-filled "Yes" and a "No" rendered as a quiet text link
-        with no border. Generous breathing room. Most stripped-down
-        of the four.
-      </p>
-    </div>
-  </section>
+  <div class="stage-wrap">
+    <div class="stage" aria-label="Revised age gate preview">
 
-  <div class="frame-wrap">
-    <div class="frame frame--paper" aria-label="Option 2 preview">
-
-      <div class="o2__inner">
-        <span class="o2__mark">mariposa</span>
-        <p class="o2__question">{ageGate.question}</p>
-        <div class="o2__choices">
-          <button class="o2-btn o2-btn--solid" type="button">Yes</button>
-          <button class="o2-btn o2-btn--text" type="button">No</button>
+      {/* Backdrop — representative of the home page underneath. */}
+      <Image
+        src={heroBg}
+        alt="Mariposa home page hero, shown as the backdrop the age gate sits over."
+        class="stage__bg"
+        widths={[800, 1200, 1800]}
+        sizes="1200px"
+      />
+      <div class="stage__backdrop-content" aria-hidden="true">
+        <div class="stage__position">
+          <span class="stage__position-pink">{position.positionPink}</span>{' '}
+          <span class="stage__position-ink">{position.positionInk}</span>
         </div>
       </div>
 
-    </div>
-  </div>
+      {/* Overlay — full-stage, 50% white, blocks the page beneath. */}
+      <div class="stage__overlay" aria-hidden="true"></div>
 
-  {/* ════════════════════════════════════════════════════════════
-      OPTION 3 — Photographic ground
-      Full-bleed hero photo, dark gradient overlay, white type and
-      a white-outlined Yes button + text No.
-      ════════════════════════════════════════════════════════════ */}
+      {/* Card — centred, opaque white, pink hairline, editorial frame. */}
+      <div class="gate-card" role="dialog" aria-modal="true" aria-labelledby="mock-age-q">
+        <span class="wordmark gate-card__mark">mariposa</span>
 
-  <section class="label">
-    <div class="container">
-      <p class="label__eyebrow">Option 3 &mdash; Photographic ground</p>
-      <p class="label__desc">
-        Full-bleed photographic background (<code>hero-mp-1.jpg</code>
-        standing in for atmosphere). Soft dark gradient so the
-        question reads white. Wordmark in white at the top, italic
-        Spectral question centred at display scale, a white-outlined
-        "Yes" and a quiet text "No". Closest to the Macallan /
-        Hennessy age-gate convention.
-      </p>
-    </div>
-  </section>
+        <h2 class="gate-card__question" id="mock-age-q">Are you 21 or older?</h2>
 
-  <div class="frame-wrap">
-    <div class="frame frame--photo" aria-label="Option 3 preview">
-
-      <Image src={heroBg} alt="Atmospheric placeholder background for the photographic age-gate variant." class="o3__bg" widths={[800, 1200, 1800]} sizes="1200px" />
-      <div class="o3__scrim" aria-hidden="true"></div>
-
-      <div class="o3__inner">
-        <span class="o3__mark">mariposa</span>
-        <p class="o3__question">{ageGate.question}</p>
-        <div class="o3__choices">
-          <button class="o3-btn o3-btn--outline" type="button">Yes</button>
-          <button class="o3-btn o3-btn--text" type="button">No</button>
+        <div class="gate-card__choices">
+          <button class="gate-btn gate-btn--solid" type="button">Yes, I am</button>
+          <button class="gate-btn gate-btn--outline" type="button">No</button>
         </div>
-      </div>
 
-    </div>
-  </div>
+        <label class="gate-card__remember">
+          <input type="checkbox" class="gate-check" checked />
+          <span class="gate-card__remember-text">Remember me on this device</span>
+        </label>
 
-  {/* ════════════════════════════════════════════════════════════
-      OPTION 4 — Brand statement
-      Dark ink ground, gold-leaf wordmark, italic pearl question,
-      gold-outlined Yes + pearl text No.
-      ════════════════════════════════════════════════════════════ */}
-
-  <section class="label">
-    <div class="container">
-      <p class="label__eyebrow">Option 4 &mdash; Brand statement</p>
-      <p class="label__desc">
-        Ink ground with gold accents. Wordmark in gold-leaf at the
-        top. Italic Spectral question in pearl at display scale. Two
-        buttons &mdash; a gold-leaf outlined "Yes" and a pearl text
-        "No". Confident, masculine, cigar-category-conventional.
-      </p>
-    </div>
-  </section>
-
-  <div class="frame-wrap">
-    <div class="frame frame--ink" aria-label="Option 4 preview">
-
-      <div class="o4__inner">
-        <span class="o4__mark">mariposa</span>
-        <p class="o4__question">{ageGate.question}</p>
-        <div class="o4__choices">
-          <button class="o4-btn o4-btn--outline" type="button">Yes</button>
-          <button class="o4-btn o4-btn--text" type="button">No</button>
-        </div>
+        <p class="gate-card__disclaimer">
+          By continuing, you confirm that you are of legal smoking age
+          and agree to our{' '}
+          <button type="button" class="gate-card__terms" data-open-terms>
+            Terms &amp; Conditions
+          </button>.
+        </p>
       </div>
 
     </div>
@@ -205,265 +101,39 @@ const { positionLine, ageGate } = global;
 </BaseLayout>
 
 <style>
-  /* ─── Intro (matches /about-mocks pattern) ───────────────── */
-  .intro {
-    padding-block: var(--space-9) var(--space-7);
-    background: var(--white);
-    border-bottom: 1px solid var(--hairline);
-  }
-  .intro__eyebrow {
-    font-family: var(--font-body);
-    font-size: var(--fs-eyebrow);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: var(--ls-section);
-    color: var(--gold-deep);
-    margin-bottom: var(--space-4);
-  }
-  .intro__title {
-    font-family: var(--font-display);
-    font-weight: 300;
-    font-size: clamp(2rem, 4.4vw, 3.25rem);
-    line-height: var(--lh-snug);
-    color: var(--ink);
-    margin-bottom: var(--space-5);
-  }
-  .intro__lede {
-    font-family: var(--font-body);
-    font-size: var(--fs-lede);
-    line-height: var(--lh-body, 1.6);
-    color: var(--ink-soft);
-    max-width: 64ch;
-  }
-  .intro__lede code,
-  .label__desc code {
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-    font-size: 0.92em;
-  }
-  .intro__lede code { color: var(--ink); }
-
-  /* ─── Option label band (matches /about-mocks pattern) ──── */
-  .label {
+  /* ─── Ribbon banner ──────────────────────────────────────── */
+  .ribbon {
     background: var(--ink);
     color: var(--white);
-    padding-block: var(--space-6);
+    padding-block: var(--space-3);
   }
-  .label__eyebrow {
-    font-family: var(--font-body);
-    font-size: var(--fs-eyebrow);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: var(--ls-section);
-    color: var(--gold-leaf);
-    margin-bottom: var(--space-3);
-  }
-  .label__desc {
+  .ribbon__text {
     font-family: var(--font-body);
     font-size: var(--fs-small);
-    line-height: var(--lh-loose);
+    letter-spacing: var(--ls-small);
     color: var(--pearl);
-    max-width: 78ch;
-  }
-  .label__desc code {
-    color: var(--gold-soft);
   }
 
-  /* ─── Preview frame ──────────────────────────────────────
-     Contained landscape stage. Aspect-ratio locked so the
-     four previews share identical canvases regardless of the
-     viewport width. Width is capped at 1200px (page max),
-     height follows from a 3:2 ratio so each frame reads as a
-     full-screen interstitial in miniature without any one of
-     them dominating the comparison page. */
-  .frame-wrap {
+  /* ─── Stage wrap ─────────────────────────────────────────── */
+  .stage-wrap {
     background: var(--pearl);
     padding-block: clamp(var(--space-7), 6vw, var(--space-9));
     padding-inline: var(--page-pad-m);
     display: flex;
     justify-content: center;
   }
-  .frame {
+  .stage {
     position: relative;
     width: 100%;
     max-width: 1200px;
     aspect-ratio: 3 / 2;
     overflow: hidden;
     box-shadow: var(--shadow-lift);
-  }
-  .frame--paper { background: var(--white); }
-  .frame--ink   { background: var(--ink); }
-  .frame--photo { background: var(--ink); }
-
-  /* ═══════════════════════════════════════════════════════════
-     OPTION 1 — Current. Mirrors AgeGate.astro spec.
-     ═══════════════════════════════════════════════════════════ */
-  .o1__inner {
-    position: absolute;
-    inset: 0;
-    display: grid;
-    place-items: center;
-    padding: var(--page-pad-m);
-    text-align: center;
-  }
-  .o1__inner > * { max-width: 520px; }
-  .o1__mark {
-    font-family: var(--font-display);
-    font-weight: 400;
-    text-transform: lowercase;
-    letter-spacing: var(--ls-wordmark);
-    font-size: clamp(2rem, 4.4vw, 3rem);
-    color: var(--gold-deep);
-    line-height: 1;
-  }
-  .o1__position {
-    font-family: var(--font-body);
-    font-size: var(--fs-caption);
-    letter-spacing: var(--ls-section);
-    text-transform: uppercase;
-    color: var(--ash);
-    margin-top: var(--space-4);
-    margin-bottom: 0;
-  }
-  .o1__rule {
-    width: 64px;
-    height: 1px;
-    border: none;
-    background: var(--gold-leaf);
-    margin-block: var(--space-7);
-  }
-  .o1__intro {
-    font-family: var(--font-body);
-    font-size: var(--fs-small);
-    letter-spacing: var(--ls-small);
-    color: var(--ash);
-    margin: 0 0 var(--space-2) 0;
-  }
-  .o1__question {
-    font-family: var(--font-display);
-    font-weight: 300;
-    font-size: clamp(1.5rem, 3vw, 2.25rem);
-    line-height: var(--lh-snug);
-    color: var(--ink);
-    margin: 0;
-  }
-  .o1__choices {
-    display: flex;
-    gap: var(--space-4);
-    margin-top: var(--space-7);
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  /* Shared pill (Option 1 only — matches the live gate). */
-  .pill {
-    font-family: var(--font-body);
-    font-size: var(--fs-small);
-    font-weight: 600;
-    letter-spacing: var(--ls-small);
-    border-radius: var(--radius-pill);
-    padding: 14px 32px;
-    cursor: pointer;
-    transition:
-      transform var(--dur-default) var(--ease-paper),
-      box-shadow var(--dur-default) var(--ease-paper),
-      background-color var(--dur-default) var(--ease-paper);
-  }
-  .pill--solid {
-    color: var(--white);
     background: var(--ink);
-    border: 1px solid var(--ink);
-    box-shadow: var(--shadow-rise);
-  }
-  .pill--solid:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lift);
-  }
-  .pill--ghost {
-    color: var(--ink);
-    background: transparent;
-    border: 1px solid var(--border-gold);
-  }
-  .pill--ghost:hover {
-    background: var(--pearl);
-  }
-  .pill:active {
-    transform: translateY(1px);
-    box-shadow: var(--shadow-press);
   }
 
-  /* ═══════════════════════════════════════════════════════════
-     OPTION 2 — Editorial pause
-     ═══════════════════════════════════════════════════════════ */
-  .o2__inner {
-    position: absolute;
-    inset: 0;
-    display: grid;
-    grid-template-rows: auto 1fr auto;
-    padding: clamp(var(--space-7), 6vw, var(--space-9));
-    text-align: center;
-  }
-  .o2__mark {
-    align-self: start;
-    justify-self: center;
-    font-family: var(--font-display);
-    font-weight: 400;
-    text-transform: lowercase;
-    letter-spacing: var(--ls-wordmark);
-    font-size: var(--fs-h6);
-    color: var(--gold-deep);
-    line-height: 1;
-  }
-  .o2__question {
-    align-self: center;
-    justify-self: center;
-    max-width: 22ch;
-    font-family: var(--font-display);
-    font-style: italic;
-    font-weight: 400;
-    font-size: clamp(2rem, 4vw, 3rem);
-    line-height: var(--lh-snug);
-    color: var(--ink);
-    margin: 0;
-  }
-  .o2__choices {
-    align-self: end;
-    justify-self: center;
-    display: flex;
-    gap: var(--space-7);
-    align-items: center;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  .o2-btn {
-    font-family: var(--font-body);
-    font-size: var(--fs-small);
-    font-weight: 600;
-    letter-spacing: var(--ls-small);
-    cursor: pointer;
-    background: transparent;
-    border: none;
-    padding: 0;
-  }
-  .o2-btn--solid {
-    color: var(--white);
-    background: var(--ink);
-    border: 1px solid var(--ink);
-    padding: 14px 40px;
-    border-radius: var(--radius-pill);
-  }
-  .o2-btn--text {
-    color: var(--ash);
-    text-decoration: underline;
-    text-underline-offset: 4px;
-    text-decoration-thickness: 1px;
-    padding: 14px 0;
-  }
-  .o2-btn--text:hover { color: var(--ink); }
-
-  /* ═══════════════════════════════════════════════════════════
-     OPTION 3 — Photographic ground
-     ═══════════════════════════════════════════════════════════ */
-  .o3__bg {
+  /* ─── Backdrop ───────────────────────────────────────────── */
+  .stage__bg {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -472,165 +142,199 @@ const { positionLine, ageGate } = global;
     object-position: center;
     display: block;
   }
-  .o3__scrim {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      to bottom,
-      color-mix(in srgb, var(--ink) 35%, transparent) 0%,
-      color-mix(in srgb, var(--ink) 55%, transparent) 100%
-    );
-    pointer-events: none;
-  }
-  .o3__inner {
+  .stage__backdrop-content {
     position: absolute;
     inset: 0;
     display: grid;
-    grid-template-rows: auto 1fr auto;
+    place-items: center;
     padding: clamp(var(--space-7), 6vw, var(--space-9));
+    z-index: 1;
+  }
+  .stage__position {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(1.6rem, 3.4vw, 2.6rem);
+    line-height: var(--lh-snug);
+    color: var(--white);
     text-align: center;
+    max-width: 28ch;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35);
+  }
+  .stage__position-pink { color: var(--pink); font-style: italic; }
+  .stage__position-ink  { color: var(--white); }
+
+  /* ─── Overlay — 50% white ────────────────────────────────── */
+  .stage__overlay {
+    position: absolute;
+    inset: 0;
+    background: color-mix(in srgb, var(--white) 50%, transparent);
     z-index: 2;
   }
-  .o3__mark {
-    align-self: start;
-    justify-self: center;
-    font-family: var(--font-display);
-    font-weight: 400;
-    text-transform: lowercase;
-    letter-spacing: var(--ls-wordmark);
-    font-size: var(--fs-h6);
-    color: var(--white);
-    line-height: 1;
-  }
-  .o3__question {
-    align-self: center;
-    justify-self: center;
-    max-width: 22ch;
-    font-family: var(--font-display);
-    font-style: italic;
-    font-weight: 400;
-    font-size: clamp(2rem, 4vw, 3rem);
-    line-height: var(--lh-snug);
-    color: var(--white);
-    margin: 0;
-    text-shadow: 0 1px 8px rgba(0,0,0,0.35);
-  }
-  .o3__choices {
-    align-self: end;
-    justify-self: center;
-    display: flex;
-    gap: var(--space-7);
-    align-items: center;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  .o3-btn {
-    font-family: var(--font-body);
-    font-size: var(--fs-small);
-    font-weight: 600;
-    letter-spacing: var(--ls-small);
-    cursor: pointer;
-    background: transparent;
-    padding: 0;
-  }
-  .o3-btn--outline {
-    color: var(--white);
-    border: 1px solid var(--white);
-    padding: 14px 40px;
-    border-radius: var(--radius-pill);
-  }
-  .o3-btn--outline:hover {
-    background: rgba(255,255,255,0.1);
-  }
-  .o3-btn--text {
-    color: var(--pearl);
-    border: none;
-    text-decoration: underline;
-    text-underline-offset: 4px;
-    text-decoration-thickness: 1px;
-    padding: 14px 0;
-  }
-  .o3-btn--text:hover { color: var(--white); }
 
   /* ═══════════════════════════════════════════════════════════
-     OPTION 4 — Brand statement
+     Gate card — centred, opaque, pink hairline.
      ═══════════════════════════════════════════════════════════ */
-  .o4__inner {
+  .gate-card {
     position: absolute;
-    inset: 0;
-    display: grid;
-    grid-template-rows: auto 1fr auto;
-    padding: clamp(var(--space-7), 6vw, var(--space-9));
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 3;
+
+    width: min(440px, 90vw);
+    background: var(--white);
+    border: 1px solid var(--pink);
+
+    padding-block: var(--space-7);
+    padding-inline: var(--space-8);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
   }
-  .o4__mark {
-    align-self: start;
-    justify-self: center;
-    font-family: var(--font-display);
-    font-weight: 400;
-    text-transform: lowercase;
-    letter-spacing: var(--ls-wordmark);
-    font-size: var(--fs-h6);
-    color: var(--gold-leaf);
+
+  .gate-card__mark {
+    font-size: var(--fs-h5);
+    color: var(--ink);
     line-height: 1;
   }
-  .o4__question {
-    align-self: center;
-    justify-self: center;
-    max-width: 22ch;
+
+  .gate-card__question {
+    margin: var(--space-6) 0 0 0;
     font-family: var(--font-display);
     font-style: italic;
     font-weight: 400;
-    font-size: clamp(2rem, 4vw, 3rem);
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
     line-height: var(--lh-snug);
-    color: var(--pearl);
-    margin: 0;
+    color: var(--ink);
   }
-  .o4__choices {
-    align-self: end;
-    justify-self: center;
+
+  .gate-card__choices {
     display: flex;
-    gap: var(--space-7);
-    align-items: center;
-    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-6);
+    width: 100%;
     justify-content: center;
   }
-  .o4-btn {
+
+  /* Buttons — square corners (--radius-xs) for the editorial register,
+     matching the brand's quieter button language used on cards and
+     inputs rather than the loud pill used in the live gate. */
+  .gate-btn {
     font-family: var(--font-body);
     font-size: var(--fs-small);
     font-weight: 600;
     letter-spacing: var(--ls-small);
+    border-radius: var(--radius-xs);
+    padding: 12px 24px;
     cursor: pointer;
+    flex: 1 1 auto;
+    min-width: 120px;
+    transition:
+      background-color var(--dur-default) var(--ease-paper),
+      color var(--dur-default) var(--ease-paper);
+  }
+  .gate-btn--solid {
+    color: var(--white);
+    background: var(--ink);
+    border: 1px solid var(--ink);
+  }
+  .gate-btn--solid:hover {
+    background: color-mix(in srgb, var(--ink) 85%, var(--white));
+  }
+  .gate-btn--outline {
+    color: var(--ink);
     background: transparent;
-    padding: 0;
+    border: 1px solid var(--ink);
   }
-  .o4-btn--outline {
-    color: var(--gold-leaf);
-    border: 1px solid var(--gold-leaf);
-    padding: 14px 40px;
-    border-radius: var(--radius-pill);
+  .gate-btn--outline:hover {
+    background: var(--pearl);
   }
-  .o4-btn--outline:hover {
-    background: color-mix(in srgb, var(--gold-leaf) 12%, transparent);
+
+  /* Remember-me — checkbox + label on one row. */
+  .gate-card__remember {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-6);
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    color: var(--ink-soft);
   }
-  .o4-btn--text {
-    color: var(--pearl);
+  .gate-check {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border: 1px solid var(--ink);
+    background: var(--white);
+    border-radius: 2px;
+    display: inline-grid;
+    place-content: center;
+    cursor: pointer;
+    margin: 0;
+  }
+  .gate-check::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    transform: scale(0);
+    transition: transform var(--dur-quick) var(--ease-paper);
+    background: var(--ink);
+    border-radius: 1px;
+  }
+  .gate-check:checked::before {
+    transform: scale(1);
+  }
+  .gate-check:focus-visible {
+    outline: 2px solid var(--pink);
+    outline-offset: 2px;
+  }
+
+  .gate-card__disclaimer {
+    margin: var(--space-4) 0 0 0;
+    font-family: var(--font-body);
+    font-size: var(--fs-caption);
+    line-height: var(--lh-body);
+    color: var(--ash);
+    max-width: 36ch;
+  }
+  .gate-card__terms {
+    font: inherit;
+    color: var(--ink);
+    background: none;
     border: none;
+    padding: 0;
+    cursor: pointer;
     text-decoration: underline;
-    text-underline-offset: 4px;
+    text-underline-offset: 3px;
     text-decoration-thickness: 1px;
-    padding: 14px 0;
   }
-  .o4-btn--text:hover { color: var(--white); }
+  .gate-card__terms:hover { color: var(--pink-deep); }
 
   /* ─── Mobile ─────────────────────────────────────────────── */
   @media (max-width: 720px) {
-    /* Stretch the frames to a taller aspect-ratio at narrow widths
-       so the question + buttons stop crowding each other. */
-    .frame {
-      aspect-ratio: 3 / 4;
+    .stage { aspect-ratio: 3 / 4; }
+    .gate-card {
+      padding-block: var(--space-6);
+      padding-inline: var(--space-6);
     }
+    .gate-card__choices { flex-wrap: wrap; }
   }
 </style>
+
+<script>
+  /* Mock-only: wire the Terms & Conditions link to the existing
+     TermsModal event. Yes / No / checkbox are intentionally inert —
+     James will spec the live behaviour separately. */
+  const termsBtn = document.querySelector<HTMLButtonElement>('[data-open-terms]');
+  termsBtn?.addEventListener('click', () => {
+    window.dispatchEvent(
+      new CustomEvent('mariposa:open-terms', { detail: { opener: termsBtn } })
+    );
+  });
+</script>
 </content>
 </invoke>
