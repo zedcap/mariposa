@@ -1,0 +1,613 @@
+---
+/* About — closing quote comparison mocks.
+   ------------------------------------------------------------------
+   2026-05-25. Comparison surface for Stephane: four highlight
+   treatments at the current placement, then two placement variants
+   using the recommended treatment.
+
+   Direct-URL only. NOT linked from the nav. The live /about page
+   is UNTOUCHED. Same pattern as /story-mocks, /contact-mocks,
+   /volage-header-mocks, /age-gate-mocks.
+
+   Quote copy is verbatim with straight apostrophes and straight
+   double quotes. No em dashes anywhere in the markup or styles.
+
+   Note: there is no --cream token in the design system, so the
+   warm-white panel in Treatment 3 uses --pearl. */
+
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import szSmoking from '../assets/sz_smoking_2.jpg';
+
+const closingQuote =
+  "\"Life isn't meant to be spent waiting for special occasions; it is about creating them on any ordinary day. The gold leaf on each Mariposa is my personal reminder to pause, slow down, and truly savour the hours shared with friends.\"";
+
+/* For Treatment 4 we hide the leading straight quote (the oversized
+   glyph replaces it). Slice from index 1 to drop the opening " and
+   keep the rest intact, closing " included. */
+const closingQuoteNoLeadMark = closingQuote.slice(1);
+
+/* Founder surround used for SECTION A — body paragraph above + quote.
+   One paragraph of founder body copy gives the quote its context. */
+const founderBodyTail =
+  "Today, Mariposa captures the rich, multi-cultural soul of cigars, giving friends around the world the perfect excuse to light up, slow down, and share a good conversation. Whatever the hour.";
+
+/* For SECTION B placement variants we need more of the live founder
+   surround so position reads accurately. */
+const founderStandfirst =
+  "What began as a founder's personal journey into the tobacco fields of East Java evolved into an exclusive blend made for close friends. Today, Mariposa brings that private reserve spirit with global friends around the world.";
+
+const storyPara1 =
+  "Mariposa's story begins with a journey. Driven by a lifelong taste for cigars, founder Stephane Zermatten followed his curiosity to the tobacco fields of East Java.";
+const storyPara2 =
+  "What he discovered inspired him to craft a blend for his own humidor and closest friends. Yet, as word spread and a wider circle grew curious, he knew it couldn't remain a private reserve. The brand was born to bring this unique cigar to a growing community in Bali and beyond.";
+---
+
+<BaseLayout title="Mariposa • About — closing quote mocks">
+
+  {/* ── Dark ribbon banner ─────────────────────────────────── */}
+  <section class="ribbon" aria-label="Mocks ribbon">
+    <div class="ribbon__inner">
+      <p class="ribbon__eyebrow">Internal &middot; comparison surface</p>
+      <h1 class="ribbon__title">About &mdash; Closing Quote Mocks</h1>
+      <p class="ribbon__sub">Pick a treatment and a placement. Live /about unchanged.</p>
+    </div>
+  </section>
+
+  {/* ═════════════════════════════════════════════════════════
+       SECTION A — Highlight treatments, at the current placement
+       ═════════════════════════════════════════════════════════ */}
+  <section class="section-head">
+    <div class="section-head__inner">
+      <p class="section-head__eyebrow">Section A</p>
+      <h2 class="section-head__title">Highlight treatments (current placement).</h2>
+      <p class="section-head__lede">
+        Four ways to render the closing quote at its current home &mdash;
+        the close of the founder feature. Each variant shows one
+        paragraph of body copy above the quote so it reads in context.
+      </p>
+    </div>
+  </section>
+
+  {/* ─── Treatment 1 — Baseline (live) ─────────────────────── */}
+  <article class="variant">
+    <header class="variant__chip">
+      <span class="variant__chip-n">T1</span>
+      <h3 class="variant__chip-name">Treatment 1 &mdash; Baseline (current live)</h3>
+      <p class="variant__chip-note">
+        Spectral italic, gold-deep, same size as the standfirst. No box,
+        no hairlines, no decoration. The reference point.
+      </p>
+    </header>
+    <div class="stage">
+      <div class="about-ed about-ed--stage">
+        <section class="about-ed__feature">
+          <p class="about-ed__feature-body">{founderBodyTail}</p>
+          <p class="about-ed__feature-closing about-ed__feature-closing--t1">{closingQuote}</p>
+        </section>
+      </div>
+    </div>
+  </article>
+
+  {/* ─── Treatment 2 — Pink hairline frame ─────────────────── */}
+  <article class="variant">
+    <header class="variant__chip">
+      <span class="variant__chip-n">T2</span>
+      <h3 class="variant__chip-name">Treatment 2 &mdash; Pink hairline frame</h3>
+      <p class="variant__chip-note">
+        Same italic gold-deep type, wrapped in a 1px pink hairline
+        rectangle with generous interior padding. Discreet call-out,
+        echoes the pink hairline language used elsewhere on the page.
+      </p>
+    </header>
+    <div class="stage">
+      <div class="about-ed about-ed--stage">
+        <section class="about-ed__feature">
+          <p class="about-ed__feature-body">{founderBodyTail}</p>
+          <div class="about-ed__feature-closing--t2-frame">
+            <p class="about-ed__feature-closing about-ed__feature-closing--t2">{closingQuote}</p>
+          </div>
+        </section>
+      </div>
+    </div>
+  </article>
+
+  {/* ─── Treatment 3 — Cream panel + gold rules ───────────── */}
+  <article class="variant variant--recommended">
+    <header class="variant__chip">
+      <span class="variant__chip-n">T3</span>
+      <h3 class="variant__chip-name">Treatment 3 &mdash; Cream panel with gold rules <span class="variant__chip-pick">Recommended</span></h3>
+      <p class="variant__chip-note">
+        Pearl warm-white panel, thin gold-deep hairlines top and bottom,
+        centred italic gold-deep type. The magazine pull-quote pattern.
+        Recommended &mdash; it gives the line the weight it deserves
+        without breaking the editorial register of the page.
+      </p>
+    </header>
+    <div class="stage">
+      <div class="about-ed about-ed--stage">
+        <section class="about-ed__feature">
+          <p class="about-ed__feature-body">{founderBodyTail}</p>
+          <aside class="about-ed__feature-closing--t3-panel">
+            <p class="about-ed__feature-closing about-ed__feature-closing--t3">{closingQuote}</p>
+          </aside>
+        </section>
+      </div>
+    </div>
+  </article>
+
+  {/* ─── Treatment 4 — Oversized opening quote mark ───────── */}
+  <article class="variant">
+    <header class="variant__chip">
+      <span class="variant__chip-n">T4</span>
+      <h3 class="variant__chip-name">Treatment 4 &mdash; Oversized opening quotation mark</h3>
+      <p class="variant__chip-note">
+        Single oversized italic Spectral gold-deep " glyph, hanging
+        into the left margin above the quote. No box, no hairlines &mdash;
+        just the typographic anchor. The inline opening quote is
+        hidden so the oversized mark replaces it.
+      </p>
+    </header>
+    <div class="stage">
+      <div class="about-ed about-ed--stage">
+        <section class="about-ed__feature">
+          <p class="about-ed__feature-body">{founderBodyTail}</p>
+          <div class="about-ed__feature-closing--t4-wrap">
+            <span class="about-ed__feature-closing--t4-mark" aria-hidden="true">&ldquo;</span>
+            <p class="about-ed__feature-closing about-ed__feature-closing--t4">{closingQuoteNoLeadMark}</p>
+          </div>
+        </section>
+      </div>
+    </div>
+  </article>
+
+  {/* ═════════════════════════════════════════════════════════
+       SECTION B — Placement variants using recommended (T3)
+       ═════════════════════════════════════════════════════════ */}
+  <section class="section-head">
+    <div class="section-head__inner">
+      <p class="section-head__eyebrow">Section B</p>
+      <h2 class="section-head__title">Placement variants (recommended treatment).</h2>
+      <p class="section-head__lede">
+        Two alternative homes for the quote, both rendered with the
+        cream-panel + gold-rules treatment from Section A. Surrounding
+        founder markup is shown so each placement reads in position.
+      </p>
+    </div>
+  </section>
+
+  {/* ─── Placement A — Bridge ──────────────────────────────── */}
+  <article class="variant">
+    <header class="variant__chip">
+      <span class="variant__chip-n">PA</span>
+      <h3 class="variant__chip-name">Placement A &mdash; Bridge (between Origins and Founder)</h3>
+      <p class="variant__chip-note">
+        Standalone block in the Origins-to-Founder transition, replacing
+        the eyebrow. Sets the founder mood before the body copy starts.
+      </p>
+    </header>
+    <div class="stage">
+      <div class="about-ed about-ed--stage">
+
+        {/* Transition area — quote replaces the eyebrow */}
+        <div class="about-ed__transition">
+          <span class="about-ed__transition-rule" aria-hidden="true"></span>
+          <aside class="about-ed__feature-closing--t3-panel about-ed__feature-closing--t3-panel-bridge">
+            <p class="about-ed__feature-closing about-ed__feature-closing--t3">{closingQuote}</p>
+          </aside>
+        </div>
+
+        {/* Founder feature follows — standfirst + portrait + first body para */}
+        <section class="about-ed__feature">
+          <p class="about-ed__feature-standfirst">{founderStandfirst}</p>
+          <figure class="about-ed__feature-figure">
+            <Image
+              src={szSmoking}
+              alt="Portrait of founder Stephane Zermatten lighting a Mariposa cigar."
+              class="about-ed__feature-img"
+              widths={[360, 540, 720, 960]}
+              sizes="(max-width: 720px) 100vw, 320px"
+              loading="lazy"
+            />
+            <figcaption class="about-ed__caption about-ed__caption--feature">
+              Stephane Zermatten &middot; Jember, East Java.
+            </figcaption>
+          </figure>
+          <p class="about-ed__feature-body">{storyPara1}</p>
+        </section>
+
+      </div>
+    </div>
+  </article>
+
+  {/* ─── Placement B — Kicker ──────────────────────────────── */}
+  <article class="variant">
+    <header class="variant__chip">
+      <span class="variant__chip-n">PB</span>
+      <h3 class="variant__chip-name">Placement B &mdash; Kicker (after standfirst, before body)</h3>
+      <p class="variant__chip-note">
+        Between the founder standfirst and the body paragraphs. Acts
+        as the thesis the body then expands on.
+      </p>
+    </header>
+    <div class="stage">
+      <div class="about-ed about-ed--stage">
+        <section class="about-ed__feature">
+          <p class="about-ed__feature-standfirst">{founderStandfirst}</p>
+          <figure class="about-ed__feature-figure">
+            <Image
+              src={szSmoking}
+              alt="Portrait of founder Stephane Zermatten lighting a Mariposa cigar."
+              class="about-ed__feature-img"
+              widths={[360, 540, 720, 960]}
+              sizes="(max-width: 720px) 100vw, 320px"
+              loading="lazy"
+            />
+            <figcaption class="about-ed__caption about-ed__caption--feature">
+              Stephane Zermatten &middot; Jember, East Java.
+            </figcaption>
+          </figure>
+
+          {/* Kicker: quote before the body paras */}
+          <aside class="about-ed__feature-closing--t3-panel about-ed__feature-closing--t3-panel-kicker">
+            <p class="about-ed__feature-closing about-ed__feature-closing--t3">{closingQuote}</p>
+          </aside>
+
+          <p class="about-ed__feature-body">{storyPara1}</p>
+          <p class="about-ed__feature-body">{storyPara2}</p>
+        </section>
+      </div>
+    </div>
+  </article>
+
+</BaseLayout>
+
+<style>
+  /* ═══════════════════════════════════════════════════════════
+     Dark ribbon banner.
+     ═══════════════════════════════════════════════════════════ */
+  .ribbon {
+    background: var(--ink);
+    color: var(--white);
+    padding-block: var(--space-8);
+  }
+  .ribbon__inner {
+    max-width: 960px;
+    margin-inline: auto;
+    padding-inline: var(--page-pad-d);
+  }
+  .ribbon__eyebrow {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
+    color: var(--gold-leaf, var(--gold-deep));
+    margin: 0 0 var(--space-3) 0;
+  }
+  .ribbon__title {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    line-height: var(--lh-tight);
+    letter-spacing: var(--ls-display);
+    color: var(--white);
+    margin: 0 0 var(--space-3) 0;
+  }
+  .ribbon__sub {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    color: color-mix(in srgb, var(--white) 75%, transparent);
+    margin: 0;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     Section heads — divide A and B.
+     ═══════════════════════════════════════════════════════════ */
+  .section-head {
+    background: var(--white);
+    padding-block: var(--space-9) var(--space-6);
+    border-top: 1px solid var(--hairline);
+  }
+  .section-head:first-of-type { border-top: 0; }
+  .section-head__inner {
+    max-width: 960px;
+    margin-inline: auto;
+    padding-inline: var(--page-pad-d);
+  }
+  .section-head__eyebrow {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    margin: 0 0 var(--space-3) 0;
+  }
+  .section-head__title {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    line-height: var(--lh-tight);
+    letter-spacing: var(--ls-display);
+    color: var(--ink);
+    margin: 0 0 var(--space-4) 0;
+  }
+  .section-head__lede {
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    line-height: var(--lh-loose);
+    color: var(--ink-soft);
+    max-width: 64ch;
+    margin: 0;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     Variant card — chip label + stage.
+     ═══════════════════════════════════════════════════════════ */
+  .variant {
+    background: var(--white);
+    padding-block: var(--space-7) var(--space-8);
+    border-top: 1px solid var(--hairline);
+  }
+  .variant__chip {
+    max-width: 960px;
+    margin: 0 auto var(--space-6) auto;
+    padding-inline: var(--page-pad-d);
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: var(--space-5);
+    row-gap: var(--space-2);
+    align-items: baseline;
+  }
+  .variant__chip-n {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    letter-spacing: var(--ls-eyebrow);
+    color: var(--gold-deep);
+    font-weight: 600;
+    grid-row: 1 / span 2;
+    align-self: center;
+  }
+  .variant__chip-name {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.25rem, 2vw, 1.5rem);
+    line-height: var(--lh-snug);
+    letter-spacing: var(--ls-display);
+    color: var(--ink);
+    margin: 0;
+  }
+  .variant__chip-pick {
+    display: inline-block;
+    margin-left: var(--space-3);
+    font-family: var(--font-body);
+    font-style: normal;
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: var(--ls-eyebrow);
+    color: var(--pink);
+    border: 1px solid var(--pink);
+    padding: 2px 8px;
+    vertical-align: middle;
+  }
+  .variant__chip-note {
+    grid-column: 2;
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--ash, var(--ink-soft));
+    margin: 0;
+    max-width: 64ch;
+  }
+
+  /* The stage hosts a replica slice of the about-ed scaffolding so
+     the quote is rendered in its real context (column width, type
+     scales, spacing) without modifying the live page. */
+  .stage {
+    background: var(--white);
+  }
+  .about-ed--stage {
+    --col: 720px;
+    background: var(--white);
+    color: var(--ink);
+  }
+  .about-ed--stage .about-ed__feature,
+  .about-ed--stage .about-ed__transition {
+    width: 100%;
+    max-width: var(--col);
+    margin-inline: auto;
+    padding-inline: var(--page-pad-d);
+    box-sizing: content-box;
+  }
+  .about-ed--stage .about-ed__feature {
+    padding-block: var(--space-7);
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     Replicas of the live .about-ed styles needed inside the stage.
+     Copied verbatim from src/pages/about.astro so the mocks render
+     identically to the live page surround.
+     ═══════════════════════════════════════════════════════════ */
+  .about-ed--stage .about-ed__feature-standfirst {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.2rem, 2vw, 1.5rem);
+    line-height: var(--lh-snug);
+    color: var(--ink-soft);
+    margin: 0 0 var(--space-7) 0;
+    max-width: 56ch;
+  }
+  .about-ed--stage .about-ed__feature-figure {
+    float: right;
+    width: min(48%, 320px);
+    margin: var(--space-1) 0 var(--space-5) var(--space-6);
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+  }
+  .about-ed--stage .about-ed__feature-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+  .about-ed--stage .about-ed__caption {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    font-style: italic;
+    letter-spacing: var(--ls-small);
+    color: var(--gold-deep);
+    margin: var(--space-3) 0 0 0;
+  }
+  .about-ed--stage .about-ed__caption--feature {
+    margin-top: var(--space-3);
+    text-align: left;
+  }
+  .about-ed--stage .about-ed__feature-body {
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    line-height: var(--lh-loose);
+    color: var(--ink);
+    margin: 0 0 var(--space-5) 0;
+  }
+  .about-ed--stage .about-ed__feature-body:last-of-type {
+    margin-bottom: 0;
+  }
+
+  /* Transition (used by Placement A). */
+  .about-ed--stage .about-ed__transition {
+    text-align: center;
+    padding-block: var(--space-7);
+  }
+  .about-ed--stage .about-ed__transition-rule {
+    display: block;
+    width: 100px;
+    height: 1px;
+    background: var(--pink);
+    margin: 0 auto calc(var(--space-6) * 2) auto;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     Treatment 1 — Baseline (current live).
+     Identical to the live .about-ed__feature-closing rule.
+     ═══════════════════════════════════════════════════════════ */
+  .about-ed--stage .about-ed__feature-closing {
+    clear: both;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.2rem, 2vw, 1.5rem);
+    line-height: var(--lh-snug);
+    color: var(--gold-deep);
+    margin: var(--space-8) 0 0 0;
+    max-width: 56ch;
+  }
+  /* T1 explicit (matches baseline). */
+  .about-ed--stage .about-ed__feature-closing--t1 {
+    /* Inherits baseline rule above. */
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     Treatment 2 — Pink hairline frame.
+     ═══════════════════════════════════════════════════════════ */
+  .about-ed--stage .about-ed__feature-closing--t2-frame {
+    clear: both;
+    margin: var(--space-8) 0 0 0;
+    border: 1px solid var(--pink);
+    padding: var(--space-6) var(--space-5);
+    max-width: 56ch;
+  }
+  .about-ed--stage .about-ed__feature-closing--t2 {
+    margin: 0;
+    max-width: none;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     Treatment 3 — Pearl warm-white panel, gold rules top/bottom.
+     ═══════════════════════════════════════════════════════════ */
+  .about-ed--stage .about-ed__feature-closing--t3-panel {
+    clear: both;
+    margin: var(--space-8) 0 0 0;
+    background: var(--pearl);
+    border-top: 1px solid var(--gold-deep);
+    border-bottom: 1px solid var(--gold-deep);
+    padding-block: var(--space-7);
+    padding-inline: var(--space-5);
+  }
+  .about-ed--stage .about-ed__feature-closing--t3 {
+    margin: 0 auto;
+    text-align: center;
+    max-width: 48ch;
+  }
+
+  /* Placement-A bridge panel: slightly tighter top margin in the
+     transition area so it sits properly between the hairline and
+     the following feature. */
+  .about-ed--stage .about-ed__feature-closing--t3-panel-bridge {
+    margin-top: 0;
+    margin-bottom: var(--space-7);
+  }
+
+  /* Placement-B kicker: sits between standfirst and body. */
+  .about-ed--stage .about-ed__feature-closing--t3-panel-kicker {
+    margin: var(--space-6) 0 var(--space-7) 0;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     Treatment 4 — Oversized opening quotation mark.
+     ═══════════════════════════════════════════════════════════ */
+  .about-ed--stage .about-ed__feature-closing--t4-wrap {
+    clear: both;
+    position: relative;
+    margin: var(--space-8) 0 0 0;
+    padding-top: var(--space-3);
+    max-width: 56ch;
+  }
+  .about-ed--stage .about-ed__feature-closing--t4-mark {
+    display: block;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--gold-deep);
+    font-size: clamp(5rem, 9vw, 8rem);
+    line-height: 0.8;
+    margin: 0 0 var(--space-2) calc(var(--space-5) * -1);
+    user-select: none;
+  }
+  .about-ed--stage .about-ed__feature-closing--t4 {
+    margin: 0;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     Mobile.
+     ═══════════════════════════════════════════════════════════ */
+  @media (max-width: 720px) {
+    .ribbon__inner,
+    .section-head__inner,
+    .variant__chip {
+      padding-inline: var(--page-pad-m);
+    }
+    .about-ed--stage .about-ed__feature,
+    .about-ed--stage .about-ed__transition {
+      padding-inline: var(--page-pad-m);
+    }
+    .about-ed--stage .about-ed__feature-figure {
+      float: none;
+      width: 100%;
+      max-width: 320px;
+      margin: 0 auto var(--space-6) auto;
+    }
+    .about-ed--stage .about-ed__caption--feature {
+      text-align: center;
+    }
+    .about-ed--stage .about-ed__feature-closing--t4-mark {
+      margin-left: 0;
+    }
+  }
+</style>
