@@ -43,6 +43,13 @@ import heroImage4 from '../assets/hero-mp-4.jpg';
 import heroImage5 from '../assets/hero-mp-5.jpg';
 import heroImage6 from '../assets/hero-mp-6.jpg';
 
+/* Desktop-only static hero (2026-05-26). Desktop renders frame 1 as a
+   single static image using the `_1d` source; mobile carousel is
+   unchanged. Frames 2-6 are hidden on desktop via CSS and auto-advance
+   is gated to mobile breakpoint only. Revert by pointing frame 1's
+   desktop source back at `heroImage1` and removing the gating. */
+import heroImage1Desktop from '../assets/hero-mp-1d.jpg';
+
 import heroImage1Mobile from '../assets/hero-mp-1-mobile.jpg';
 import heroImage2Mobile from '../assets/hero-mp-2-mobile.jpg';
 import heroImage3Mobile from '../assets/hero-mp-3-mobile.jpg';
@@ -81,9 +88,11 @@ const { slides } = Astro.props;
    `srcSet` we can hand to <source>/<img>; widths chosen per breakpoint
    (mobile band tops out around a phone width, desktop band goes wide). */
 const desktopSources = await Promise.all(
-  heroImages.map((src) =>
+  heroImages.map((src, i) =>
     getImage({
-      src,
+      /* Frame 1's desktop source is the static `_1d` image; frames 2-6
+         keep the `_c` series (still bundled, but hidden on desktop). */
+      src: i === 0 ? heroImage1Desktop : src,
       widths: [720, 1280, 1920, 2560],
       sizes: '100vw',
       format: 'webp',
@@ -212,6 +221,16 @@ const mobileSources = await Promise.all(
     }
   }
 
+  /* Desktop static hero (2026-05-26). Frame 1 stays visible (always
+     `.is-active` because JS auto-advance is gated to mobile); frames
+     2-6 are hidden so only the single `_1d` image renders. Mobile
+     carousel keeps cycling — overrides scoped to min-width: 721px. */
+  @media (min-width: 721px) {
+    .hero__slide:not(:first-of-type) {
+      display: none;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .hero__slide { transition: opacity 0.01ms; }
   }
@@ -225,7 +244,12 @@ const mobileSources = await Promise.all(
   const frames = Array.from(document.querySelectorAll<HTMLElement>('[data-hero-frame]'));
   const ADVANCE_MS = 7000;
 
-  if (hero && slides.length > 1) {
+  /* Desktop static hero (2026-05-26). Auto-advance and Ken Burns only
+     run at the mobile breakpoint; on desktop frame 1 stays as a single
+     static image (frames 2-6 are hidden via CSS). */
+  const IS_MOBILE = window.matchMedia('(max-width: 720px)').matches;
+
+  if (hero && slides.length > 1 && IS_MOBILE) {
     let current = 0;
     let timer: number | undefined;
     let kenBurns: gsap.core.Tween | undefined;
