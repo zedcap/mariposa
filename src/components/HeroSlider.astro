@@ -157,13 +157,19 @@ const mobileSources = await Promise.all(
   .hero {
     /* Contained band — sized so the nav menu below the hero is visible
        on first paint without scrolling (the marigold.global pattern).
-       64svh on a standard desktop viewport leaves the full 84px nav bar
-       clearly in view; the min/max keep that true across screen sizes.
-       Rich imagery and motion live inside this height, not beyond it. */
+       Desktop (≥721px): the section is locked to the native 1200×630
+       proportions of the `_1d` source and capped at 1200px wide so the
+       image NEVER scales (no crop, no upscale blur). Centred horizontally;
+       body white fills the margins on wider monitors. The 1200×630 size
+       sits comfortably under the previous 720px max-height, so the nav
+       below the hero remains visible on first paint. Mobile keeps the
+       64svh / 3:4 carousel pattern below.
+       Stephane's instruction 2026-05-26: "never scales". */
     position: relative;
-    height: 64svh;
-    min-height: 440px;
-    max-height: 720px;
+    width: 100%;
+    max-width: 1200px;
+    aspect-ratio: 1200 / 630;
+    margin: 0 auto;
     overflow: hidden;
     background: var(--ink);
   }
@@ -213,10 +219,9 @@ const mobileSources = await Promise.all(
       /* On a phone the band is a 3:4 portrait — purpose-cropped sources
          land at 1472×1963 (essentially 3:4). The mobile <source> in the
          <picture> serves those directly, so no CSS object-position
-         per-frame trickery is needed any more (removed 2026-05-24). */
-      height: auto;
-      min-height: 0;
-      max-height: none;
+         per-frame trickery is needed any more (removed 2026-05-24).
+         Override desktop's 1200px cap so mobile stays full-bleed. */
+      max-width: none;
       aspect-ratio: 3 / 4;
     }
   }
