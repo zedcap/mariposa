@@ -27,12 +27,22 @@ import { withBase } from '../lib/path';
 interface Props {
   title: string;
   description?: string;
+  /* Optional per-page share image override. Public-path string (e.g.
+     '/og-share.jpg'). Resolved to an absolute URL against Astro.site
+     for og:image / twitter:image. Defaults to the brand home hero. */
+  image?: string;
 }
 
 const {
   title,
-  description = 'Mariposa — hand-rolled cigars from Jember, East Java. Volcanic Soul. 24-Carat Gold.',
+  description = 'Mariposa is the first ultra-luxury cigar brand born in Indonesia. Volcanic Soul. 24-Carat Gold.',
+  image = '/og-share.jpg',
 } = Astro.props;
+
+/* Absolute URLs for canonical and social-share scrapers.
+   og:image MUST be absolute. canonical is best as absolute too. */
+const canonicalURL = new URL(Astro.url.pathname, Astro.site).href;
+const shareImageURL = new URL(image, Astro.site).href;
 
 /* True when the page supplies hero markup. Drives the header's
    over-hero vs from-the-top resting state. */
@@ -61,9 +71,20 @@ const bgTexture  = `url("${withBase('/texture.jpg')}")`;
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
+
+    <link rel="canonical" href={canonicalURL} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Mariposa" />
+    <meta property="og:url" content={canonicalURL} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
+    <meta property="og:image" content={shareImageURL} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={shareImageURL} />
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>

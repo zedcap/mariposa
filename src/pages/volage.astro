@@ -68,7 +68,10 @@ const product = (await getEntry('products', 'volage'))!.data;
 const specsBgImage = `url("${withBase('/specs-bg-volage-gold.jpg')}")`;
 ---
 
-<BaseLayout title={`Mariposa • ${product.name}`}>
+<BaseLayout
+  title={`Mariposa • ${product.name}`}
+  description="Volage. A canonazo crafted for a leisurely smoke. 150 mm, 52 ring gauge."
+>
   {/* ─── 1. Hero — signature-led header (Stephane 2026-05-24) ───
        Source + visual order:
          signature (Volage) → hairline → tagline → vitola eyebrow
