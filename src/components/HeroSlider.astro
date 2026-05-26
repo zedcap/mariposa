@@ -26,8 +26,10 @@
    7-second dwell, cross-fade. Single static `_1d` previously; now
    restored as a 4-step cycle (Stephane's call, 2026-05-26).
 
-   MOBILE. Unchanged: 6 frames, `_c` series with mobile portrait sources,
-   7-second dwell, Ken Burns on the active frame.
+   MOBILE. 4-frame custom sequence mirroring desktop, using the d-series
+   mobile portrait sources: m1d → m3d → m2d → m3d (loop). m3d appears
+   twice (positions 2 and 4). 7-second dwell, Ken Burns on the active
+   frame. Replaces the previous 6-frame `_c` series cycle (2026-05-26).
 
    prefers-reduced-motion: no Ken Burns, instant cross-fade, no
    auto-advance (handled in JS via REDUCED flag). */
@@ -42,22 +44,11 @@ import heroImage1Desktop from '../assets/hero-mp-1d.jpg';
 import heroImage2Desktop from '../assets/hero-mp-2d.jpg';
 import heroImage3Desktop from '../assets/hero-mp-3d.jpg';
 
-/* Mobile c-series (purpose-cropped 3:4 portrait, 1472×1963). */
-import heroImage1Mobile from '../assets/hero-mp-1-mobile.jpg';
-import heroImage2Mobile from '../assets/hero-mp-2-mobile.jpg';
-import heroImage3Mobile from '../assets/hero-mp-3-mobile.jpg';
-import heroImage4Mobile from '../assets/hero-mp-4-mobile.jpg';
-import heroImage5Mobile from '../assets/hero-mp-5-mobile.jpg';
-import heroImage6Mobile from '../assets/hero-mp-6-mobile.jpg';
-
-const heroImagesMobile = [
-  heroImage1Mobile,
-  heroImage2Mobile,
-  heroImage3Mobile,
-  heroImage4Mobile,
-  heroImage5Mobile,
-  heroImage6Mobile,
-];
+/* Mobile d-series (purpose-cropped 3:4 portrait). Three distinct frames;
+   the sequence visits m3d twice per loop, mirroring desktop. */
+import heroImage1Mobile from '../assets/hero-mp-1d-mobile.jpg';
+import heroImage2Mobile from '../assets/hero-mp-2d-mobile.jpg';
+import heroImage3Mobile from '../assets/hero-mp-3d-mobile.jpg';
 
 /* Desktop carousel sequence — d1, d3, d2, d3. Order matters; d3 must
    appear at positions 2 and 4 of the four-step loop. */
@@ -66,6 +57,14 @@ const desktopSequence = [
   heroImage3Desktop,
   heroImage2Desktop,
   heroImage3Desktop,
+];
+
+/* Mobile carousel sequence — m1d, m3d, m2d, m3d. Mirrors desktop. */
+const mobileSequence = [
+  heroImage1Mobile,
+  heroImage3Mobile,
+  heroImage2Mobile,
+  heroImage3Mobile,
 ];
 
 interface Slide {
@@ -90,7 +89,7 @@ const desktopSources = await Promise.all(
   ),
 );
 const mobileSources = await Promise.all(
-  heroImagesMobile.map((src) =>
+  mobileSequence.map((src) =>
     getImage({
       src,
       widths: [480, 720, 1080, 1472],
@@ -100,14 +99,16 @@ const mobileSources = await Promise.all(
   ),
 );
 
-/* Slide captions for the desktop sequence reuse the closest matching
-   `slides` entries by index where available; fall back to the first. */
+/* Captions for each 4-step sequence reuse the closest matching `slides`
+   entries by index where available; fall back to the first. Desktop and
+   mobile share the same d1/d3/d2/d3 mapping. */
 const desktopCaptions = [
   slides[0]?.caption ?? '',
   slides[2]?.caption ?? slides[0]?.caption ?? '',
   slides[1]?.caption ?? slides[0]?.caption ?? '',
   slides[2]?.caption ?? slides[0]?.caption ?? '',
 ];
+const mobileCaptions = desktopCaptions;
 ---
 
 {/* Desktop carousel — 4-frame d-series sequence (d1, d3, d2, d3). */}
@@ -143,12 +144,11 @@ const desktopCaptions = [
   </div>
 </section>
 
-{/* Mobile carousel — 6-frame _c series, untouched. */}
+{/* Mobile carousel — 4-frame d-series sequence (m1d, m3d, m2d, m3d). */}
 <section class="hero hero--mobile" aria-label="Mariposa" data-hero-mobile>
   <div class="hero__track">
     {
-      slides.map((slide, i) => {
-        const mobile = mobileSources[i] ?? mobileSources[0];
+      mobileSources.map((img, i) => {
         const isFirst = i === 0;
         return (
           <div
@@ -159,12 +159,12 @@ const desktopCaptions = [
             <div class="hero__frame" data-hero-frame-mobile>
               <img
                 class="hero__img"
-                src={mobile.src}
-                srcset={mobile.srcSet.attribute}
+                src={img.src}
+                srcset={img.srcSet.attribute}
                 sizes="100vw"
-                alt={slide.caption}
-                width={mobile.attributes.width}
-                height={mobile.attributes.height}
+                alt={mobileCaptions[i]}
+                width={img.attributes.width}
+                height={img.attributes.height}
                 loading={isFirst ? 'eager' : 'lazy'}
                 fetchpriority={isFirst ? 'high' : 'auto'}
                 decoding="async"
@@ -289,8 +289,8 @@ const desktopCaptions = [
     start();
   }
 
-  /* Mobile carousel — 6-frame `_c` cycle with Ken Burns on the active
-     frame. Unchanged from the previous build. */
+  /* Mobile carousel — 4-frame d-series cycle (m1d, m3d, m2d, m3d) with
+     Ken Burns on the active frame. Mirrors desktop sequence. */
   const mobileHero = document.querySelector<HTMLElement>('[data-hero-mobile]');
   const mobileSlides = Array.from(
     document.querySelectorAll<HTMLElement>('[data-slide-mobile]'),
