@@ -9,7 +9,7 @@ import { defineConfig } from 'astro/config';
 // https://astro.build/config
 export default defineConfig({
   output: 'static',
-  site: 'https://zedcap.github.io',
+  site: 'https://mariposacigars.com',
   base: '/',
   image: {
     // sharp service — AVIF/WebP responsive output for src/assets imagery
