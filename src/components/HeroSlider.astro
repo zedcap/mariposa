@@ -9,62 +9,46 @@
    invisible until the user scrolls — which defeats it. Containing the
    hero so the nav bar shows underneath on first paint is the pattern
    working as designed. Stephane's call; not a regression to a header
-   strip — the band stays rich (six frames, Ken Burns, slider motion),
+   strip — the band stays rich (frames, Ken Burns, slider motion),
    only the height is capped.
-
-   The section carries its own choreography: a slow scale on the active
-   frame and a plain cross-fade between slides.
 
    Hero imagery renders in ORIGINAL COLOUR — a deliberate override of
    the design system's "full-bleed photography = B&W / duotone" rule.
    Stephane's call (2026-05-22); recorded in mariposa-design-conventions.md.
 
-   6 frames, slow auto-advance (7s) → 42s loop. No manual nav, no dots:
-   the slider is a passive, auto-only band (Stephane's call, 2026-05-23).
-   Pause on hover preserved. prefers-reduced-motion: no Ken Burns,
-   instant cross-fade.
+   SPLIT MARKUP (2026-05-26). Desktop and mobile run independent
+   carousels. Two separate `<div data-hero>` blocks; CSS hides one per
+   viewport; each has its own JS loop. Cleanest separation because the
+   two cycles differ in both source set and frame sequence.
 
-   ART DIRECTION (2026-05-24). The phone breakpoint now serves a
-   purpose-cropped portrait source (3:4, 1472×1963) rather than
-   re-cropping the landscape original in CSS. Astro's <Image> has no
-   built-in art direction, so each frame ships a <picture> with a
-   <source media="(max-width: 720px)" srcset=...> generated via
-   getImage(), and a desktop <img> fallback. */
+   DESKTOP. 4-frame custom sequence using the d-series 1200×630 sources:
+   d1 → d3 → d2 → d3 (loop). d3 appears twice (positions 2 and 4).
+   7-second dwell, cross-fade. Single static `_1d` previously; now
+   restored as a 4-step cycle (Stephane's call, 2026-05-26).
+
+   MOBILE. Unchanged: 6 frames, `_c` series with mobile portrait sources,
+   7-second dwell, Ken Burns on the active frame.
+
+   prefers-reduced-motion: no Ken Burns, instant cross-fade, no
+   auto-advance (handled in JS via REDUCED flag). */
 import { getImage } from 'astro:assets';
 
 /* Mariposa hero frames — the collage device: the same faceless woman
-   with a cigar across six scene-and-ground variants, in colour.
-   Numeric order 1 → 6 as delivered. Landscape source, 3200×1800 (16:9).
-   Mobile source is a pre-cropped 3:4 portrait, 1472×1963. */
-import heroImage1 from '../assets/hero-mp-1.jpg';
-import heroImage2 from '../assets/hero-mp-2.jpg';
-import heroImage3 from '../assets/hero-mp-3.jpg';
-import heroImage4 from '../assets/hero-mp-4.jpg';
-import heroImage5 from '../assets/hero-mp-5.jpg';
-import heroImage6 from '../assets/hero-mp-6.jpg';
+   with a cigar across variants, in colour. */
 
-/* Desktop-only static hero (2026-05-26). Desktop renders frame 1 as a
-   single static image using the `_1d` source; mobile carousel is
-   unchanged. Frames 2-6 are hidden on desktop via CSS and auto-advance
-   is gated to mobile breakpoint only. Revert by pointing frame 1's
-   desktop source back at `heroImage1` and removing the gating. */
+/* Desktop d-series (1200×630). Three distinct frames; the sequence
+   visits d3 twice per loop. */
 import heroImage1Desktop from '../assets/hero-mp-1d.jpg';
+import heroImage2Desktop from '../assets/hero-mp-2d.jpg';
+import heroImage3Desktop from '../assets/hero-mp-3d.jpg';
 
+/* Mobile c-series (purpose-cropped 3:4 portrait, 1472×1963). */
 import heroImage1Mobile from '../assets/hero-mp-1-mobile.jpg';
 import heroImage2Mobile from '../assets/hero-mp-2-mobile.jpg';
 import heroImage3Mobile from '../assets/hero-mp-3-mobile.jpg';
 import heroImage4Mobile from '../assets/hero-mp-4-mobile.jpg';
 import heroImage5Mobile from '../assets/hero-mp-5-mobile.jpg';
 import heroImage6Mobile from '../assets/hero-mp-6-mobile.jpg';
-
-const heroImages = [
-  heroImage1,
-  heroImage2,
-  heroImage3,
-  heroImage4,
-  heroImage5,
-  heroImage6,
-];
 
 const heroImagesMobile = [
   heroImage1Mobile,
@@ -73,6 +57,15 @@ const heroImagesMobile = [
   heroImage4Mobile,
   heroImage5Mobile,
   heroImage6Mobile,
+];
+
+/* Desktop carousel sequence — d1, d3, d2, d3. Order matters; d3 must
+   appear at positions 2 and 4 of the four-step loop. */
+const desktopSequence = [
+  heroImage1Desktop,
+  heroImage3Desktop,
+  heroImage2Desktop,
+  heroImage3Desktop,
 ];
 
 interface Slide {
@@ -84,17 +77,14 @@ interface Props {
 }
 const { slides } = Astro.props;
 
-/* Pre-resolve responsive sources at build time. getImage() returns a
-   `srcSet` we can hand to <source>/<img>; widths chosen per breakpoint
-   (mobile band tops out around a phone width, desktop band goes wide). */
+/* Pre-resolve responsive sources at build time. Desktop widths sized
+   for the 1200px cap; mobile widths for the phone band. */
 const desktopSources = await Promise.all(
-  heroImages.map((src, i) =>
+  desktopSequence.map((src) =>
     getImage({
-      /* Frame 1's desktop source is the static `_1d` image; frames 2-6
-         keep the `_c` series (still bundled, but hidden on desktop). */
-      src: i === 0 ? heroImage1Desktop : src,
-      widths: [720, 1280, 1920, 2560],
-      sizes: '100vw',
+      src,
+      widths: [720, 1200, 1600, 2400],
+      sizes: '(min-width: 721px) min(100vw, 1200px), 100vw',
       format: 'webp',
     }),
   ),
@@ -109,42 +99,76 @@ const mobileSources = await Promise.all(
     }),
   ),
 );
+
+/* Slide captions for the desktop sequence reuse the closest matching
+   `slides` entries by index where available; fall back to the first. */
+const desktopCaptions = [
+  slides[0]?.caption ?? '',
+  slides[2]?.caption ?? slides[0]?.caption ?? '',
+  slides[1]?.caption ?? slides[0]?.caption ?? '',
+  slides[2]?.caption ?? slides[0]?.caption ?? '',
+];
 ---
 
-<section class="hero" aria-label="Mariposa" data-hero>
+{/* Desktop carousel — 4-frame d-series sequence (d1, d3, d2, d3). */}
+<section class="hero hero--desktop" aria-label="Mariposa" data-hero-desktop>
+  <div class="hero__track">
+    {
+      desktopSources.map((img, i) => {
+        const isFirst = i === 0;
+        return (
+          <div
+            class:list={['hero__slide', { 'is-active': isFirst }]}
+            data-slide-desktop
+            aria-hidden={isFirst ? 'false' : 'true'}
+          >
+            <div class="hero__frame">
+              <img
+                class="hero__img"
+                src={img.src}
+                srcset={img.srcSet.attribute}
+                sizes="(min-width: 721px) min(100vw, 1200px), 100vw"
+                alt={desktopCaptions[i]}
+                width={img.attributes.width}
+                height={img.attributes.height}
+                loading={isFirst ? 'eager' : 'lazy'}
+                fetchpriority={isFirst ? 'high' : 'auto'}
+                decoding="async"
+              />
+            </div>
+          </div>
+        );
+      })
+    }
+  </div>
+</section>
+
+{/* Mobile carousel — 6-frame _c series, untouched. */}
+<section class="hero hero--mobile" aria-label="Mariposa" data-hero-mobile>
   <div class="hero__track">
     {
       slides.map((slide, i) => {
-        const desktop = desktopSources[i] ?? desktopSources[0];
         const mobile = mobileSources[i] ?? mobileSources[0];
         const isFirst = i === 0;
         return (
           <div
             class:list={['hero__slide', { 'is-active': isFirst }]}
-            data-slide
+            data-slide-mobile
             aria-hidden={isFirst ? 'false' : 'true'}
           >
-            <div class="hero__frame" data-hero-frame>
-              <picture>
-                <source
-                  media="(max-width: 720px)"
-                  srcset={mobile.srcSet.attribute}
-                  sizes="100vw"
-                  type="image/webp"
-                />
-                <img
-                  class="hero__img"
-                  src={desktop.src}
-                  srcset={desktop.srcSet.attribute}
-                  sizes="100vw"
-                  alt={slide.caption}
-                  width={desktop.attributes.width}
-                  height={desktop.attributes.height}
-                  loading={isFirst ? 'eager' : 'lazy'}
-                  fetchpriority={isFirst ? 'high' : 'auto'}
-                  decoding="async"
-                />
-              </picture>
+            <div class="hero__frame" data-hero-frame-mobile>
+              <img
+                class="hero__img"
+                src={mobile.src}
+                srcset={mobile.srcSet.attribute}
+                sizes="100vw"
+                alt={slide.caption}
+                width={mobile.attributes.width}
+                height={mobile.attributes.height}
+                loading={isFirst ? 'eager' : 'lazy'}
+                fetchpriority={isFirst ? 'high' : 'auto'}
+                decoding="async"
+              />
             </div>
           </div>
         );
@@ -155,23 +179,35 @@ const mobileSources = await Promise.all(
 
 <style>
   .hero {
-    /* Contained band — sized so the nav menu below the hero is visible
-       on first paint without scrolling (the marigold.global pattern).
-       Desktop (≥721px): the section is locked to the native 1200×630
-       proportions of the `_1d` source and capped at 1200px wide so the
-       image NEVER scales (no crop, no upscale blur). Centred horizontally;
-       body white fills the margins on wider monitors. The 1200×630 size
-       sits comfortably under the previous 720px max-height, so the nav
-       below the hero remains visible on first paint. Mobile keeps the
-       64svh / 3:4 carousel pattern below.
-       Stephane's instruction 2026-05-26: "never scales". */
     position: relative;
     width: 100%;
+    overflow: hidden;
+    background: var(--ink);
+  }
+
+  /* Desktop band — locked to native 1200×630 proportions of the d-series
+     sources and capped at 1200px wide so the image NEVER scales (no crop,
+     no upscale blur). Centred horizontally; body white fills the margins
+     on wider monitors. Sits under the previous 720px max-height, so the
+     nav below the hero remains visible on first paint. */
+  .hero--desktop {
     max-width: 1200px;
     aspect-ratio: 1200 / 630;
     margin: 0 auto;
-    overflow: hidden;
-    background: var(--ink);
+  }
+
+  /* Mobile band — 3:4 portrait, full-bleed. */
+  .hero--mobile {
+    aspect-ratio: 3 / 4;
+  }
+
+  /* Viewport gating — only the matching block renders per breakpoint.
+     Avoids running two JS loops or paying for two image sets at runtime. */
+  @media (min-width: 721px) {
+    .hero--mobile { display: none; }
+  }
+  @media (max-width: 720px) {
+    .hero--desktop { display: none; }
   }
 
   .hero__track {
@@ -198,12 +234,6 @@ const mobileSources = await Promise.all(
     overflow: hidden;
   }
 
-  .hero__frame picture {
-    display: block;
-    width: 100%;
-    height: 100%;
-  }
-
   .hero__img {
     width: 100%;
     height: 100%;
@@ -214,28 +244,6 @@ const mobileSources = await Promise.all(
     will-change: transform;
   }
 
-  @media (max-width: 720px) {
-    .hero {
-      /* On a phone the band is a 3:4 portrait — purpose-cropped sources
-         land at 1472×1963 (essentially 3:4). The mobile <source> in the
-         <picture> serves those directly, so no CSS object-position
-         per-frame trickery is needed any more (removed 2026-05-24).
-         Override desktop's 1200px cap so mobile stays full-bleed. */
-      max-width: none;
-      aspect-ratio: 3 / 4;
-    }
-  }
-
-  /* Desktop static hero (2026-05-26). Frame 1 stays visible (always
-     `.is-active` because JS auto-advance is gated to mobile); frames
-     2-6 are hidden so only the single `_1d` image renders. Mobile
-     carousel keeps cycling — overrides scoped to min-width: 721px. */
-  @media (min-width: 721px) {
-    .hero__slide:not(:first-of-type) {
-      display: none;
-    }
-  }
-
   @media (prefers-reduced-motion: reduce) {
     .hero__slide { transition: opacity 0.01ms; }
   }
@@ -244,29 +252,62 @@ const mobileSources = await Promise.all(
 <script>
   import { gsap, REDUCED } from '../lib/motion';
 
-  const hero = document.querySelector<HTMLElement>('[data-hero]');
-  const slides = Array.from(document.querySelectorAll<HTMLElement>('[data-slide]'));
-  const frames = Array.from(document.querySelectorAll<HTMLElement>('[data-hero-frame]'));
   const ADVANCE_MS = 7000;
 
-  /* Desktop static hero (2026-05-26). Auto-advance and Ken Burns only
-     run at the mobile breakpoint; on desktop frame 1 stays as a single
-     static image (frames 2-6 are hidden via CSS). */
-  const IS_MOBILE = window.matchMedia('(max-width: 720px)').matches;
+  /* Desktop carousel — 4-frame d-series cycle, plain cross-fade only
+     (no Ken Burns on the d-series; the d frames are tightly composed
+     and the scale was a `_c`-series touch). */
+  const desktopHero = document.querySelector<HTMLElement>('[data-hero-desktop]');
+  const desktopSlides = Array.from(
+    document.querySelectorAll<HTMLElement>('[data-slide-desktop]'),
+  );
 
-  if (hero && slides.length > 1 && IS_MOBILE) {
+  if (desktopHero && desktopSlides.length > 1) {
+    let current = 0;
+    let timer: number | undefined;
+
+    const show = (next: number) => {
+      desktopSlides[current].classList.remove('is-active');
+      desktopSlides[current].setAttribute('aria-hidden', 'true');
+      current = (next + desktopSlides.length) % desktopSlides.length;
+      desktopSlides[current].classList.add('is-active');
+      desktopSlides[current].setAttribute('aria-hidden', 'false');
+    };
+
+    const start = () => {
+      if (REDUCED) return;
+      stop();
+      timer = window.setInterval(() => show(current + 1), ADVANCE_MS);
+    };
+    const stop = () => {
+      if (timer) window.clearInterval(timer);
+    };
+
+    desktopHero.addEventListener('mouseenter', stop);
+    desktopHero.addEventListener('mouseleave', start);
+
+    start();
+  }
+
+  /* Mobile carousel — 6-frame `_c` cycle with Ken Burns on the active
+     frame. Unchanged from the previous build. */
+  const mobileHero = document.querySelector<HTMLElement>('[data-hero-mobile]');
+  const mobileSlides = Array.from(
+    document.querySelectorAll<HTMLElement>('[data-slide-mobile]'),
+  );
+  const mobileFrames = Array.from(
+    document.querySelectorAll<HTMLElement>('[data-hero-frame-mobile]'),
+  );
+
+  if (mobileHero && mobileSlides.length > 1) {
     let current = 0;
     let timer: number | undefined;
     let kenBurns: gsap.core.Tween | undefined;
 
-    /* Ken Burns — the active frame eases from slightly enlarged toward
-       true size over the full dwell. Slow, analogue: the eye should
-       never catch it as a discrete move, only feel the frame breathe.
-       The marigold hero gives its imagery the same quiet life. */
     const animateFrame = (idx: number) => {
       if (REDUCED) return;
       kenBurns?.kill();
-      const frame = frames[idx];
+      const frame = mobileFrames[idx];
       if (!frame) return;
       gsap.set(frame, { scale: 1.0, xPercent: 0 });
       kenBurns = gsap.fromTo(
@@ -282,13 +323,11 @@ const mobileSources = await Promise.all(
     };
 
     const show = (next: number) => {
-      slides[current].classList.remove('is-active');
-      slides[current].setAttribute('aria-hidden', 'true');
-
-      current = (next + slides.length) % slides.length;
-
-      slides[current].classList.add('is-active');
-      slides[current].setAttribute('aria-hidden', 'false');
+      mobileSlides[current].classList.remove('is-active');
+      mobileSlides[current].setAttribute('aria-hidden', 'true');
+      current = (next + mobileSlides.length) % mobileSlides.length;
+      mobileSlides[current].classList.add('is-active');
+      mobileSlides[current].setAttribute('aria-hidden', 'false');
       animateFrame(current);
     };
 
@@ -306,8 +345,8 @@ const mobileSources = await Promise.all(
       start();
     };
 
-    hero.addEventListener('mouseenter', stop);
-    hero.addEventListener('mouseleave', resume);
+    mobileHero.addEventListener('mouseenter', stop);
+    mobileHero.addEventListener('mouseleave', resume);
 
     animateFrame(0);
     start();
