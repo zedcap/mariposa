@@ -11,7 +11,7 @@ Brand and visual decisions are not duplicated here — that is the conventions d
 ## 1. Current state — what's live
 
 - **Live URL.** https://mariposacigars.com/
-- **Repo.** `git@github.com:zedcap/mariposa.git` (separate git dir at `/Users/mrclaude/Claude/.git-repos/mariposa-website.git/` — the working tree's `.git` file points at it).
+- **Repo.** `git@github.com:zedcap/mariposa.git` is the canonical remote. Working checkout at `/Users/mrclaude/Claude/sites/mariposa-website/` — a normal clone (`.git` is a real directory, not a pointer).
 - **Latest production SHA.** `fa32f1a` — home hero (mobile): switch to d-series 4-frame carousel (d1→d3→d2→d3).
 - **Built with.** Astro 6 (static output), TypeScript, GSAP for scroll choreography. Node ≥22.12.0.
 
@@ -78,16 +78,15 @@ GitHub Actions runs `withastro/action@v3` + `actions/deploy-pages@v4` on every p
 
 ### SSH push from Mr. Claude
 
-The deploy key on disk is configured for the `zedcap/mariposa` repo. Use it explicitly with `GIT_SSH_COMMAND`:
+The deploy key is wired into this clone's `core.sshCommand`, so `git push origin main` uses it automatically — no env-var prefix needed:
 
 ```
-GIT_SSH_COMMAND="ssh -i /Users/mrclaude/Claude/.git-repos/mariposa-deploy-key -o IdentitiesOnly=yes" \
-  git push origin main
+git push origin main
 ```
 
+- `core.sshCommand` on this clone: `ssh -i /Users/mrclaude/Claude/.git-repos/mariposa-deploy-key -o IdentitiesOnly=yes`.
 - Deploy key location: `/Users/mrclaude/Claude/.git-repos/mariposa-deploy-key` (private), `…/mariposa-deploy-key.pub` (public, installed in the GitHub repo's Deploy Keys with write access).
 - The GitHub PAT (fallback HTTPS auth, rarely used) is in `/Users/mrclaude/Claude/.git-repos/mariposa-credentials.json`.
-- The git dir is separate from the working tree — `.git` in this folder is a `gitdir:` pointer to `/Users/mrclaude/Claude/.git-repos/mariposa-website.git/`.
 
 ### Commit discipline
 
@@ -279,7 +278,7 @@ Visual revert chains for the story background and hero: superseded source files 
 - **`@import` for fonts in `tokens.css`.** Known anti-pattern — delays font discovery until CSS parse. Works fine; a `<link rel="stylesheet">` in `BaseLayout.astro`'s `<head>` would be marginally faster.
 - **macOS case-insensitive FS.** `Origin Story` and `origin story` resolve to the same folder. Same for `Volage.astro` vs `volage.astro`. Don't rely on case for uniqueness. Don't do case-only renames in git — they will silently no-op or collide.
 - **Filenames with U+202F (narrow no-break space).** Several screenshots Stephane drops carry U+202F instead of normal space. Glob them rather than typing the name.
-- **Separate `.git` dir.** This working tree's `.git` is a pointer file, not a directory. Real git data at `/Users/mrclaude/Claude/.git-repos/mariposa-website.git/`. `git` commands work normally; just don't move the working tree without updating the pointer.
+- **Normal clone at `/Users/mrclaude/Claude/sites/mariposa-website/`.** `.git` is a real directory. The deploy key is wired via `core.sshCommand`, so `git push` authenticates without an env-var prefix.
 - **Astro cache invalidation.** When a source image in `src/assets/` is overwritten with the same filename, Astro may serve the cached encoded variant. Stop the dev server and clear `.astro/` if a refreshed image is not appearing.
 - **GSAP loads deferred.** Page is fully readable without it. Reveals fall through to instant resting state. Verify any new animation degrades gracefully — `prefers-reduced-motion` snaps to endpoints throughout the codebase.
 - **`/refusal/` bypasses BaseLayout.** Wires tokens.css + base.css directly. If you add a new global concern (analytics, error tracking, etc.) and want it on refusal too, add it here separately — don't expect BaseLayout to reach this page.
