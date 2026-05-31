@@ -1,43 +1,44 @@
-# Astro Starter Kit: Minimal
+# Mariposa website
+
+Static Astro site for `https://mariposacigars.com/`.
+
+**For the full handoff** — state, build, deploy, history, gotchas, custom-domain ops — read [`PROJECT.md`](./PROJECT.md).
+
+**For brand and design conventions** — colour, type, spacing, components, voice, photography — read [`../mariposa-design-conventions.md`](../mariposa-design-conventions.md).
+
+## Quick start
 
 ```sh
-npm create astro@latest -- --template minimal
+npm install
+npm run dev      # http://localhost:4321/
+npm run build    # → dist/
+npm run preview  # serve dist/ locally
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Deploy
 
-## 🚀 Project Structure
+Push to `main`. GitHub Actions builds and publishes to the Pages environment automatically (typically 30-60s).
 
-Inside of your Astro project, you'll see the following folders and files:
+SSH push pattern from Mr. Claude:
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+```sh
+GIT_SSH_COMMAND="ssh -i /Users/mrclaude/Claude/.git-repos/mariposa-deploy-key -o IdentitiesOnly=yes" \
+  git push origin main
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Layout
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+```
+src/
+  pages/        One file per route
+  components/   Shared .astro pieces (Header, Footer, AgeGate, HeroSlider, …)
+  layouts/      BaseLayout — shared shell
+  styles/       tokens.css + base.css
+  content/      JSON content collections (Zod schemas in content.config.ts)
+  assets/       Bundled imagery (Astro emits AVIF/WebP variants)
+  lib/          motion.ts (GSAP engine), path.ts (withBase helper)
+public/         Static-pass-through assets (favicon, OG share, CNAME, …)
+_archive/       Historical research briefs — no build effect
+```
 
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Node ≥22.12.0.
