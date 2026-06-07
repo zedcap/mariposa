@@ -25,6 +25,9 @@ export interface Story {
   /** Department label on the index card, e.g. "Terroir". */
   department: string;
   headline: string;
+  /** Optional shorter title shown only on the /stories/ index preview;
+      the post page always uses the full headline. */
+  indexTitle?: string;
   standfirst: string;
   hero: ImageMetadata;
   heroAlt: string;
@@ -73,6 +76,7 @@ export const stories: Story[] = [
     pillar: 'Terroir',
     department: 'Terroir',
     headline: 'The Volcanic Origin Behind Indonesia’s Wrapper Leaf',
+    indexTitle: 'The Volcanic Origin',
     standfirst:
       'More than half of Indonesia’s wrapper leaf grows in one regency, in the shadow of a volcano.',
     hero: besukiLeafBw,

@@ -64,7 +64,7 @@ const [first, ...rest] = stories;
         </figure>
         <div class="card__copy">
           <p class="dept">{first.department}</p>
-          <h2 class="card__headline">{first.headline}</h2>
+          <h2 class="card__headline">{first.indexTitle ?? first.headline}</h2>
           <p class="card__standfirst">{first.standfirst}</p>
           <div class="card__teaser"><p>{teaserOf(first)}</p></div>
           <span class="card__more">Read the story</span>
@@ -87,7 +87,7 @@ const [first, ...rest] = stories;
           </figure>
           <div class="card__copy">
             <p class="dept">{story.department}</p>
-            <h3 class="card__headline">{story.headline}</h3>
+            <h3 class="card__headline">{story.indexTitle ?? story.headline}</h3>
             <p class="card__standfirst">{story.standfirst}</p>
             <div class="card__teaser"><p>{teaserOf(story)}</p></div>
             <span class="card__more">Read the story</span>
