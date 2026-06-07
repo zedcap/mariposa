@@ -6,9 +6,10 @@
    so Astro's sharp pipeline emits responsive AVIF/WebP from the PNG
    masters in src/assets/.
 
-   Order below is the INDEX order: the first entry is the lead feature,
-   the remaining three are the secondary row. `num` / `pillar` drive the
-   per-post kicker; `department` drives the index dept label. */
+   Order below is the default (no-JS) INDEX order: the first entry is the
+   lead feature, the remaining three are the secondary row. The index
+   shuffles this client-side on load. `pillar` drives the per-post kicker;
+   `department` drives the index dept label. */
 
 import type { ImageMetadata } from 'astro';
 
@@ -19,8 +20,6 @@ import hourVolageDusk from '../assets/hour-volage-dusk-band.png';
 
 export interface Story {
   slug: string;
-  /** Kicker number on the post masthead, e.g. "No. 03". */
-  num: string;
   /** Kicker pillar on the post masthead, e.g. "The Category". */
   pillar: string;
   /** Department label on the index card, e.g. "Terroir". */
@@ -37,7 +36,6 @@ export interface Story {
 export const stories: Story[] = [
   {
     slug: 'half-of-indonesias-wrapper',
-    num: 'No. 03',
     pillar: 'The Category',
     department: 'Terroir',
     headline: 'Half of Indonesia’s Wrapper',
@@ -55,7 +53,6 @@ export const stories: Story[] = [
   },
   {
     slug: 'the-garden-room',
-    num: 'No. 02',
     pillar: 'Rooms',
     department: 'The Rooms',
     headline: 'The Garden Room',
@@ -73,7 +70,6 @@ export const stories: Story[] = [
   },
   {
     slug: 'the-volcanic-origin',
-    num: 'No. 01',
     pillar: 'Terroir',
     department: 'Terroir',
     headline: 'The Volcanic Origin Behind Indonesia’s Wrapper Leaf',
@@ -93,7 +89,6 @@ export const stories: Story[] = [
   },
   {
     slug: 'before-the-rain',
-    num: 'No. 04',
     pillar: 'The Hour',
     department: 'The Hour',
     headline: 'Before the Rain',
@@ -112,14 +107,12 @@ export const stories: Story[] = [
   },
 ];
 
-/** Index-order lead (first) and the secondary row (rest). */
-export const leadStory = stories[0];
-export const secondaryStories = stories.slice(1);
-
 /** Look up a single story by slug. */
 export function getStory(slug: string): Story | undefined {
   return stories.find((s) => s.slug === slug);
 }
 
-/** The teaser shown on the index lead card — the lead's first body paragraph only. */
-export const leadTeaser = leadStory.body[0];
+/** The lead-card teaser for any story — its first body paragraph only. */
+export function teaserOf(story: Story): string {
+  return story.body[0];
+}

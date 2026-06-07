@@ -7,6 +7,16 @@
    row of three secondaries. Pink image frames, no captions, no
    dividers between lead and row.
 
+   Order is randomised per visit. Every story is rendered as a full,
+   lead-capable card; a small inline script (run before paint) shuffles
+   the four and assigns one to the lead slot and three to the grid by
+   moving DOM nodes. Lead-only copy (the teaser body) is carried on
+   every card and shown by CSS only when the card sits in the lead slot.
+
+   No-JS fallback: the page ships in the data's default order — first
+   card in the lead slot, the other three in the grid — and reads
+   correctly with the script disabled.
+
    Native build on the live shell: BaseLayout supplies the real
    site Header (with inStories → the unlisted Stories nav item +
    mobile burger) and Footer. Hero-less, so the header is stuck from
@@ -18,7 +28,9 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { Image } from 'astro:assets';
 import { withBase } from '../../lib/path';
-import { leadStory, secondaryStories, leadTeaser } from '../../lib/stories';
+import { stories, teaserOf } from '../../lib/stories';
+
+const [first, ...rest] = stories;
 ---
 
 <BaseLayout
@@ -35,35 +47,36 @@ import { leadStory, secondaryStories, leadTeaser } from '../../lib/stories';
     <span class="journal-masthead__rule" aria-hidden="true"></span>
   </section>
 
-  <div class="sheet">
-    {/* Lead feature — teaser is the lead's first body paragraph only,
-        plus a read link. The whole card is the link. */}
-    <a class="lead" href={withBase(`/stories/${leadStory.slug}`)}>
-      <figure class="lead__figure">
-        <Image
-          src={leadStory.hero}
-          alt={leadStory.heroAlt}
-          widths={[480, 720, 1100]}
-          sizes="(max-width: 860px) 92vw, 56vw"
-          loading="eager"
-        />
-      </figure>
-      <div class="lead__copy">
-        <p class="dept">{leadStory.department}</p>
-        <h2 class="lead__headline">{leadStory.headline}</h2>
-        <p class="lead__standfirst">{leadStory.standfirst}</p>
-        <div class="lead__body">
-          <p>{leadTeaser}</p>
+  {/* data-shuffle: the script swaps cards between the lead slot and the
+      grid before paint, then drops the .is-pending hold to reveal. */}
+  <div class="sheet is-pending" data-shuffle>
+    {/* Lead slot — holds one full card. */}
+    <div class="lead-slot" data-lead-slot>
+      <a class="card" href={withBase(`/stories/${first.slug}`)}>
+        <figure class="card__figure">
+          <Image
+            src={first.hero}
+            alt={first.heroAlt}
+            widths={[480, 720, 1100]}
+            sizes="(max-width: 860px) 92vw, 56vw"
+            loading="eager"
+          />
+        </figure>
+        <div class="card__copy">
+          <p class="dept">{first.department}</p>
+          <h2 class="card__headline">{first.headline}</h2>
+          <p class="card__standfirst">{first.standfirst}</p>
+          <div class="card__teaser"><p>{teaserOf(first)}</p></div>
+          <span class="card__more">Read the story</span>
         </div>
-        <span class="lead__more">Read the story</span>
-      </div>
-    </a>
+      </a>
+    </div>
 
-    {/* Secondary features — clean three-up row, no cell borders. */}
-    <div class="features">
-      {secondaryStories.map((story) => (
-        <a class="feature" href={withBase(`/stories/${story.slug}`)}>
-          <figure class="feature__figure">
+    {/* Grid — holds the other three full cards. */}
+    <div class="features" data-grid>
+      {rest.map((story) => (
+        <a class="card" href={withBase(`/stories/${story.slug}`)}>
+          <figure class="card__figure">
             <Image
               src={story.hero}
               alt={story.heroAlt}
@@ -72,10 +85,13 @@ import { leadStory, secondaryStories, leadTeaser } from '../../lib/stories';
               loading="lazy"
             />
           </figure>
-          <p class="dept">{story.department}</p>
-          <h3 class="feature__headline">{story.headline}</h3>
-          <p class="feature__standfirst">{story.standfirst}</p>
-          <span class="feature__more">Read the story</span>
+          <div class="card__copy">
+            <p class="dept">{story.department}</p>
+            <h3 class="card__headline">{story.headline}</h3>
+            <p class="card__standfirst">{story.standfirst}</p>
+            <div class="card__teaser"><p>{teaserOf(story)}</p></div>
+            <span class="card__more">Read the story</span>
+          </div>
         </a>
       ))}
     </div>
@@ -141,23 +157,31 @@ import { leadStory, secondaryStories, leadTeaser } from '../../lib/stories';
     padding: 0 32px 80px;
   }
 
-  /* Lead feature */
-  .lead {
+  /* Shuffle hold — keep the listing invisible until the script has
+     placed the cards, so the reorder never flashes. The script removes
+     .is-pending in one frame. No-JS never sees this rule (the noscript
+     block below neutralises it). */
+  .sheet.is-pending { opacity: 0; }
+  @media (prefers-reduced-motion: no-preference) {
+    .sheet { transition: opacity 220ms ease; }
+  }
+
+  .lead-slot { padding-bottom: 40px; }
+  .features {
     display: grid;
-    grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 40px;
-    align-items: start;
-    padding-bottom: 40px;
+    margin-top: 80px;
+  }
+
+  /* Card — base; the link is the whole card. */
+  .card {
     color: inherit;
     text-decoration: none;
   }
-  .lead__figure {
-    margin: 0;
-    position: relative;
-  }
-  .lead__figure :global(img) {
+  .card__figure { margin: 0; }
+  .card__figure :global(img) {
     width: 100%;
-    aspect-ratio: 16 / 10;
     object-fit: cover;
     border: 1px solid var(--pink);
     display: block;
@@ -180,91 +204,25 @@ import { leadStory, secondaryStories, leadTeaser } from '../../lib/stories';
     background: var(--gold);
     display: inline-block;
   }
-  .lead__headline {
+  .card__headline {
     font-family: var(--font-display);
     font-weight: 600;
     font-style: normal;
-    font-size: clamp(2rem, 4.4vw, 3.2rem);
-    line-height: 1.02;
-    letter-spacing: var(--ls-display);
     color: var(--ink);
-    margin: 0 0 16px;
   }
-  .lead__standfirst {
+  .card__standfirst {
     font-family: var(--font-display);
     font-style: italic;
     font-weight: 400;
-    font-size: 1.2rem;
-    line-height: 1.4;
     color: var(--ink-soft);
-    margin: 0 0 16px;
   }
-  .lead__body {
+  .card__teaser {
     font-size: 14px;
     line-height: 1.62;
     color: var(--ink-soft);
   }
-  .lead__body p {
-    margin: 0 0 12px;
-  }
-  .lead__body p:first-child {
-    margin-top: 0;
-  }
-  .lead__more {
-    display: inline-block;
-    margin-top: 8px;
-    font-size: 10.5px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: var(--ls-eyebrow);
-    color: var(--gold-deep);
-    border-bottom: 1px solid var(--gold);
-  }
-  .lead:hover .lead__more,
-  .lead:focus-visible .lead__more {
-    color: var(--pink-deep);
-    border-color: var(--pink);
-  }
-
-  /* Secondary features: three-up row, no cell borders */
-  .features {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 40px;
-    margin-top: 80px;
-  }
-  .feature {
-    padding: 0;
-    color: inherit;
-    text-decoration: none;
-  }
-  .feature__figure {
-    margin: 0 0 16px;
-  }
-  .feature__figure :global(img) {
-    width: 100%;
-    aspect-ratio: 3 / 2;
-    object-fit: cover;
-    border: 1px solid var(--pink);
-    display: block;
-  }
-  .feature__headline {
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-style: normal;
-    font-size: clamp(1.4rem, 2.6vw, 1.85rem);
-    line-height: 1.08;
-    letter-spacing: var(--ls-display);
-    color: var(--ink);
-    margin: 0 0 12px;
-  }
-  .feature__standfirst {
-    font-size: 14px;
-    line-height: 1.55;
-    color: var(--ink-soft);
-    margin: 0 0 14px;
-  }
-  .feature__more {
+  .card__teaser p { margin: 0; }
+  .card__more {
     font-size: 10px;
     font-weight: 700;
     text-transform: uppercase;
@@ -273,14 +231,62 @@ import { leadStory, secondaryStories, leadTeaser } from '../../lib/stories';
     border-bottom: 1px solid var(--gold);
     padding-bottom: 1px;
   }
-  .feature:hover .feature__more,
-  .feature:focus-visible .feature__more {
+  .card:hover .card__more,
+  .card:focus-visible .card__more {
     color: var(--pink-deep);
     border-color: var(--pink);
   }
 
+  /* Lead treatment — applies to whichever card sits in the lead slot. */
+  .lead-slot .card {
+    display: grid;
+    grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+    gap: 40px;
+    align-items: start;
+  }
+  .lead-slot .card__figure :global(img) { aspect-ratio: 16 / 10; }
+  .lead-slot .card__headline {
+    font-size: clamp(2rem, 4.4vw, 3.2rem);
+    line-height: 1.02;
+    letter-spacing: var(--ls-display);
+    margin: 0 0 16px;
+  }
+  .lead-slot .card__standfirst {
+    font-size: 1.2rem;
+    line-height: 1.4;
+    margin: 0 0 16px;
+  }
+  .lead-slot .card__teaser { display: block; }
+  .lead-slot .card__more {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 10.5px;
+    letter-spacing: var(--ls-eyebrow);
+    border: 0;
+    border-bottom: 1px solid var(--gold);
+  }
+
+  /* Grid treatment — applies to cards in the secondary row. The teaser
+     body is hidden here; it only shows when a card is in the lead slot. */
+  .features .card__figure { margin-bottom: 16px; }
+  .features .card__figure :global(img) { aspect-ratio: 3 / 2; }
+  .features .card__headline {
+    font-size: clamp(1.4rem, 2.6vw, 1.85rem);
+    line-height: 1.08;
+    letter-spacing: var(--ls-display);
+    margin: 0 0 12px;
+  }
+  .features .card__standfirst {
+    font-family: var(--font-body);
+    font-style: normal;
+    font-size: 14px;
+    line-height: 1.55;
+    margin: 0 0 14px;
+  }
+  .features .card__teaser { display: none; }
+
   @media (max-width: 860px) {
-    .lead {
+    .lead-slot .card {
       grid-template-columns: 1fr;
       gap: 24px;
     }
@@ -298,3 +304,52 @@ import { leadStory, secondaryStories, leadTeaser } from '../../lib/stories';
     }
   }
 </style>
+
+{/* No-JS: never hold the listing hidden. */}
+<noscript>
+  <style>
+    .sheet.is-pending { opacity: 1 !important; }
+  </style>
+</noscript>
+
+<script is:inline>
+  /* Randomise the listing per visit, before paint, with no flash.
+     The sheet ships held (opacity 0 via .is-pending in the SSR markup);
+     we shuffle the four cards, place one in the lead slot and three in
+     the grid by moving the existing nodes, then reveal in the next
+     frame. The cards are layout-agnostic — lead vs grid styling is
+     purely positional, so a card reads correctly in either slot. */
+  (function () {
+    var sheet = document.querySelector('.sheet[data-shuffle]');
+    if (!sheet) return;
+
+    var leadSlot = sheet.querySelector('[data-lead-slot]');
+    var grid = sheet.querySelector('[data-grid]');
+    if (!leadSlot || !grid) {
+      sheet.classList.remove('is-pending');
+      return;
+    }
+
+    var cards = Array.prototype.slice.call(sheet.querySelectorAll('.card'));
+    if (cards.length < 2) {
+      sheet.classList.remove('is-pending');
+      return;
+    }
+
+    // Fisher–Yates.
+    for (var i = cards.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = cards[i];
+      cards[i] = cards[j];
+      cards[j] = t;
+    }
+
+    // First card → lead slot; the rest → grid, in shuffled order.
+    leadSlot.appendChild(cards[0]);
+    for (var k = 1; k < cards.length; k++) grid.appendChild(cards[k]);
+
+    requestAnimationFrame(function () {
+      sheet.classList.remove('is-pending');
+    });
+  })();
+</script>

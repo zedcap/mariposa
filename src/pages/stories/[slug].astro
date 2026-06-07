@@ -43,7 +43,7 @@ const more = stories.filter((s) => s.slug !== story.slug);
 
     <header class="post__masthead" data-reveal>
       <p class="post__kicker">
-        <span class="num">{story.num}</span> <span class="pillar">{story.pillar}</span>
+        <span class="pillar">{story.pillar}</span>
       </p>
       <h1 class="post__headline">{story.headline}</h1>
       <p class="post__standfirst">{story.standfirst}</p>
@@ -141,13 +141,8 @@ const more = stories.filter((s) => s.slug !== story.slug);
     letter-spacing: var(--ls-section);
     text-transform: uppercase;
     color: var(--gold-deep);
-    display: flex;
-    align-items: baseline;
-    gap: var(--space-3);
     margin: 0 0 var(--space-5);
   }
-  .post__kicker .num { font-variant-numeric: tabular-nums; }
-  .post__kicker .pillar { color: var(--ash); }
   .post__headline {
     font-family: var(--font-display);
     font-style: italic;
