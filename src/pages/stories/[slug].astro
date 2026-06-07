@@ -38,7 +38,8 @@ const more = stories.filter((s) => s.slug !== story.slug);
 >
   <article class="post">
     <a class="post__back" href={withBase('/stories')} data-reveal>
-      <span class="arrow" aria-hidden="true">&larr;</span> Stories
+      <span class="arrow" aria-hidden="true">&larr;</span>
+      <span class="post__back-text">Stories</span>
     </a>
 
     <header class="post__masthead" data-reveal>
@@ -70,7 +71,8 @@ const more = stories.filter((s) => s.slug !== story.slug);
 
     <div class="post__end" data-reveal>
       <a class="post__end-back" href={withBase('/stories')}>
-        <span class="arrow" aria-hidden="true">&larr;</span> Stories
+        <span class="arrow" aria-hidden="true">&larr;</span>
+        <span class="post__end-back-text">Stories</span>
       </a>
     </div>
 
@@ -89,7 +91,7 @@ const more = stories.filter((s) => s.slug !== story.slug);
                 loading="lazy"
               />
             </figure>
-            <p class="post__more-title">{s.headline}</p>
+            <p class="post__more-title"><span class="post__more-title-text">{s.headline}</span></p>
           </a>
         ))}
       </div>
@@ -111,24 +113,41 @@ const more = stories.filter((s) => s.slug !== story.slug);
     .post { padding-inline: var(--page-pad-m); }
   }
 
-  /* Back link — top of page. */
+  /* Back link — top of page. Homepage link treatment (.range__link):
+     quiet uppercase gold-deep, weight 400, with a 1px underline on the
+     label text that draws left-to-right on hover/focus. The leading
+     arrow nudges left, keeping the "back" motion. */
   .post__back {
     display: inline-flex;
     align-items: center;
     gap: var(--space-3);
     font-family: var(--font-body);
     font-size: var(--fs-eyebrow);
-    font-weight: 600;
+    font-weight: 400;
     letter-spacing: var(--ls-eyebrow);
     text-transform: uppercase;
     color: var(--gold-deep);
     text-decoration: none;
-    border-bottom: 1px solid transparent;
-    padding-bottom: 2px;
     margin-top: clamp(var(--space-7), 6vw, var(--space-8));
-    transition: border-color var(--dur-default) var(--ease-paper);
   }
-  .post__back:hover { border-bottom-color: var(--gold); }
+  .post__back-text {
+    position: relative;
+    padding-bottom: 3px;
+  }
+  .post__back-text::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--gold-deep);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform var(--dur-default) var(--ease-paper);
+  }
+  .post__back:hover .post__back-text::after,
+  .post__back:focus-visible .post__back-text::after { transform: scaleX(1); }
   .post__back .arrow { transition: transform var(--dur-default) var(--ease-paper); }
   .post__back:hover .arrow { transform: translateX(-4px); }
 
@@ -224,16 +243,30 @@ const more = stories.filter((s) => s.slug !== story.slug);
     gap: var(--space-3);
     font-family: var(--font-body);
     font-size: var(--fs-eyebrow);
-    font-weight: 600;
+    font-weight: 400;
     letter-spacing: var(--ls-eyebrow);
     text-transform: uppercase;
     color: var(--gold-deep);
     text-decoration: none;
-    border-bottom: 1px solid var(--gold);
-    padding-bottom: 2px;
-    transition: color var(--dur-default) var(--ease-paper);
   }
-  .post__end-back:hover { color: var(--ink); }
+  .post__end-back-text {
+    position: relative;
+    padding-bottom: 3px;
+  }
+  .post__end-back-text::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--gold-deep);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform var(--dur-default) var(--ease-paper);
+  }
+  .post__end-back:hover .post__end-back-text::after,
+  .post__end-back:focus-visible .post__end-back-text::after { transform: scaleX(1); }
   .post__end-back .arrow { transition: transform var(--dur-default) var(--ease-paper); }
   .post__end-back:hover .arrow { transform: translateX(-4px); }
 
@@ -284,6 +317,22 @@ const more = stories.filter((s) => s.slug !== story.slug);
     letter-spacing: var(--ls-display);
     color: var(--ink);
     margin: 0;
+  }
+  /* Title carries the homepage link underline: 1px, drawn left-to-right
+     on hover/focus of the thumbnail link. */
+  .post__more-title-text {
+    position: relative;
+    display: inline;
+    padding-bottom: 2px;
+    background-image: linear-gradient(var(--gold-deep), var(--gold-deep));
+    background-repeat: no-repeat;
+    background-position: left bottom;
+    background-size: 0% 1px;
+    transition: background-size var(--dur-default) var(--ease-paper);
+  }
+  .post__more-item:hover .post__more-title-text,
+  .post__more-item:focus-visible .post__more-title-text {
+    background-size: 100% 1px;
   }
 
   @media (max-width: 720px) {

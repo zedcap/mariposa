@@ -35,10 +35,10 @@ export interface Story {
 
 export const stories: Story[] = [
   {
-    slug: 'half-of-indonesias-wrapper',
+    slug: 'the-besuki-grade',
     pillar: 'The Category',
     department: 'Terroir',
-    headline: 'Half of Indonesia’s Wrapper',
+    headline: 'The Besuki Grade',
     standfirst:
       'One grade, one corner of East Java, behind most of what a major wrapper origin sends into the world.',
     hero: wrapperFieldGreen,
