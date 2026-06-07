@@ -1,0 +1,350 @@
+---
+/* Mariposa Stories — individual post.
+   ------------------------------------------------------------------
+   One essay per slug, matching the approved post template
+   (mariposa-stories-post*): kicker → large italic headline → single
+   italic standfirst → offset hero in a pink frame with caption →
+   body at the article measure with a gold drop cap on the first
+   paragraph → top + bottom "Stories" links → a quiet "More stories"
+   row of the other three posts.
+
+   Native build on the live shell: BaseLayout supplies the real
+   Header (inStories → unlisted Stories nav item + mobile burger) and
+   Footer. Hero-less, so the header is stuck from the first paint.
+
+   Copy + image data: src/lib/stories.ts. Images go through Astro's
+   sharp pipeline via <Image>. Reveal-on-scroll uses a self-contained
+   [data-reveal] observer (no GSAP dependency for this template). */
+
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { Image } from 'astro:assets';
+import { withBase } from '../../lib/path';
+import { stories, getStory } from '../../lib/stories';
+
+export const getStaticPaths = (() =>
+  stories.map((s) => ({ params: { slug: s.slug } }))) satisfies GetStaticPaths;
+
+const { slug } = Astro.params;
+const story = getStory(slug!)!;
+/* The other three, in the data's index order, for the "More stories" row. */
+const more = stories.filter((s) => s.slug !== story.slug);
+---
+
+<BaseLayout
+  title={`Mariposa • ${story.headline}`}
+  description={story.standfirst}
+  inStories
+>
+  <article class="post">
+    <a class="post__back" href={withBase('/stories')} data-reveal>
+      <span class="arrow" aria-hidden="true">&larr;</span> Stories
+    </a>
+
+    <header class="post__masthead" data-reveal>
+      <p class="post__kicker">
+        <span class="num">{story.num}</span> <span class="pillar">{story.pillar}</span>
+      </p>
+      <h1 class="post__headline">{story.headline}</h1>
+      <p class="post__standfirst">{story.standfirst}</p>
+    </header>
+
+    <figure class="post__hero" data-reveal>
+      <div class="post__hero-frame">
+        <Image
+          class="post__hero-img"
+          src={story.hero}
+          alt={story.heroAlt}
+          widths={[480, 720, 1100]}
+          sizes="(max-width: 720px) 92vw, 840px"
+          loading="eager"
+        />
+      </div>
+      <figcaption class="post__hero-caption">{story.heroCaption}</figcaption>
+    </figure>
+
+    <div class="post__body" data-reveal>
+      {story.body.map((para, i) => (
+        <p class:list={['post__p', { 'post__p--dropcap': i === 0 }]}>{para}</p>
+      ))}
+    </div>
+
+    <div class="post__end" data-reveal>
+      <a class="post__end-back" href={withBase('/stories')}>
+        <span class="arrow" aria-hidden="true">&larr;</span> Stories
+      </a>
+    </div>
+
+    <section class="post__more" data-reveal aria-label="More stories">
+      <p class="post__more-label">More stories</p>
+      <div class="post__more-grid">
+        {more.map((s) => (
+          <a class="post__more-item" href={withBase(`/stories/${s.slug}`)}>
+            <figure class="post__more-figure">
+              <Image
+                class="post__more-img"
+                src={s.hero}
+                alt={s.heroAlt}
+                widths={[320, 480, 640]}
+                sizes="(max-width: 720px) 92vw, 45vw"
+                loading="lazy"
+              />
+            </figure>
+            <p class="post__more-title">{s.headline}</p>
+          </a>
+        ))}
+      </div>
+    </section>
+  </article>
+</BaseLayout>
+
+<style>
+  /* Article measure — the post column (review --measure 680px).
+     Scoped to .post so the global --measure (640px) is untouched. */
+  .post {
+    --measure: 680px;
+    max-width: calc(var(--measure) + 2 * var(--page-pad-d));
+    margin-inline: auto;
+    padding-inline: var(--page-pad-d);
+    padding-bottom: clamp(var(--space-9), 11vw, var(--space-10));
+  }
+  @media (max-width: 720px) {
+    .post { padding-inline: var(--page-pad-m); }
+  }
+
+  /* Back link — top of page. */
+  .post__back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    padding-bottom: 2px;
+    margin-top: clamp(var(--space-7), 6vw, var(--space-8));
+    transition: border-color var(--dur-default) var(--ease-paper);
+  }
+  .post__back:hover { border-bottom-color: var(--gold); }
+  .post__back .arrow { transition: transform var(--dur-default) var(--ease-paper); }
+  .post__back:hover .arrow { transform: translateX(-4px); }
+
+  /* Masthead — kicker, large italic headline, single italic standfirst. */
+  .post__masthead { padding-top: clamp(var(--space-6), 5vw, var(--space-7)); }
+  .post__kicker {
+    font-family: var(--font-body);
+    font-size: var(--fs-caption);
+    font-weight: 600;
+    letter-spacing: var(--ls-section);
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+    margin: 0 0 var(--space-5);
+  }
+  .post__kicker .num { font-variant-numeric: tabular-nums; }
+  .post__kicker .pillar { color: var(--ash); }
+  .post__headline {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(2.6rem, 5.6vw, 4.2rem);
+    line-height: var(--lh-tight);
+    letter-spacing: var(--ls-display);
+    color: var(--ink);
+    margin: 0 0 var(--space-6);
+    max-width: 20ch;
+    text-wrap: balance;
+  }
+  .post__standfirst {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.25rem, 2.2vw, 1.6rem);
+    line-height: var(--lh-snug);
+    color: var(--ink-soft);
+    margin: 0;
+    max-width: 48ch;
+  }
+
+  /* Hero — offset right of the text column, pink frame on the image
+     only; caption sits beneath, outside the frame. */
+  .post__hero {
+    margin: clamp(var(--space-7), 6vw, var(--space-8)) 0 0;
+    width: min(100%, calc(var(--measure) + 160px));
+    margin-left: auto;
+  }
+  .post__hero-frame {
+    border: 1px solid var(--pink);
+    box-sizing: border-box;
+    overflow: hidden;
+    background: var(--pearl);
+  }
+  .post__hero-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+  }
+  .post__hero-caption {
+    font-family: var(--font-body);
+    font-size: var(--fs-caption);
+    color: var(--ash);
+    margin: var(--space-3) 0 0;
+    text-wrap: pretty;
+  }
+
+  /* Body — single measure column, generous leading, gold drop cap on
+     the first paragraph only. */
+  .post__body {
+    max-width: var(--measure);
+    margin-top: clamp(var(--space-8), 8vw, var(--space-9));
+  }
+  .post__p {
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    line-height: var(--lh-loose);
+    color: var(--ink);
+    margin: 0 0 var(--space-6);
+  }
+  .post__p:last-child { margin-bottom: 0; }
+  .post__p--dropcap::first-letter {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--gold-deep);
+    font-size: clamp(5rem, 8vw, 6.2rem);
+    line-height: 0.82;
+    float: left;
+    padding-right: var(--space-3);
+    padding-top: 0.06em;
+  }
+
+  /* End of essay — a rule, then the left-aligned path back to the index. */
+  .post__end {
+    margin-top: var(--space-7);
+    padding-bottom: var(--space-7);
+    border-bottom: 1px solid var(--border-strong);
+  }
+  .post__end-back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    text-decoration: none;
+    border-bottom: 1px solid var(--gold);
+    padding-bottom: 2px;
+    transition: color var(--dur-default) var(--ease-paper);
+  }
+  .post__end-back:hover { color: var(--ink); }
+  .post__end-back .arrow { transition: transform var(--dur-default) var(--ease-paper); }
+  .post__end-back:hover .arrow { transform: translateX(-4px); }
+
+  /* More stories — three thumbnails with short titles, each a link. */
+  .post__more { margin-top: clamp(calc(var(--space-8) / 2), 4vw, calc(var(--space-9) / 2)); }
+  .post__more-label {
+    font-family: var(--font-body);
+    font-size: var(--fs-caption);
+    font-weight: 600;
+    letter-spacing: var(--ls-section);
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    margin: 0 0 var(--space-6);
+  }
+  .post__more-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(var(--space-5), 3vw, var(--space-6));
+  }
+  .post__more-item {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+  .post__more-figure {
+    margin: 0 0 var(--space-4);
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+    border: 1px solid var(--pink);
+    box-sizing: border-box;
+    background: var(--pearl);
+  }
+  .post__more-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    transition: transform var(--dur-slow) var(--ease-paper);
+  }
+  .post__more-item:hover .post__more-img { transform: scale(1.03); }
+  .post__more-title {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+    line-height: var(--lh-snug);
+    letter-spacing: var(--ls-display);
+    color: var(--ink);
+    margin: 0;
+  }
+
+  @media (max-width: 720px) {
+    .post__hero { width: 100%; margin-left: 0; }
+    .post__more-grid { grid-template-columns: 1fr; gap: var(--space-6); }
+  }
+
+  /* Reveal-on-scroll — self-contained, ~16px rise, once. */
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(16px);
+    transition:
+      opacity var(--dur-slow) var(--ease-paper),
+      transform var(--dur-slow) var(--ease-paper);
+  }
+  [data-reveal].is-in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    [data-reveal] { opacity: 1; transform: none; transition: none; }
+  }
+</style>
+
+<noscript>
+  <style>
+    [data-reveal] { opacity: 1 !important; transform: none !important; }
+  </style>
+</noscript>
+
+<script>
+  /* Reveal-on-scroll: add .is-in once an element enters view. Respects
+     reduced motion (CSS already neutralises the transform there). */
+  const rm =
+    window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const els = document.querySelectorAll('[data-reveal]');
+  if (rm || !('IntersectionObserver' in window)) {
+    els.forEach((el) => el.classList.add('is-in'));
+  } else {
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add('is-in');
+            io.unobserve(e.target);
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -8% 0px' },
+    );
+    els.forEach((el) => io.observe(el));
+  }
+</script>

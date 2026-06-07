@@ -31,12 +31,17 @@ interface Props {
      '/og-share.jpg'). Resolved to an absolute URL against Astro.site
      for og:image / twitter:image. Defaults to the brand home hero. */
   image?: string;
+  /* True on the Stories section only. Forwarded to the Header so it
+     shows the unlisted "Stories" nav item and the mobile burger. The
+     four public pages leave it false, so their nav is unchanged. */
+  inStories?: boolean;
 }
 
 const {
   title,
   description = 'Mariposa is the first ultra-luxury cigar brand born in Indonesia. Volcanic Soul. 24-Carat Gold.',
   image = '/og-share.jpg',
+  inStories = false,
 } = Astro.props;
 
 /* Absolute URLs for canonical and social-share scrapers.
@@ -72,6 +77,13 @@ const bgTexture  = `url("${withBase('/texture.jpg')}")`;
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
 
+    {/* URL-only Stories section: keep it out of search indexes even if a
+        link leaks. Driven off inStories, which is true only for the
+        /stories pages and false for the four public pages, so the public
+        nav/SEO is untouched. Sitemap exclusion is handled separately in
+        astro.config.mjs (the integration does not read page HTML). */}
+    {inStories && <meta name="robots" content="noindex, nofollow" />}
+
     <link rel="canonical" href={canonicalURL} />
 
     <meta property="og:type" content="website" />
@@ -95,7 +107,7 @@ const bgTexture  = `url("${withBase('/texture.jpg')}")`;
       {/* Hero renders first so the header rests below it on load.
           Empty on hero-less pages — header then sits at the top. */}
       <slot name="hero" />
-      <Header overHero={hasHero} />
+      <Header overHero={hasHero} inStories={inStories} />
       <slot />
     </main>
 

@@ -45,8 +45,15 @@ import { withBase } from '../lib/path';
 interface Props {
   /** True when the page has a hero for the nav to rest below. */
   overHero?: boolean;
+  /* True on the Stories section (the /stories/ index and the
+     /stories/<slug> posts). Adds the unlisted "Stories" nav item and
+     switches the nav to a burger at mobile widths, because the extra
+     item overflows the existing four-item bar there. The four public
+     pages (home, /volage, /caprice, /about) never pass this, so their
+     nav renders exactly as before: Volage / Caprice / About, no burger. */
+  inStories?: boolean;
 }
-const { overHero = false } = Astro.props;
+const { overHero = false, inStories = false } = Astro.props;
 /* Astro.url.pathname includes the base ('/mariposa/volage' on staging),
    so compare against base-prefixed hrefs. Normalise the trailing slash
    the GitHub Pages build adds to directory URLs. */
@@ -65,7 +72,7 @@ const isActive = (href: string) => {
 {overHero && <div class="site-header__sentinel" aria-hidden="true"></div>}
 
 <header
-  class:list={['site-header', { 'is-stuck': !overHero }]}
+  class:list={['site-header', { 'is-stuck': !overHero, 'site-header--stories': inStories }]}
   data-header
   data-over-hero={overHero ? 'true' : 'false'}
 >
@@ -73,9 +80,36 @@ const isActive = (href: string) => {
     <a class="site-header__mark wordmark" href={withBase('/')} aria-label="Mariposa, home">
       mariposa
     </a>
-    <nav class="site-header__nav" aria-label="Primary">
+
+    {/* Burger toggle — only rendered on the Stories section. Hidden on
+        desktop via CSS; it controls the nav panel at mobile widths. The
+        panel id is referenced by aria-controls; a tiny inline script
+        mirrors the open state onto aria-expanded. With JS off the
+        :has() fallback below still opens the panel on click. */}
+    {inStories && (
+      <button
+        class="site-header__burger"
+        type="button"
+        aria-expanded="false"
+        aria-controls="site-nav"
+        aria-label="Menu"
+        data-burger
+      >
+        <span class="site-header__burger-bars" aria-hidden="true"></span>
+      </button>
+    )}
+
+    <nav
+      id="site-nav"
+      class:list={['site-header__nav', { 'site-header__nav--collapsible': inStories }]}
+      aria-label="Primary"
+      data-nav
+    >
       <a href={withBase('/volage')} class:list={[{ 'is-active': isActive('/volage') }]}>Volage</a>
       <a href={withBase('/caprice')} class:list={[{ 'is-active': isActive('/caprice') }]}>Caprice</a>
+      {inStories && (
+        <a href={withBase('/stories')} class:list={[{ 'is-active': isActive('/stories') }]}>Stories</a>
+      )}
       <a href={withBase('/about')} class:list={[{ 'is-active': isActive('/about') }]}>About</a>
     </nav>
   </div>
@@ -161,6 +195,56 @@ const isActive = (href: string) => {
     color: var(--gold-deep);
   }
 
+  /* ── Stories burger ────────────────────────────────────────────
+     Only present on the Stories section. The nav there carries one
+     extra item (Stories) and overflows the bar at mobile widths, so
+     below 720px the nav items collapse behind this burger toggle.
+     Hidden on desktop and on every non-Stories page (the button is
+     not even rendered there). */
+  .site-header__burger {
+    display: none; /* desktop + non-Stories: never shown */
+    appearance: none;
+    -webkit-appearance: none;
+    background: transparent;
+    border: 0;
+    padding: var(--space-3);
+    margin: 0;
+    cursor: pointer;
+    color: var(--ink);
+    line-height: 0;
+  }
+  /* Three-bar glyph drawn with a 1px-edged box + pseudo-elements.
+     No icon font, no inline SVG file: a hand-drawn mark. */
+  .site-header__burger-bars,
+  .site-header__burger-bars::before,
+  .site-header__burger-bars::after {
+    display: block;
+    width: 22px;
+    height: 1.5px;
+    background: currentColor;
+    transition: transform var(--dur-default) var(--ease-paper),
+      opacity var(--dur-default) var(--ease-paper);
+  }
+  .site-header__burger-bars { position: relative; }
+  .site-header__burger-bars::before,
+  .site-header__burger-bars::after {
+    content: '';
+    position: absolute;
+    left: 0;
+  }
+  .site-header__burger-bars::before { top: -6px; }
+  .site-header__burger-bars::after { top: 6px; }
+  /* Open state — bars cross into an X. */
+  .site-header__burger[aria-expanded='true'] .site-header__burger-bars {
+    background: transparent;
+  }
+  .site-header__burger[aria-expanded='true'] .site-header__burger-bars::before {
+    transform: translateY(6px) rotate(45deg);
+  }
+  .site-header__burger[aria-expanded='true'] .site-header__burger-bars::after {
+    transform: translateY(-6px) rotate(-45deg);
+  }
+
   @media (max-width: 720px) {
     .site-header__inner { height: 66px; }
     .site-header.is-stuck .site-header__inner { height: 56px; }
@@ -172,6 +256,42 @@ const isActive = (href: string) => {
          the same visual line. */
       transform: translateY(3px);
     }
+
+    /* Stories section only: show the burger, collapse the nav into a
+       dropdown panel beneath the bar. Non-Stories pages keep the inline
+       nav above (no .site-header__nav--collapsible, no burger rendered),
+       so their mobile nav is unchanged. */
+    .site-header--stories .site-header__burger { display: inline-flex; }
+
+    .site-header__nav--collapsible {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      left: 0;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: var(--space-5);
+      background: #ffffff;
+      border-bottom: 1px solid var(--border-gold);
+      box-shadow: 0 8px 16px rgba(31, 27, 23, 0.08);
+      padding: var(--space-5) var(--page-pad-m);
+      transform: none;
+      /* Collapsed by default. */
+      display: none;
+    }
+    /* Open via the burger's aria-expanded (JS path) OR, with JS off,
+       the :has() fallback keys off :focus on the button so a tap still
+       reveals the panel. */
+    .site-header--stories:has(.site-header__burger[aria-expanded='true']) .site-header__nav--collapsible,
+    .site-header--stories:has(.site-header__burger:focus) .site-header__nav--collapsible {
+      display: flex;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .site-header__burger-bars,
+    .site-header__burger-bars::before,
+    .site-header__burger-bars::after { transition: none; }
   }
 
   /* Reduced motion — the stuck-state settle snaps instantly. The
@@ -206,5 +326,33 @@ const isActive = (href: string) => {
       );
       io.observe(sentinel);
     }
+  }
+
+  /* Stories burger toggle. Only present on the Stories section; absent
+     elsewhere, so this is a no-op on the four public pages. Drives
+     aria-expanded (the CSS opens the panel off that attribute). The
+     no-JS :has(:focus) fallback in the CSS keeps the panel reachable
+     if this never runs. Closes on Escape and on outside click. */
+  const burger = document.querySelector<HTMLButtonElement>('[data-burger]');
+  if (burger && header) {
+    const setOpen = (open: boolean) =>
+      burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    burger.addEventListener('click', () => {
+      setOpen(burger.getAttribute('aria-expanded') !== 'true');
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && burger.getAttribute('aria-expanded') === 'true') {
+        setOpen(false);
+        burger.focus();
+      }
+    });
+    document.addEventListener('click', (e) => {
+      if (
+        burger.getAttribute('aria-expanded') === 'true' &&
+        !header.contains(e.target as Node)
+      ) {
+        setOpen(false);
+      }
+    });
   }
 </script>

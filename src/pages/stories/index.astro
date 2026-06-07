@@ -1,0 +1,297 @@
+---
+/* Mariposa Stories — index (the trade-listing layout).
+   ------------------------------------------------------------------
+   Reproduces the approved v3 (mariposa-stories-tradepub-v2): a
+   "Stories" masthead over a trade-listing grid — one lead feature
+   (teaser = its first body paragraph + a read link) above a clean
+   row of three secondaries. Pink image frames, no captions, no
+   dividers between lead and row.
+
+   Native build on the live shell: BaseLayout supplies the real
+   site Header (with inStories → the unlisted Stories nav item +
+   mobile burger) and Footer. Hero-less, so the header is stuck from
+   the first paint, matching the review's pinned bar.
+
+   Copy + image data: src/lib/stories.ts. Images go through Astro's
+   sharp pipeline via <Image>. */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { Image } from 'astro:assets';
+import { withBase } from '../../lib/path';
+import { leadStory, secondaryStories, leadTeaser } from '../../lib/stories';
+---
+
+<BaseLayout
+  title="Mariposa • Stories"
+  description="A slow journal of terroir, craft, and the rooms where a Mariposa is lit."
+  inStories
+>
+  <section class="journal-masthead">
+    <p class="journal-masthead__eyebrow">Mariposa &middot; Stories</p>
+    <h1 class="journal-masthead__headline">Notes from the Volcanic Soil</h1>
+    <p class="journal-masthead__standfirst">
+      A slow journal of terroir, craft, and the rooms where a Mariposa is lit.
+    </p>
+    <span class="journal-masthead__rule" aria-hidden="true"></span>
+  </section>
+
+  <div class="sheet">
+    {/* Lead feature — teaser is the lead's first body paragraph only,
+        plus a read link. The whole card is the link. */}
+    <a class="lead" href={withBase(`/stories/${leadStory.slug}`)}>
+      <figure class="lead__figure">
+        <Image
+          src={leadStory.hero}
+          alt={leadStory.heroAlt}
+          widths={[480, 720, 1100]}
+          sizes="(max-width: 860px) 92vw, 56vw"
+          loading="eager"
+        />
+      </figure>
+      <div class="lead__copy">
+        <p class="dept">{leadStory.department}</p>
+        <h2 class="lead__headline">{leadStory.headline}</h2>
+        <p class="lead__standfirst">{leadStory.standfirst}</p>
+        <div class="lead__body">
+          <p>{leadTeaser}</p>
+        </div>
+        <span class="lead__more">Read the story</span>
+      </div>
+    </a>
+
+    {/* Secondary features — clean three-up row, no cell borders. */}
+    <div class="features">
+      {secondaryStories.map((story) => (
+        <a class="feature" href={withBase(`/stories/${story.slug}`)}>
+          <figure class="feature__figure">
+            <Image
+              src={story.hero}
+              alt={story.heroAlt}
+              widths={[360, 540, 720]}
+              sizes="(max-width: 860px) 92vw, 30vw"
+              loading="lazy"
+            />
+          </figure>
+          <p class="dept">{story.department}</p>
+          <h3 class="feature__headline">{story.headline}</h3>
+          <p class="feature__standfirst">{story.standfirst}</p>
+          <span class="feature__more">Read the story</span>
+        </a>
+      ))}
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  /* Listing measure — the wide trade-grid column (review --measure
+     1180px). Scoped here so the global --measure (640px body width)
+     is untouched. */
+  .journal-masthead,
+  .sheet { --measure-wide: 1180px; }
+
+  /* ── Stories masthead ──────────────────────────────────────── */
+  .journal-masthead {
+    max-width: var(--measure-wide);
+    margin: 0 auto;
+    padding: clamp(56px, 11vw, 96px) 32px clamp(40px, 8vw, 64px);
+    text-align: center;
+  }
+  .journal-masthead__eyebrow {
+    font-family: var(--font-body);
+    font-size: clamp(0.92rem, 1.4vw, 1.05rem);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: var(--ls-section);
+    color: var(--gold-deep);
+    margin: 0 0 24px;
+  }
+  .journal-masthead__headline {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(3rem, 7.2vw, 5.5rem);
+    line-height: 1.05;
+    letter-spacing: var(--ls-display);
+    color: var(--ink);
+    margin: 0 auto 24px;
+    max-width: 14ch;
+  }
+  .journal-masthead__standfirst {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.15rem, 1.9vw, 1.4rem);
+    line-height: 1.4;
+    color: var(--ink-soft);
+    margin: 0 auto 28px;
+    max-width: 50ch;
+  }
+  .journal-masthead__rule {
+    display: block;
+    width: 64px;
+    height: 1px;
+    background: var(--pink);
+    margin: 0 auto;
+  }
+
+  /* ── main grid ─────────────────────────────────────────────── */
+  .sheet {
+    max-width: var(--measure-wide);
+    margin: 0 auto;
+    padding: 0 32px 80px;
+  }
+
+  /* Lead feature */
+  .lead {
+    display: grid;
+    grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+    gap: 40px;
+    align-items: start;
+    padding-bottom: 40px;
+    color: inherit;
+    text-decoration: none;
+  }
+  .lead__figure {
+    margin: 0;
+    position: relative;
+  }
+  .lead__figure :global(img) {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    border: 1px solid var(--pink);
+    display: block;
+  }
+  .dept {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: var(--ls-section);
+    font-weight: 700;
+    color: var(--gold-deep);
+    margin: 0 0 11px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+  }
+  .dept::before {
+    content: '';
+    width: 18px;
+    height: 2px;
+    background: var(--gold);
+    display: inline-block;
+  }
+  .lead__headline {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-style: normal;
+    font-size: clamp(2rem, 4.4vw, 3.2rem);
+    line-height: 1.02;
+    letter-spacing: var(--ls-display);
+    color: var(--ink);
+    margin: 0 0 16px;
+  }
+  .lead__standfirst {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.2rem;
+    line-height: 1.4;
+    color: var(--ink-soft);
+    margin: 0 0 16px;
+  }
+  .lead__body {
+    font-size: 14px;
+    line-height: 1.62;
+    color: var(--ink-soft);
+  }
+  .lead__body p {
+    margin: 0 0 12px;
+  }
+  .lead__body p:first-child {
+    margin-top: 0;
+  }
+  .lead__more {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: var(--ls-eyebrow);
+    color: var(--gold-deep);
+    border-bottom: 1px solid var(--gold);
+  }
+  .lead:hover .lead__more,
+  .lead:focus-visible .lead__more {
+    color: var(--pink-deep);
+    border-color: var(--pink);
+  }
+
+  /* Secondary features: three-up row, no cell borders */
+  .features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    margin-top: 80px;
+  }
+  .feature {
+    padding: 0;
+    color: inherit;
+    text-decoration: none;
+  }
+  .feature__figure {
+    margin: 0 0 16px;
+  }
+  .feature__figure :global(img) {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    border: 1px solid var(--pink);
+    display: block;
+  }
+  .feature__headline {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-style: normal;
+    font-size: clamp(1.4rem, 2.6vw, 1.85rem);
+    line-height: 1.08;
+    letter-spacing: var(--ls-display);
+    color: var(--ink);
+    margin: 0 0 12px;
+  }
+  .feature__standfirst {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    margin: 0 0 14px;
+  }
+  .feature__more {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: var(--ls-eyebrow);
+    color: var(--gold-deep);
+    border-bottom: 1px solid var(--gold);
+    padding-bottom: 1px;
+  }
+  .feature:hover .feature__more,
+  .feature:focus-visible .feature__more {
+    color: var(--pink-deep);
+    border-color: var(--pink);
+  }
+
+  @media (max-width: 860px) {
+    .lead {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+    .features {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+    .journal-masthead,
+    .sheet {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  }
+</style>

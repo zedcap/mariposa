@@ -11,6 +11,9 @@ import sitemap from '@astrojs/sitemap';
 // `/refusal/` is already noindex via <meta robots> in the page; the
 // sitemap integration does NOT inspect page HTML, so we exclude it
 // explicitly via the `filter` option to keep noindex pages out of the map.
+// `/stories` and `/stories/*` are the URL-only Stories section (noindex
+// via inStories in BaseLayout) — same reason, excluded here too so no
+// Stories URL ever appears in the generated sitemap.
 //
 // https://astro.build/config
 export default defineConfig({
@@ -23,7 +26,7 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
-      filter: (page) => !page.includes('/refusal'),
+      filter: (page) => !page.includes('/refusal') && !page.includes('/stories'),
     }),
   ],
 });
