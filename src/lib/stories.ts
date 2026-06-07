@@ -14,7 +14,7 @@ import type { ImageMetadata } from 'astro';
 
 import besukiLeafBw from '../assets/besuki-leaf-bw.png';
 import wrapperFieldGreen from '../assets/wrapper-field-green.png';
-import gardenCigarAshtray from '../assets/garden-cigar-ashtray-capband.png';
+import gardenRoomGloriaBanyan from '../assets/garden-room-gloria-banyan.jpg';
 import hourVolageDusk from '../assets/hour-volage-dusk-band.png';
 
 export interface Story {
@@ -61,9 +61,9 @@ export const stories: Story[] = [
     headline: 'The Garden Room',
     standfirst:
       'A terrace bar above a heritage garden the city has almost finished building over.',
-    hero: gardenCigarAshtray,
+    hero: gardenRoomGloriaBanyan,
     heroAlt:
-      'A lit cigar resting in a glass ashtray on a table at dusk, the tropical garden behind it in evident natural green; the rest of the frame is black-and-white except the cigar’s warm ember at the tip and a single gold-leaf band near the cap.',
+      'Gloria seen from behind, a monochrome figure with a cigar, looking out over a colour banyan heritage garden.',
     heroCaption: 'A Mariposa would sit easily on the terrace as the afternoon cools, Central Jakarta.',
     body: [
       'On the lobby floor of the Hotel Borobudur in Central Jakarta, past the marble, a wine and cigar room keeps older hours than the city around it. The Churchill has billiards, chess, and a terrace that opens onto the hotel’s tropical garden, and for years it has been a quiet haunt of diplomats.',
