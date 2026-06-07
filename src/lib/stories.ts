@@ -76,7 +76,7 @@ export const stories: Story[] = [
     pillar: 'Terroir',
     department: 'Terroir',
     headline: 'The Volcanic Origin Behind Indonesia’s Wrapper Leaf',
-    indexTitle: 'The Volcanic Origin',
+    indexTitle: 'Volcanic Origin',
     standfirst:
       'More than half of Indonesia’s wrapper leaf grows in one regency, in the shadow of a volcano.',
     hero: besukiLeafBw,
