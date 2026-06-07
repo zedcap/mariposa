@@ -286,7 +286,10 @@ import { leadStory, secondaryStories, leadTeaser } from '../../lib/stories';
     }
     .features {
       grid-template-columns: 1fr;
-      gap: 32px;
+      /* Match the lead-to-first-secondary spacing (lead padding-bottom
+         40px + .features margin-top 80px = 120px) so all mobile gaps
+         read as one rhythm. Desktop three-up gap is unchanged. */
+      gap: 120px;
     }
     .journal-masthead,
     .sheet {
