@@ -16,7 +16,7 @@ import type { ImageMetadata } from 'astro';
 import besukiLeafBw from '../assets/besuki-leaf-bw.png';
 import wrapperFieldGreen from '../assets/wrapper-field-green.png';
 import gardenRoomGloriaBanyan from '../assets/garden-room-gloria-banyan.jpg';
-import hourVolageDusk from '../assets/hour-volage-dusk-band.png';
+import hourBeforeTheRain from '../assets/hour-before-the-rain.jpg';
 
 export interface Story {
   slug: string;
@@ -93,9 +93,9 @@ export const stories: Story[] = [
     department: 'The Hour',
     headline: 'Before the Rain',
     standfirst: 'An hour with the Volage in a Jember field as the rain comes in.',
-    hero: hourVolageDusk,
+    hero: hourBeforeTheRain,
     heroAlt:
-      'A single lit cigar held at dusk above a Jember tobacco field, the field soft and dark behind under a heavy rain-light sky; the whole frame is neutral black-and-white except the cigar’s warm ember at the foot and a single gold-leaf band near the cap.',
+      'A lit cigar held in a hand over a monochrome tobacco field at dusk, the cigar in colour with its red ember and a crumpled gold-leaf mark.',
     heroCaption: 'A Volage burning down at dusk, a Jember field behind, the gold leaf the one warm thing on it.',
     body: [
       'The cigar takes a moment to catch, the way the slow ones do. She turns it in the flame rather than draws on it, and the foot comes round to an even line before the first proper pull. Earthen, that pull, and unhurried, a sweetness under it that is not quite cocoa and will not sit still long enough to be named.',
