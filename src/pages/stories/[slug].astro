@@ -3,7 +3,7 @@
    ------------------------------------------------------------------
    One essay per slug, matching the approved post template
    (mariposa-stories-post*): kicker → large italic headline → single
-   italic standfirst → offset hero in a pink frame with caption →
+   italic standfirst → offset hero in a pink frame →
    body at the article measure with a gold drop cap on the first
    paragraph → top + bottom "Stories" links → a quiet "More stories"
    row of the other three posts.
@@ -60,7 +60,6 @@ const more = stories.filter((s) => s.slug !== story.slug);
           loading="eager"
         />
       </div>
-      <figcaption class="post__hero-caption">{story.heroCaption}</figcaption>
     </figure>
 
     <div class="post__body" data-reveal>
@@ -172,8 +171,7 @@ const more = stories.filter((s) => s.slug !== story.slug);
     max-width: 48ch;
   }
 
-  /* Hero — offset right of the text column, pink frame on the image
-     only; caption sits beneath, outside the frame. */
+  /* Hero — offset right of the text column, pink frame on the image. */
   .post__hero {
     margin: clamp(var(--space-7), 6vw, var(--space-8)) 0 0;
     width: min(100%, calc(var(--measure) + 160px));
@@ -191,13 +189,6 @@ const more = stories.filter((s) => s.slug !== story.slug);
     display: block;
     aspect-ratio: 3 / 2;
     object-fit: cover;
-  }
-  .post__hero-caption {
-    font-family: var(--font-body);
-    font-size: var(--fs-caption);
-    color: var(--ash);
-    margin: var(--space-3) 0 0;
-    text-wrap: pretty;
   }
 
   /* Body — single measure column, generous leading, gold drop cap on
